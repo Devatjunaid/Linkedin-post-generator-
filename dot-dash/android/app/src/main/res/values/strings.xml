@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Dot Dash!</string>
+    <string name="title_activity_main">Dot Dash!</string>
+    <string name="package_name">com.dotdash.kids</string>
+    <string name="custom_url_scheme">com.dotdash.kids</string>
+</resources>

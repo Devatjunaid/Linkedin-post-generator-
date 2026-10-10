@@ -1,0 +1,29 @@
+{
+  "name": "dot-dash",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Dot Dash! A connect-the-dots game for kids: animals, vehicles and dinosaurs.",
+  "scripts": {
+    "build": "esbuild src/main.js --bundle --minify --format=iife --target=es2019 --outfile=www/app.js --tsconfig=tsconfig.json",
+    "dev": "esbuild src/main.js --bundle --format=iife --target=es2019 --outfile=www/app.js --tsconfig=tsconfig.json --servedir=www --serve=8080",
+    "fonts": "node scripts/copy-fonts.mjs",
+    "icons": "node scripts/render-assets.mjs && npx @capacitor/assets generate --android --iconBackgroundColor '#1E1A4D' --splashBackgroundColor '#1E1A4D'",
+    "sync": "npm run build && npx cap sync android",
+    "android": "npm run sync && npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor-community/admob": "8.2.1",
+    "@capacitor-community/text-to-speech": "8.0.2",
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/splash-screen": "8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.3",
+    "@fontsource/fredoka": "5.3.0",
+    "@fontsource/nunito": "5.3.0",
+    "esbuild": "0.28.2"
+  }
+}

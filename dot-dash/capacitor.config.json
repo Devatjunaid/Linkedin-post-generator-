@@ -1,0 +1,16 @@
+{
+  "appId": "com.dotdash.kids",
+  "appName": "Dot Dash!",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#1E1A4D"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "launchAutoHide": true,
+      "backgroundColor": "#1E1A4D",
+      "showSpinner": false
+    }
+  }
+}
