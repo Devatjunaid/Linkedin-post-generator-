@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fuel Tracker Layouts</title>
+<style>
+  :root {
+    --page-bg: #EEF1F5;
+    --page-ink: #191C20;
+    --page-muted: #5B616B;
+    --page-card: #FFFFFF;
+    --page-line: #D9DEE5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Inter, Roboto, "Noto Sans", system-ui, sans-serif;
+    background: var(--page-bg);
+    color: var(--page-ink);
+    padding: 48px 56px 64px;
+    width: 1720px;
+  }
+
+  /* ---------- Document chrome ---------- */
+  header.doc { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
+  header.doc h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
+  header.doc p { color: var(--page-muted); font-size: 15px; margin-top: 6px; max-width: 760px; line-height: 1.5; }
+  .tag { font-size: 12px; font-weight: 600; letter-spacing: .6px; text-transform: uppercase; color: #1A5FA8; background: #D4E3FF; padding: 6px 12px; border-radius: 999px; }
+
+  section.block { background: var(--page-card); border: 1px solid var(--page-line); border-radius: 20px; padding: 28px 32px; margin-bottom: 28px; }
+  section.block > h2 { font-size: 13px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--page-muted); margin-bottom: 20px; }
+
+  .palettes { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .palettes h3 { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+  .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .sw { border-radius: 12px; height: 78px; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; font-size: 11px; line-height: 1.35; border: 1px solid rgba(0,0,0,.06); }
+  .sw b { font-weight: 600; font-size: 12px; }
+
+  .screens { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; justify-items: center; }
+  .screen-label { font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; }
+  .screen-label span { display: block; font-weight: 400; color: var(--page-muted); font-size: 12px; margin-top: 2px; }
+
+  .specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .spec h4 { font-size: 14px; margin-bottom: 8px; }
+  .spec ul { padding-left: 18px; color: var(--page-muted); font-size: 13px; line-height: 1.6; }
+
+  /* ---------- Material 3 theme tokens (per phone) ---------- */
+  .phone.light {
+    --primary: #1A5FA8; --on-primary: #FFFFFF;
+    --primary-container: #D4E3FF; --on-primary-container: #001C3A;
+    --secondary: #545F70; --secondary-container: #D8E3F8; --on-secondary-container: #111C2B;
+    --tertiary: #1F7A4D; --on-tertiary: #FFFFFF;
+    --tertiary-container: #A8F2C6; --on-tertiary-container: #00210F;
+    --background: #F6F8FB; --on-surface: #191C20; --on-surface-variant: #43474E;
+    --surface-container-low: #F0F3F8; --surface-container: #EAEEF3; --surface-container-high: #E4E8EE;
+    --outline: #73777F; --outline-variant: #C3C6CF;
+    --ad-bg: #E9EDF2; --ad-line: #B8BEC7;
+  }
+  .phone.dark {
+    --primary: #A5C8FF; --on-primary: #00315E;
+    --primary-container: #004785; --on-primary-container: #D4E3FF;
+    --secondary: #BCC7DB; --secondary-container: #3C4758; --on-secondary-container: #D8E3F8;
+    --tertiary: #8CD6AB; --on-tertiary: #003920;
+    --tertiary-container: #005234; --on-tertiary-container: #A8F2C6;
+    --background: #0F1418; --on-surface: #E1E2E8; --on-surface-variant: #C3C6CF;
+    --surface-container-low: #171C21; --surface-container: #1B2026; --surface-container-high: #252B31;
+    --outline: #8D9199; --outline-variant: #43474E;
+    --ad-bg: #1B2026; --ad-line: #43474E;
+  }
+
+  /* ---------- Phone frame ---------- */
+  .phone {
+    width: 360px; height: 812px; border-radius: 36px; overflow: hidden;
+    background: var(--background); color: var(--on-surface);
+    border: 8px solid #1E2227; box-shadow: 0 18px 40px rgba(16, 24, 40, .18);
+    display: flex; flex-direction: column; position: relative;
+    font-family: Roboto, Inter, "Noto Sans", sans-serif;
+  }
+  .statusbar { height: 28px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; flex: none; }
+  .statusbar .dots { display: flex; gap: 5px; align-items: center; }
+  .statusbar .dots i { width: 14px; height: 9px; border-radius: 2px; background: currentColor; opacity: .85; display: block; }
+  .topbar { height: 56px; padding: 0 8px 0 16px; display: flex; align-items: center; justify-content: space-between; flex: none; }
+  .topbar .title { font-size: 20px; font-weight: 500; }
+  .topbar .sub { font-size: 12px; color: var(--on-surface-variant); margin-top: 1px; }
+  .iconbtn { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--on-surface-variant); }
+
+  .content { flex: 1; overflow: hidden; padding: 4px 16px 10px; display: flex; flex-direction: column; gap: 11px; }
+  .content > * { flex: none; }
+
+  svg.ic { width: 24px; height: 24px; fill: currentColor; flex: none; }
+  svg.ic.sm { width: 18px; height: 18px; }
+
+  /* Segmented button */
+  .seg { display: flex; border: 1px solid var(--outline); border-radius: 999px; height: 40px; overflow: hidden; }
+  .seg div { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 500; }
+  .seg div + div { border-left: 1px solid var(--outline); }
+  .seg .on { background: var(--secondary-container); color: var(--on-secondary-container); }
+
+  /* Chips */
+  .chips { display: flex; gap: 8px; }
+  .chip { height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--outline-variant); display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--on-surface-variant); white-space: nowrap; }
+  .chip.on { background: var(--secondary-container); color: var(--on-secondary-container); border-color: transparent; }
+
+  .label-sm { font-size: 12px; font-weight: 500; color: var(--on-surface-variant); letter-spacing: .3px; }
+
+  /* Outlined text field */
+  .field { position: relative; height: 56px; border: 1px solid var(--outline); border-radius: 12px; display: flex; align-items: center; padding: 0 14px 0 12px; gap: 12px; }
+  .field.focus { border: 2px solid var(--primary); padding: 0 13px 0 11px; }
+  .field .lbl { position: absolute; top: -8px; left: 10px; padding: 0 4px; background: var(--background); font-size: 12px; color: var(--on-surface-variant); }
+  .field.focus .lbl { color: var(--primary); }
+  .field .lead { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--primary-container); color: var(--on-primary-container); }
+  .field .val { flex: 1; font-size: 16px; }
+  .field .suf { font-size: 14px; color: var(--on-surface-variant); }
+  .field.focus .val::after { content: ""; display: inline-block; width: 2px; height: 18px; background: var(--primary); margin-left: 1px; vertical-align: -3px; }
+  .helper { font-size: 11px; color: var(--on-surface-variant); margin: -8px 0 0 16px; }
+
+  /* Result card */
+  .result { border-radius: 24px; background: var(--primary-container); color: var(--on-primary-container); padding: 14px 18px; position: relative; overflow: hidden; }
+  .result::after { content: ""; position: absolute; right: -40px; top: -40px; width: 150px; height: 150px; border-radius: 50%; background: var(--primary); opacity: .10; }
+  .result .k { font-size: 13px; font-weight: 500; opacity: .85; display: flex; align-items: center; gap: 6px; }
+  .result .big { font-size: 40px; font-weight: 700; letter-spacing: -1px; margin: 2px 0 10px; font-variant-numeric: tabular-nums; }
+  .result .big small { font-size: 22px; font-weight: 600; opacity: .8; margin-right: 2px; vertical-align: 14px; }
+  .result .row { display: flex; gap: 8px; }
+  .result .pill { flex: 1; background: var(--background); color: var(--on-surface); border-radius: 14px; padding: 8px 10px; }
+  .result .pill .t { font-size: 11px; color: var(--on-surface-variant); }
+  .result .pill .v { font-size: 15px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  .btn { height: 52px; border-radius: 999px; background: var(--primary); color: var(--on-primary); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600; letter-spacing: .2px; flex: none; }
+
+  /* History */
+  .stats { border-radius: 20px; background: var(--surface-container); padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { background: var(--background); border-radius: 14px; padding: 10px 12px; }
+  .stat .t { font-size: 11px; color: var(--on-surface-variant); display: flex; align-items: center; gap: 5px; }
+  .stat .v { font-size: 19px; font-weight: 700; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .stat.hl { background: var(--tertiary-container); color: var(--on-tertiary-container); }
+  .stat.hl .t { color: var(--on-tertiary-container); opacity: .85; }
+  .month { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: var(--primary); padding: 2px 4px 0; }
+  .month span { color: var(--on-surface-variant); font-weight: 500; font-size: 12px; }
+  .trip { border-radius: 16px; background: var(--surface-container-low); border: 1px solid var(--outline-variant); padding: 12px; display: flex; gap: 12px; align-items: center; }
+  .trip .av { width: 44px; height: 44px; border-radius: 14px; background: var(--secondary-container); color: var(--on-secondary-container); display: grid; place-items: center; flex: none; }
+  .trip .mid { flex: 1; min-width: 0; }
+  .trip .name { font-size: 15px; font-weight: 600; }
+  .trip .meta { font-size: 12px; color: var(--on-surface-variant); display: flex; gap: 10px; margin-top: 4px; align-items: center; }
+  .trip .meta span { display: inline-flex; align-items: center; gap: 3px; }
+  .trip .cost { text-align: right; }
+  .trip .cost .v { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .trip .cost .t { font-size: 11px; color: var(--tertiary); font-weight: 600; margin-top: 2px; }
+
+  /* Ad placeholder: fixed 50dp banner + 8dp padding = always 66dp tall */
+  .adslot { flex: none; height: 66px; padding: 8px 16px; background: var(--background); }
+  .adslot div { height: 50px; border-radius: 10px; border: 1.5px dashed var(--ad-line); background: var(--ad-bg); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: var(--on-surface-variant); letter-spacing: .3px; }
+  .adslot b { font-size: 10px; font-weight: 700; border: 1px solid var(--on-surface-variant); border-radius: 4px; padding: 1px 4px; }
+
+  /* Bottom navigation */
+  .navbar { flex: none; height: 80px; background: var(--surface-container); display: flex; padding-top: 12px; }
+  .navitem { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--on-surface-variant); }
+  .navitem .ind { width: 64px; height: 32px; border-radius: 16px; display: grid; place-items: center; }
+  .navitem.on { color: var(--on-surface); font-weight: 700; }
+  .navitem.on .ind { background: var(--secondary-container); color: var(--on-secondary-container); }
+  .gesture { flex: none; height: 18px; background: var(--surface-container); display: grid; place-items: center; }
+  .gesture i { width: 108px; height: 4px; border-radius: 2px; background: var(--on-surface); opacity: .45; display: block; }
+</style>
+</head>
+<body>
+
+<header class="doc">
+  <div>
+    <h1>Fuel & Trip Cost Tracker: Screen Layouts</h1>
+    <p>Material 3 layouts for Jetpack Compose. A deep-blue primary carries the actions, green tertiary marks savings and efficiency, and cool neutrals keep the dashboard calm. Each screen is shown in light and dark mode.</p>
+  </div>
+  <div class="tag">UI design v1 · Oct 2026</div>
+</header>
+
+<section class="block">
+  <h2>1 · Color palette</h2>
+  <div class="palettes" id="palettes"></div>
+</section>
+
+<section class="block">
+  <h2>2–5 · Screens: bottom navigation, calculator, history, ad slot</h2>
+  <div class="screens" id="screens"></div>
+</section>
+
+<section class="block">
+  <h2>Layout specs</h2>
+  <div class="specs">
+    <div class="spec"><h4>Navigation</h4><ul>
+      <li>Material 3 <code>NavigationBar</code> with two destinations</li>
+      <li>Pill indicator on the selected tab, 80dp tall</li>
+      <li>One top app bar whose title follows the selected tab</li>
+    </ul></div>
+    <div class="spec"><h4>Calculator</h4><ul>
+      <li>Metric / Imperial segmented toggle swaps the units</li>
+      <li>Vehicle chips pick the vehicle to save the trip under</li>
+      <li>Outlined fields with tonal icons and unit suffixes; decimal keypad</li>
+      <li>Tap the efficiency unit (⇄) to switch between km/L and L/100km</li>
+      <li>Result card updates as you type; Save stays disabled until all three fields are valid</li>
+    </ul></div>
+    <div class="spec"><h4>History</h4><ul>
+      <li><code>LazyColumn</code>: a stats header item, then trips grouped by month</li>
+      <li>Card shows vehicle, date, distance, efficiency and total cost</li>
+      <li>16dp side gutter, 12dp gap between items</li>
+    </ul></div>
+    <div class="spec"><h4>Ad placeholder</h4><ul>
+      <li>Fixed 50dp banner (320×50) plus 8dp vertical padding = 66dp</li>
+      <li>Sits between the content and the nav bar, in the Scaffold <code>bottomBar</code></li>
+      <li>The slot is always reserved, so content doesn't jump when an ad loads or fails</li>
+    </ul></div>
+  </div>
+</section>
+
+<script>
+const I = {
+  calc: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5.97 4.06L14.09 6l1.41 1.41L16.91 6l1.06 1.06-1.41 1.41 1.41 1.41-1.06 1.06-1.41-1.4-1.41 1.41-1.06-1.06 1.41-1.41-1.41-1.42zm-6.78.66h5v1.5h-5v-1.5zM11.5 16h-2v2H8v-2H6v-1.5h2v-2h1.5v2h2V16zm6.5 1.25h-5v-1.5h5v1.5zm0-2.5h-5v-1.5h5v1.5z",
+  hist: "M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z",
+  fuel: "M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33 0 1.38 1.12 2.5 2.5 2.5.36 0 .69-.08 1-.21v7.21c0 .55-.45 1-1 1s-1-.45-1-1V14c0-1.1-.9-2-2-2h-1V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v16h10v-7.5h1.5v5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V9c0-.69-.28-1.32-.73-1.77zM12 10H6V5h6v5zm6 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z",
+  car: "M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z",
+  pin: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
+  speed: "M20.38 8.57l-1.23 1.85a8 8 0 0 1-.22 7.58H5.07A8 8 0 0 1 15.58 6.85l1.85-1.23A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1 10 10 0 0 0-.27-10.44zm-9.79 6.84a2 2 0 0 0 2.83 0l5.66-8.49-8.49 5.66a2 2 0 0 0 0 2.83z",
+  money: "M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z",
+  save: "M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z",
+  cal: "M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z",
+  check: "M9 16.17L4.83 12l-1.42 1.42L9 19 21 7l-1.41-1.41z",
+  more: "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z",
+  filter: "M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z",
+};
+const ic = (n, cls = "") => `<svg class="ic ${cls}" viewBox="0 0 24 24"><path d="${I[n]}"/></svg>`;
+
+const frameTop = `<div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i style="width:20px"></i></span></div>`;
+const frameBottom = (tab) => `
+  <div class="adslot"><div><b>AD</b> AdMob banner · 320 × 50</div></div>
+  <nav class="navbar">
+    <div class="navitem ${tab === 0 ? "on" : ""}"><div class="ind">${ic("calc")}</div>Calculator</div>
+    <div class="navitem ${tab === 1 ? "on" : ""}"><div class="ind">${ic("hist")}</div>History</div>
+  </nav>
+  <div class="gesture"><i></i></div>`;
+
+const calculator = (theme) => `
+<div class="phone ${theme}">
+  ${frameTop}
+  <div class="topbar">
+    <div><div class="title">Trip Calculator</div><div class="sub">Quick log a trip</div></div>
+    <div class="iconbtn">${ic("more")}</div>
+  </div>
+  <div class="content">
+    <div class="seg"><div class="on">${ic("check", "sm")} Metric</div><div>Imperial</div></div>
+    <div>
+      <div class="label-sm" style="margin:0 0 6px 2px">Vehicle</div>
+      <div class="chips">
+        <div class="chip on">${ic("car", "sm")} Civic</div>
+        <div class="chip">${ic("car", "sm")} Tucson</div>
+        <div class="chip">+ Add</div>
+      </div>
+    </div>
+    <div class="field focus"><span class="lbl">Distance</span><span class="lead">${ic("pin", "sm")}</span><span class="val">245</span><span class="suf">km</span></div>
+    <div class="field"><span class="lbl">Fuel price</span><span class="lead">${ic("fuel", "sm")}</span><span class="val">1.79</span><span class="suf">$ / L</span></div>
+    <div class="field"><span class="lbl">Efficiency</span><span class="lead">${ic("speed", "sm")}</span><span class="val">14.5</span><span class="suf">km/L ⇄</span></div>
+    <div class="result">
+      <div class="k">${ic("money", "sm")} Estimated trip cost</div>
+      <div class="big"><small>$</small>30.24</div>
+      <div class="row">
+        <div class="pill"><div class="t">Fuel needed</div><div class="v">16.9 L</div></div>
+        <div class="pill"><div class="t">Cost per km</div><div class="v">$0.12</div></div>
+      </div>
+    </div>
+    <div class="btn">${ic("save", "sm")} Save Trip</div>
+  </div>
+  ${frameBottom(0)}
+</div>`;
+
+const trips = [
+  ["Civic", "Oct 8", "245 km", "14.5 km/L", "$30.24", "Weekend trip"],
+  ["Tucson", "Oct 5", "62 km", "10.8 km/L", "$10.28", "Commute"],
+  ["Civic", "Oct 2", "118 km", "15.1 km/L", "$13.99", "Errands"],
+];
+const tripsSep = [
+  ["Tucson", "Sep 27", "410 km", "11.2 km/L", "$65.53", "Road trip"],
+];
+const tripCard = ([v, d, km, eff, cost, label]) => `
+  <div class="trip">
+    <div class="av">${ic("car")}</div>
+    <div class="mid">
+      <div class="name">${v} <span style="font-weight:400;font-size:12px;opacity:.7">· ${label}</span></div>
+      <div class="meta"><span>${ic("cal", "sm")}${d}</span><span>${ic("pin", "sm")}${km}</span></div>
+    </div>
+    <div class="cost"><div class="v">${cost}</div><div class="t">${eff}</div></div>
+  </div>`;
+
+const history = (theme) => `
+<div class="phone ${theme}">
+  ${frameTop}
+  <div class="topbar">
+    <div><div class="title">Trip History</div><div class="sub">12 trips saved</div></div>
+    <div class="iconbtn">${ic("filter")}</div>
+  </div>
+  <div class="content">
+    <div class="stats">
+      <div class="stat hl"><div class="t">${ic("money", "sm")} Spent this month</div><div class="v">$54.51</div></div>
+      <div class="stat"><div class="t">${ic("pin", "sm")} Distance</div><div class="v">425 km</div></div>
+      <div class="stat"><div class="t">${ic("speed", "sm")} Avg efficiency</div><div class="v">14.0 km/L</div></div>
+      <div class="stat"><div class="t">${ic("fuel", "sm")} Avg cost / km</div><div class="v">$0.13</div></div>
+    </div>
+    <div class="month">October 2026 <span>$54.51</span></div>
+    ${trips.map(tripCard).join("")}
+    <div class="month">September 2026 <span>$212.40</span></div>
+    ${tripsSep.map(tripCard).join("")}
+  </div>
+  ${frameBottom(1)}
+</div>`;
+
+document.getElementById("screens").innerHTML = [
+  ["Screen A · Calculator", "Light mode", calculator("light")],
+  ["Screen B · History", "Light mode", history("light")],
+  ["Screen A · Calculator", "Dark mode", calculator("dark")],
+  ["Screen B · History", "Dark mode", history("dark")],
+].map(([t, s, h]) => `<div><div class="screen-label">${t}<span>${s}</span></div>${h}</div>`).join("");
+
+const pal = {
+  "Light scheme": [
+    ["Primary", "#1A5FA8", "#FFFFFF"], ["Primary container", "#D4E3FF", "#001C3A"],
+    ["Tertiary (eco)", "#1F7A4D", "#FFFFFF"], ["Tertiary container", "#A8F2C6", "#00210F"],
+    ["Secondary container", "#D8E3F8", "#111C2B"],
+    ["Background", "#F6F8FB", "#191C20"], ["Surface container", "#EAEEF3", "#191C20"],
+    ["On surface", "#191C20", "#FFFFFF"], ["On surface var.", "#43474E", "#FFFFFF"],
+    ["Outline", "#73777F", "#FFFFFF"],
+  ],
+  "Dark scheme": [
+    ["Primary", "#A5C8FF", "#00315E"], ["Primary container", "#004785", "#D4E3FF"],
+    ["Tertiary (eco)", "#8CD6AB", "#003920"], ["Tertiary container", "#005234", "#A8F2C6"],
+    ["Secondary container", "#3C4758", "#D8E3F8"],
+    ["Background", "#0F1418", "#E1E2E8"], ["Surface container", "#1B2026", "#E1E2E8"],
+    ["On surface", "#E1E2E8", "#191C20"], ["On surface var.", "#C3C6CF", "#191C20"],
+    ["Outline", "#8D9199", "#191C20"],
+  ],
+};
+document.getElementById("palettes").innerHTML = Object.entries(pal).map(([name, list]) => `
+  <div><h3>${name}</h3><div class="swatches">
+    ${list.map(([n, bg, fg]) => `<div class="sw" style="background:${bg};color:${fg}"><b>${n}</b>${bg}</div>`).join("")}
+  </div></div>`).join("");
+</script>
+</body>
+</html>
