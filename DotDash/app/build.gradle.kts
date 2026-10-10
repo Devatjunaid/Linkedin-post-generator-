@@ -33,6 +33,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true // BuildConfig.DEBUG turns on the on-screen ad diagnostics
     }
 }
 

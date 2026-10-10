@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +20,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.dotdash.kids.BuildConfig
 import com.dotdash.kids.game.LevelAds
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdListener
@@ -55,6 +58,8 @@ object AdConfig {
  * - App open: ONLY when the app returns from the background, never on first launch,
  *   and not when the app was left because an ad was open or tapped.
  */
+private const val TAG = "DotDashAds"
+
 class AdsManager(
     private val app: Application,
     private val onPause: () -> Unit,
@@ -76,6 +81,8 @@ class AdsManager(
     private var backgrounded = false
     private var exiting = false // the player tapped Exit: the next launch is a fresh start
     private var levelOpens = 0
+    private var waitingLevel: (() -> Unit)? = null // a level waiting briefly for its interstitial
+    private val stopWaiting = Runnable { startWaitingLevel() }
 
     fun start() {
         app.registerActivityLifecycleCallbacks(this)
@@ -89,15 +96,29 @@ class AdsManager(
                 .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_G)
                 .build(),
         )
-        Thread {
-            MobileAds.initialize(app) {
-                main.post {
-                    ready = true
-                    loadInterstitial()
-                    loadAppOpen()
-                }
-            }
-        }.start()
+        Thread { MobileAds.initialize(app) { debugNote("AdMob ready") } }.start()
+        // Without mediation, ads may be requested straight away; the SDK queues
+        // them until it has finished starting.
+        ready = true
+        loadInterstitial()
+        loadAppOpen()
+    }
+
+    /** Logs every ad problem; debug builds also show it on screen so it can be fixed. */
+    internal fun debugNote(msg: String) {
+        Log.w(TAG, msg)
+        if (BuildConfig.DEBUG) main.post { Toast.makeText(app, msg, Toast.LENGTH_LONG).show() }
+    }
+
+    private fun describe(error: AdError): String {
+        val reason = when (error.code) {
+            AdRequest.ERROR_CODE_INTERNAL_ERROR -> "internal error"
+            AdRequest.ERROR_CODE_INVALID_REQUEST -> "invalid request (check the ad unit ID)"
+            AdRequest.ERROR_CODE_NETWORK_ERROR -> "network error (check the internet connection)"
+            AdRequest.ERROR_CODE_NO_FILL -> "no ad available right now"
+            else -> "code ${error.code}"
+        }
+        return "$reason: ${error.message}"
     }
 
     private fun request() = AdRequest.Builder().build()
@@ -110,18 +131,47 @@ class AdsManager(
             override fun onAdLoaded(ad: InterstitialAd) {
                 interstitial = ad
                 interstitialLoading = false
+                waitingLevel?.let {
+                    waitingLevel = null
+                    main.removeCallbacks(stopWaiting)
+                    showInterstitialThen(it)
+                }
             }
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 interstitialLoading = false
+                debugNote("Interstitial failed to load: ${describe(error)}")
+                startWaitingLevel()
                 main.postDelayed({ loadInterstitial() }, 30_000)
             }
         })
     }
 
     override fun onLevelOpen(then: () -> Unit) {
+        if (waitingLevel != null) return // already waiting for an ad (double tap)
         levelOpens++
         if (levelOpens % AdConfig.INTERSTITIAL_EVERY_N_LEVELS.coerceAtLeast(1) != 0) return then()
+        if (interstitial == null) {
+            loadInterstitial()
+            if (interstitialLoading) {
+                // The ad is on its way (usually the very first level): wait up to
+                // 3 seconds for it, then start the level anyway.
+                waitingLevel = then
+                main.postDelayed(stopWaiting, 3_000)
+                return
+            }
+        }
+        showInterstitialThen(then)
+    }
+
+    private fun startWaitingLevel() {
+        val level = waitingLevel ?: return
+        waitingLevel = null
+        main.removeCallbacks(stopWaiting)
+        level()
+    }
+
+    private fun showInterstitialThen(then: () -> Unit) {
         val ad = interstitial
         val activity = currentActivity
         if (ad == null || activity == null) {
@@ -133,7 +183,11 @@ class AdsManager(
         fullscreen = true
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() = done()
-            override fun onAdFailedToShowFullScreenContent(error: AdError) = done()
+            override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                debugNote("Interstitial failed to show: ${describe(error)}")
+                done()
+            }
+
             override fun onAdClicked() {
                 adClicked = true
             }
@@ -162,6 +216,7 @@ class AdsManager(
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 appOpenLoading = false
+                debugNote("App open ad failed to load: ${describe(error)}")
             }
         })
     }
@@ -177,7 +232,11 @@ class AdsManager(
         fullscreen = true
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() = done()
-            override fun onAdFailedToShowFullScreenContent(error: AdError) = done()
+            override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                debugNote("App open ad failed to show: ${describe(error)}")
+                done()
+            }
+
             override fun onAdClicked() {
                 adClicked = true
             }
@@ -246,6 +305,8 @@ fun AdBanner(ads: AdsManager) {
                     setAdSize(size)
                     adListener = object : AdListener() {
                         override fun onAdClicked() = ads.onBannerClicked()
+                        override fun onAdFailedToLoad(error: LoadAdError) =
+                            ads.debugNote("Banner failed to load: ${error.message} (code ${error.code})")
                     }
                     loadAd(AdRequest.Builder().build())
                 }
