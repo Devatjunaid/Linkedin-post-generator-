@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.harrycodess.drawingkids.ads.BannerAd
 import com.harrycodess.drawingkids.art.AnimalArt
 import com.harrycodess.drawingkids.audio.Sfx
@@ -132,7 +133,10 @@ fun StudioScreen(
             ) {
                 IconButton32(onLeading, size = btn) { if (isHome) homeIcon() else backIcon() }
                 Text(
-                    title, style = kidText(if (compact) 19 else 26), maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    title,
+                    style = if (compact) kidText(15).copy(lineHeight = 17.sp) else kidText(26),
+                    maxLines = if (compact) 2 else 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                 )
                 IconButton32({ doc.undo() }, size = btn, enabled = doc.canUndo) { undoIcon(doc.canUndo) }

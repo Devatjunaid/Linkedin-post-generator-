@@ -109,11 +109,11 @@ fun GalleryScreen(onHome: () -> Unit) {
             }
         } else {
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(180.dp),
+                columns = GridCells.Adaptive(140.dp),
                 modifier = Modifier.weight(1f).fillMaxWidth(),
-                contentPadding = PaddingValues(24.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalArrangement = Arrangement.spacedBy(30.dp),
+                contentPadding = PaddingValues(18.dp),
+                horizontalArrangement = Arrangement.spacedBy(18.dp),
+                verticalArrangement = Arrangement.spacedBy(26.dp),
             ) {
                 itemsIndexed(items, key = { _, a -> a.file.path }) { i, artwork ->
                     Polaroid(artwork, i, dateFormat.format(Date(artwork.createdAt))) { opened = artwork }
