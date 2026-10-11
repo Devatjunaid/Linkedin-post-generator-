@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="surface">#1B2420</color>
+    <color name="background">#111714</color>
+    <color name="ink">#E8EEEA</color>
+    <color name="muted">#A3AFA8</color>
+    <color name="outline">#2C3732</color>
+</resources>

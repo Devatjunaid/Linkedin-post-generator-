@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ShelfGuard" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/brand_deep</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- System splash (Android 12+ API, back-ported by core-splashscreen). It hands over
+         instantly to the animated Compose splash, which uses the same background. -->
+    <style name="Theme.ShelfGuard.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/brand_deep</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
+        <item name="postSplashScreenTheme">@style/Theme.ShelfGuard</item>
+    </style>
+</resources>
