@@ -223,7 +223,9 @@ fun ProductEditorScreen(navigator: AppNavigator, productId: Long, initialBarcode
     val f = state.form
     val e = state.errors
 
-    val leave = { if (state.dirty) confirmDiscard = true else navigator.back() }
+    val leave: () -> Unit = {
+        if (state.dirty) confirmDiscard = true else navigator.back()
+    }
     BackHandler(enabled = state.dirty) { confirmDiscard = true }
     if (confirmDiscard) ConfirmDialog(
         title = "Discard changes?",
