@@ -30,114 +30,6 @@ function gearPath(cx, cy, n, R, r) {
   return 'M' + pts.join('L') + 'Z';
 }
 
-let rid = 0;
-// Robot builder. viewBox 0 0 200 260. Options pick parts so the same kit draws every robot in the game.
-function robot(o = {}) {
-  const id = 'rb' + rid++;
-  const c = o.color || '#38B6FF', a = o.accent || '#FFC531', m = o.metal || '#C3CCE0', e = o.eye || '#5CF2FF';
-  const hide = o.hide || [], ghost = o.ghost || [], only = o.only;
-  const show = n => !hide.includes(n) && (!only || only.includes(n));
-  const part = (n, s) => (show(n) ? (ghost.includes(n) ? `<g class="ghost">${s}</g>` : s) : '');
-  const B = `url(#${id}b)`, M = `url(#${id}m)`, A = `url(#${id}a)`;
-  const defs = `<defs>
-    <linearGradient id="${id}b" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="${shade(c, 0.4)}"/><stop offset=".5" stop-color="${c}"/><stop offset="1" stop-color="${shade(c, -0.3)}"/></linearGradient>
-    <linearGradient id="${id}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(m, 0.5)}"/><stop offset="1" stop-color="${shade(m, -0.25)}"/></linearGradient>
-    <linearGradient id="${id}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(a, 0.45)}"/><stop offset="1" stop-color="${shade(a, -0.2)}"/></linearGradient>
-    <radialGradient id="${id}s" cx=".4" cy=".3" r=".9"><stop offset="0" stop-color="#34407A"/><stop offset="1" stop-color="#11152E"/></radialGradient>
-    <radialGradient id="${id}g"><stop offset="0" stop-color="${e}" stop-opacity=".7"/><stop offset="1" stop-color="${e}" stop-opacity="0"/></radialGradient>
-  </defs>`;
-
-  // ---- antenna
-  const ant = {
-    ball: `<path d="M100 40 V16" stroke="${OL}" stroke-width="9"/><path d="M100 40 V16" stroke="${M}" stroke-width="4"/>
-           <circle cx="100" cy="11" r="16" fill="url(#${id}g)" stroke="none"/><circle cx="100" cy="11" r="9" fill="${A}"/>`,
-    double: `<path d="M80 42 L66 14 M120 42 L134 14" stroke="${OL}" stroke-width="9"/><path d="M80 42 L66 14 M120 42 L134 14" stroke="${M}" stroke-width="4"/>
-           <circle cx="66" cy="11" r="8" fill="${A}"/><circle cx="134" cy="11" r="8" fill="${A}"/>`,
-    bolt: `<path d="M104 4 L86 30 H100 L94 46 L116 18 H102 Z" fill="${A}"/>`,
-    prop: `<path d="M100 40 V22" stroke="${OL}" stroke-width="9"/><path d="M100 40 V22" stroke="${M}" stroke-width="4"/>
-           <path d="M100 18 C80 6 62 10 60 18 C62 26 80 28 100 18 C120 8 138 10 140 18 C138 26 120 30 100 18Z" fill="${A}"/><circle cx="100" cy="18" r="5" fill="${M}"/>`,
-    none: ''
-  }[o.antenna || 'ball'];
-
-  // ---- legs
-  const legs = {
-    legs: `<rect x="68" y="204" width="20" height="34" rx="8" fill="${M}"/><rect x="112" y="204" width="20" height="34" rx="8" fill="${M}"/>
-           <path d="M54 252 Q54 232 78 232 Q100 232 98 252Z" fill="${B}"/><path d="M146 252 Q146 232 122 232 Q100 232 102 252Z" fill="${B}"/>`,
-    wheel: `<rect x="88" y="204" width="24" height="20" fill="${M}"/><circle cx="100" cy="228" r="25" fill="#2D2A4A"/>
-           <circle cx="100" cy="228" r="12" fill="${A}"/><path d="M100 206 V216 M100 240 V250 M78 228 H88 M112 228 H122" stroke="#5B5880" stroke-width="4"/>`,
-    treads: `<rect x="86" y="204" width="28" height="14" fill="${M}"/><rect x="46" y="212" width="108" height="40" rx="20" fill="#34305A"/>
-           <circle cx="68" cy="232" r="10" fill="${M}"/><circle cx="100" cy="232" r="10" fill="${M}"/><circle cx="132" cy="232" r="10" fill="${M}"/>`,
-    rocket: `<path d="M64 204 H92 L88 236 H68Z" fill="${M}"/><path d="M108 204 H136 L132 236 H112Z" fill="${M}"/>
-           <path d="M70 238 Q78 268 86 238Z M114 238 Q122 268 130 238Z" fill="#FF8A1F" stroke="none"/>
-           <path d="M74 238 Q78 256 82 238Z M118 238 Q122 256 126 238Z" fill="#FFE45C" stroke="none"/>`
-  }[o.legs || 'legs'];
-
-  // ---- arms (outline stroke then metal stroke gives a chunky tube)
-  const tube = d => `<path d="${d}" stroke="${OL}" stroke-width="17" fill="none"/><path d="${d}" stroke="${M}" stroke-width="9" fill="none"/>`;
-  const hand = (x, y) => (o.arms === 'claw'
-    ? `<path d="M${x - 12} ${y - 2} Q${x - 16} ${y + 16} ${x - 2} ${y + 18} M${x + 12} ${y - 2} Q${x + 16} ${y + 16} ${x + 2} ${y + 18}" stroke="${OL}" stroke-width="10" fill="none"/>
-       <path d="M${x - 12} ${y - 2} Q${x - 16} ${y + 16} ${x - 2} ${y + 18} M${x + 12} ${y - 2} Q${x + 16} ${y + 16} ${x + 2} ${y + 18}" stroke="${A}" stroke-width="4" fill="none"/><circle cx="${x}" cy="${y}" r="9" fill="${M}"/>`
-    : `<circle cx="${x}" cy="${y}" r="13" fill="${B}"/>`);
-  let L = 'M50 150 C26 160 20 182 26 204', LH = [26, 208];
-  let R = 'M150 150 C174 160 180 182 174 204', RH = [174, 208];
-  if (o.wave || o.cheer) { R = 'M150 150 C178 140 186 116 176 92'; RH = [176, 86]; }
-  if (o.cheer) { L = 'M50 150 C22 140 14 116 24 92'; LH = [24, 86]; }
-  const arms = tube(L) + hand(...LH) + tube(R) + hand(...RH) +
-    `<circle cx="50" cy="150" r="10" fill="${A}"/><circle cx="150" cy="150" r="10" fill="${A}"/>`;
-
-  // ---- body
-  const bodyShape = {
-    box: `<rect x="50" y="132" width="100" height="80" rx="24" fill="${B}"/>`,
-    barrel: `<rect x="46" y="130" width="108" height="84" rx="42" fill="${B}"/>`,
-    tri: `<path d="M64 132 H136 Q146 132 148 142 L158 200 Q160 212 148 212 H52 Q40 212 42 200 L52 142 Q54 132 64 132Z" fill="${B}"/>`
-  }[o.body || 'box'];
-  const chest = o.chest === 'bolt'
-    ? `<circle cx="100" cy="172" r="18" fill="#141A33"/><path d="M103 158 L92 174 H100 L96 186 L109 168 H101Z" fill="${e}" stroke="none"/>`
-    : `<circle cx="100" cy="172" r="18" fill="#141A33"/><path d="M100 182 C84 172 88 160 95 162 C98 163 100 166 100 166 C100 166 102 163 105 162 C112 160 116 172 100 182Z" fill="#FF5C8A" stroke="none"/>`;
-  const body = bodyShape + chest +
-    `<circle cx="70" cy="196" r="5" fill="#FF5C5C"/><circle cx="130" cy="196" r="5" fill="#7CF25A"/>
-     <ellipse cx="74" cy="144" rx="14" ry="5" fill="#fff" opacity=".45" stroke="none" transform="rotate(-15 74 144)"/>`;
-
-  // ---- head
-  const headShape = {
-    round: `<rect x="36" y="36" width="128" height="96" rx="46" fill="${B}"/>`,
-    square: `<rect x="38" y="36" width="124" height="94" rx="18" fill="${B}"/>`,
-    dome: `<path d="M38 130 V92 A62 58 0 0 1 162 92 V130 Q162 134 156 134 H44 Q38 134 38 130Z" fill="${B}"/>`
-  }[o.head || 'round'];
-  const ears = `<rect x="22" y="72" width="18" height="30" rx="8" fill="${A}"/><rect x="160" y="72" width="18" height="30" rx="8" fill="${A}"/>`;
-  const head = ears + headShape +
-    `<ellipse cx="66" cy="50" rx="16" ry="6" fill="#fff" opacity=".55" stroke="none" transform="rotate(-18 66 50)"/>`;
-
-  // ---- face (screen + eyes + mouth)
-  const eye = (x, r = 13) => `<circle cx="${x}" cy="84" r="${r + 9}" fill="url(#${id}g)" stroke="none"/><circle cx="${x}" cy="84" r="${r}" fill="${e}" stroke="none"/>
-      <circle cx="${x - r * 0.35}" cy="${84 - r * 0.35}" r="${r * 0.38}" fill="#fff" stroke="none"/>`;
-  const happy = x => `<path d="M${x - 12} 88 Q${x} 72 ${x + 12} 88" stroke="${e}" stroke-width="6" fill="none"/>`;
-  const eyes = {
-    big: eye(78) + eye(122),
-    happy: happy(78) + happy(122),
-    wink: happy(78) + eye(122),
-    visor: `<rect x="62" y="72" width="76" height="24" rx="12" fill="${e}" stroke="none"/><rect x="70" y="76" width="26" height="6" rx="3" fill="#fff" opacity=".8" stroke="none"/>`,
-    cyclops: eye(100, 19),
-    hearts: [78, 122].map(x => `<path d="M${x} 94 C${x - 16} 84 ${x - 12} 72 ${x - 5} 74 C${x - 2} 75 ${x} 78 ${x} 78 C${x} 78 ${x + 2} 75 ${x + 5} 74 C${x + 12} 72 ${x + 16} 84 ${x} 94Z" fill="#FF6FB5" stroke="none"/>`).join('')
-  }[o.eyes || 'big'];
-  const mouth = {
-    smile: `<path d="M86 102 Q100 114 114 102" stroke="${e}" stroke-width="5" fill="none"/>`,
-    open: `<path d="M84 100 H116 Q114 116 100 116 Q86 116 84 100Z" fill="${e}" stroke="none"/><path d="M90 109 Q100 104 110 109 Q106 115 100 115 Q94 115 90 109Z" fill="#FF6F91" stroke="none"/>`,
-    o: `<ellipse cx="100" cy="106" rx="7" ry="8" fill="${e}" stroke="none"/>`,
-    grin: `<rect x="82" y="100" width="36" height="12" rx="6" fill="${e}" stroke="none"/><path d="M94 100 V112 M106 100 V112" stroke="#141A33" stroke-width="3"/>`
-  }[o.mouth || 'smile'];
-  const face = `<rect x="54" y="54" width="92" height="64" rx="22" fill="url(#${id}s)"/>` + eyes + mouth +
-    `<circle cx="64" cy="108" r="6" fill="#FF7EB6" opacity=".7" stroke="none"/><circle cx="136" cy="108" r="6" fill="#FF7EB6" opacity=".7" stroke="none"/>`;
-
-  const neck = `<rect x="86" y="124" width="28" height="14" rx="4" fill="${M}"/>`;
-  const vb = o.viewBox || '0 -6 200 268';
-  const shadow = o.shadow === false ? '' : `<ellipse cx="100" cy="254" rx="62" ry="9" fill="#000" opacity=".22"/>`;
-  return `<svg viewBox="${vb}" class="${o.cls || ''}" style="${o.style || ''}" xmlns="http://www.w3.org/2000/svg">${defs}${shadow}
-    <g stroke="${OL}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
-      ${part('antenna', ant)}${part('legs', legs)}${part('arms', arms)}${part('body', body)}${part('body', neck)}${part('head', head)}${show('face') && !ghost.includes('head') ? part('head', face) : ''}
-    </g></svg>`;
-}
-
 // ---- icons, all 24x24
 const sv = (s, inner, vb = '0 0 24 24') => `<svg width="${s}" height="${s}" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
 const I = {
@@ -217,9 +109,13 @@ body{width:540px;height:960px;overflow:hidden;font-family:Fredoka,sans-serif;fon
 .pill .plus{position:absolute;right:-6px;top:5px;width:28px;height:28px;border-radius:10px;border:3px solid ${OL};background:linear-gradient(#8DF56A,#2EC24A);
   display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;padding-bottom:3px}
 .badge{position:absolute;min-width:30px;height:30px;border-radius:15px;background:#FF3B5C;border:3px solid ${OL};font-size:17px;display:flex;align-items:center;justify-content:center;padding:0 6px}
-.ghost *{fill:rgba(255,255,255,.14)!important;stroke:rgba(255,255,255,.95)!important;stroke-dasharray:8 7}
+.ghost *{fill:rgba(255,255,255,.14)!important;stroke:rgba(255,255,255,.95)!important;stroke-dasharray:8 7;stroke-width:2.5px}
+.sil *{fill:var(--sil)!important;stroke:var(--sil)!important}
+.ghost .ln,.sil .ln{fill:none!important}
+.ghost .ln{stroke-width:12px}
 .glow{filter:drop-shadow(0 0 10px rgba(255,255,255,.9)) drop-shadow(0 0 22px rgba(120,240,255,.8))}
 .panel{position:absolute;background:#FFF6E3;border:5px solid ${OL};border-radius:38px;box-shadow:inset 0 -10px 0 #F1DDB6,0 10px 0 ${OL},0 24px 40px rgba(0,0,0,.35);color:${OL}}
 `;
 
-module.exports = { OL, shade, starPath, gearPath, robot, I, sparkle, confetti, rnd, css };
+const { robot, CAST } = require('./robot');
+module.exports = { OL, shade, starPath, gearPath, robot, CAST, I, sparkle, confetti, rnd, css };

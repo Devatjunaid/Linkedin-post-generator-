@@ -1,34 +1,30 @@
 // Art-kit sheet and the overview board that stitches the screens together.
 const path = require('path');
-const { OL, robot, I } = require('./lib');
+const { OL, robot, CAST, I } = require('./lib');
 
 const section = (x, y, w, h, title, inner, col = '#FF5C8A') => `<div class="panel" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:32px">
   <div class="abs lil ol-s" style="left:24px;top:-24px;padding:6px 20px;border-radius:16px;background:${col};border:4px solid ${OL};font-size:26px;color:#fff;box-shadow:0 5px 0 ${OL}">${title}</div>${inner}</div>`;
 const label = (x, y, w, t) => `<div class="abs" style="left:${x}px;top:${y}px;width:${w}px;text-align:center;font-size:17px;color:#6B6894">${t}</div>`;
 
 function artKit() {
-  const friends = [
-    { color: '#FF7A45', wave: true, mouth: 'open' }, { color: '#38B6FF', head: 'square', eyes: 'visor', antenna: 'double', legs: 'treads', arms: 'claw' },
-    { color: '#57D96A', eyes: 'cyclops', antenna: 'prop', legs: 'wheel', body: 'barrel' }, { color: '#FF6FB5', head: 'dome', eyes: 'hearts', body: 'tri', mouth: 'o' },
-    { color: '#B46BFF', antenna: 'bolt', eyes: 'wink', mouth: 'grin', legs: 'rocket', cheer: true }, { color: '#FFD43B', accent: '#FF5C8A', head: 'square', eyes: 'happy', mouth: 'open', legs: 'treads' }
-  ];
-  const names = ['Sparky', 'Visor', 'Propo', 'Lulu', 'Zappy', 'Chompy'];
-  const heads = [{ color: '#FF7A45' }, { color: '#38B6FF', head: 'square', eyes: 'visor' }, { color: '#FF6FB5', head: 'dome', eyes: 'hearts' },
-    { color: '#57D96A', eyes: 'cyclops', antenna: 'prop' }, { color: '#B46BFF', head: 'square', eyes: 'wink', mouth: 'grin', antenna: 'bolt' }, { color: '#22D3C5', head: 'dome', eyes: 'happy', mouth: 'open', antenna: 'double' }];
-  const bodies = [{ body: 'box', color: '#FF7A45' }, { body: 'barrel', color: '#57D96A', arms: 'claw' }, { body: 'tri', color: '#FF6FB5', chest: 'bolt' }];
-  const legs = ['legs', 'wheel', 'treads', 'rocket'];
-  const ants = ['ball', 'double', 'bolt', 'prop'];
+  const friends = [{ ...CAST.sparky, pose: 'wave' }, CAST.nimbus, CAST.telly, CAST.rex, CAST.canny, { ...CAST.zippy, pose: 'cheer' }];
+  const names = ['Sparky', 'Nimbus', 'Telly', 'Rex', 'Canny', 'Zippy'];
+  const heads = [{ head: 'binocular', color: '#E8692A' }, { head: 'dome', color: '#E9EDF2', mood: 'wow' }, { head: 'crt', color: '#2BA3A0' },
+    { head: 'cyclops', color: '#D9433B', eye: '#FF9A3C', mood: 'focus' }, { head: 'bucket', color: '#3567B5', mood: 'wink' }, { head: 'binocular', color: '#7C4DDB', mood: 'wow' }];
+  const bodies = [{ body: 'box', color: '#F2B705' }, { body: 'barrel', color: '#2BA3A0' }, { body: 'sphere', color: '#E9EDF2', arms: 'bellows' }];
+  const legs = ['legs', 'wheels', 'treads', 'spider', 'hover'];
+  const ants = ['ball', 'double', 'dish', 'beacon', 'prop'];
   const sounds = [['Boing-clack!', 'a part snaps on'], ['Bleep-bloop', 'robot wakes up & talks'], ['Ding-ding-ding', 'nuts pour into the pile'],
     ['Ta-daaa!', 'drum roll + fanfare for stars'], ['Whoosh', 'rocket boots & screen swipes'], ['Chiptune loop', 'bouncy music, 3 world themes']];
-  const palette = ['#FF7A45', '#FFD43B', '#57D96A', '#38B6FF', '#B46BFF', '#FF6FB5', '#22D3C5', OL];
+  const palette = ['#E8692A', '#F2B705', '#2BA3A0', '#3567B5', '#D9433B', '#7C4DDB', '#E9EDF2', '#B9C0CC'];
   return `<div class="screen" style="width:1080px;height:1500px;background:#2A2470;background-image:linear-gradient(rgba(255,255,255,.05) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.05) 2px,transparent 2px);background-size:40px 40px">
   <div class="abs lil ol" style="left:40px;top:28px;font-size:54px;color:#FFD43B">BOLT BUDDIES <span style="color:#5CE1FF">ART KIT</span></div>
-  <div class="abs" style="left:640px;top:44px;font-size:20px;opacity:.85;width:400px;text-align:right">Every robot is built from the same mix-and-match parts, so kids can create hundreds of combos.</div>
+  <div class="abs" style="left:640px;top:44px;font-size:20px;opacity:.85;width:400px;text-align:right">Painted metal, rivets, lens eyes and real treads. Every robot is built from mix-and-match parts, so kids can make hundreds of combos.</div>
   ${section(40, 150, 1000, 300, 'ROBOT FRIENDS', friends.map((f, i) => robot({ ...f, style: `position:absolute;left:${24 + i * 162}px;top:30px;width:150px` }) + label(24 + i * 162, 236, 150, `<b style="color:${OL};font-size:21px">${names[i]}</b>`)).join(''))}
-  ${section(40, 500, 560, 460, 'HEADS', heads.map((h, i) => `<div class="abs" style="left:${26 + (i % 3) * 176}px;top:${36 + Math.floor(i / 3) * 206}px;width:160px;height:190px;border-radius:24px;background:#fff;border:4px solid #EADBB8;display:flex;align-items:center;justify-content:center">${robot({ ...h, only: ['antenna', 'head', 'face'], viewBox: '10 -14 180 156', style: 'width:140px' })}</div>`).join(''), '#38B6FF')}
-  ${section(640, 500, 400, 140, 'BODIES + ARMS', bodies.map((b, i) => robot({ ...b, only: ['body', 'arms'], shadow: false, viewBox: '0 122 200 104', style: `position:absolute;left:${20 + i * 124}px;top:30px;width:118px` })).join(''), '#57D96A')}
-  ${section(640, 680, 400, 120, 'LEGS & WHEELS', legs.map((l, i) => robot({ legs: l, color: '#B46BFF', only: ['legs'], shadow: false, viewBox: '40 198 120 72', style: `position:absolute;left:${18 + i * 94}px;top:34px;width:84px` })).join(''), '#FF8A1F')}
-  ${section(640, 840, 400, 120, 'TOPPERS', ants.map((a, i) => robot({ antenna: a, accent: ['#FFD43B', '#FF5C8A', '#5CE1FF', '#7CF25A'][i], only: ['antenna'], viewBox: '50 -10 100 56', style: `position:absolute;left:${18 + i * 94}px;top:30px;width:84px` })).join(''), '#B46BFF')}
+  ${section(40, 500, 560, 460, 'HEADS', heads.map((h, i) => `<div class="abs" style="left:${26 + (i % 3) * 176}px;top:${36 + Math.floor(i / 3) * 206}px;width:160px;height:190px;border-radius:24px;background:#fff;border:4px solid #EADBB8;display:flex;align-items:center;justify-content:center">${robot({ ...h, antenna: ['ball', 'dish', 'double', 'beacon', 'prop', 'none'][i], only: ['antenna', 'head'], viewBox: '10 -14 180 156', style: 'width:140px' })}</div>`).join(''), '#38B6FF')}
+  ${section(640, 500, 400, 140, 'BODIES + ARMS', bodies.map((b, i) => robot({ ...b, only: ['body', 'arms'], shadow: false, viewBox: '0 118 200 112', style: `position:absolute;left:${20 + i * 124}px;top:26px;width:118px` })).join(''), '#57D96A')}
+  ${section(640, 680, 400, 120, 'LEGS & WHEELS', legs.map((l, i) => robot({ legs: l, color: '#3567B5', only: ['legs'], shadow: false, viewBox: '16 194 168 66', style: `position:absolute;left:${12 + i * 76}px;top:36px;width:72px` })).join(''), '#FF8A1F')}
+  ${section(640, 840, 400, 120, 'TOPPERS', ants.map((a, i) => robot({ antenna: a, head: 'dome', accent: '#F2B705', only: ['antenna'], viewBox: '50 -10 100 56', style: `position:absolute;left:${12 + i * 76}px;top:32px;width:72px` })).join(''), '#B46BFF')}
   ${section(40, 1010, 1000, 220, 'UI KIT', `
     <div class="btn green lil" style="left:30px;top:44px;width:220px;height:80px;font-size:40px"><span class="ol">PLAY!</span>${I.play(34)}</div>
     <div class="btn yellow lil" style="left:30px;top:142px;width:220px;height:56px;font-size:26px"><span class="ol-s">Rate Us!</span></div>
