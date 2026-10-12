@@ -109,8 +109,11 @@ private fun MainScaffold(vm: MainViewModel, openRequest: String?, onOpenHandled:
 
     val startTrip: () -> Unit = {
         perms.startManual {
-            if (vm.startManualTrip()) showLive = true
-            else Toast.makeText(ctx, "Couldn't start GPS. Check location permission.", Toast.LENGTH_SHORT).show()
+            if (vm.startManualTrip()) {
+                showLive = true
+            } else {
+                Toast.makeText(ctx, "Couldn't start GPS. Check location permission.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

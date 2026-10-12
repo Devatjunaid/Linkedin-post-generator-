@@ -125,7 +125,12 @@ private fun bind(view: NativeAdView, ad: NativeAd, dark: Boolean) {
     val iconDrawable = ad.icon?.drawable
     icon.setImageDrawable(iconDrawable)
     icon.visibility = if (iconDrawable == null) View.GONE else View.VISIBLE
-    media.mediaContent = ad.mediaContent
-    media.visibility = if (ad.mediaContent == null) View.GONE else View.VISIBLE
+    val content = ad.mediaContent
+    if (content != null) {
+        media.mediaContent = content
+        media.visibility = View.VISIBLE
+    } else {
+        media.visibility = View.GONE
+    }
     view.setNativeAd(ad)
 }
