@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- soft halo behind the gauge -->
+    <path
+        android:pathData="M36.32,69.68A25,25 0,1 1,71.68 69.68"
+        android:strokeColor="#1F4FD18B"
+        android:strokeWidth="13"
+        android:strokeLineCap="round" />
+    <!-- gauge arc: mint to amber -->
+    <path
+        android:pathData="M36.32,69.68A25,25 0,1 1,71.68 69.68"
+        android:strokeWidth="7"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:type="linear"
+                android:startX="29" android:startY="70"
+                android:endX="79" android:endY="70">
+                <item android:offset="0" android:color="#FF4FD18B" />
+                <item android:offset="0.5" android:color="#FF9BD36A" />
+                <item android:offset="1" android:color="#FFF2B33D" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- tick marks -->
+    <path
+        android:pathData="M38,52L34.5,52M42.69,40.69L40.21,38.21M54,36L54,32.5M65.31,40.69L67.79,38.21M70,52L73.5,52"
+        android:strokeColor="#BFFFFFFF"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round" />
+    <!-- road vanishing into the gauge -->
+    <path android:pathData="M52.2,60L55.8,60L76,108L32,108Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="54" android:startY="60"
+                android:endX="54" android:endY="100">
+                <item android:offset="0" android:color="#990A1712" />
+                <item android:offset="1" android:color="#FF050D09" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:pathData="M52.2,60L32,108M55.8,60L76,108"
+        android:strokeColor="#99FFFFFF"
+        android:strokeWidth="1.3" />
+    <path
+        android:fillColor="#FFF2B33D"
+        android:pathData="M53.45,63h1.1v2.4h-1.1zM53.2,68h1.6v3.6h-1.6zM52.85,75h2.3v5.4h-2.3zM52.4,84.5h3.2v7.5h-3.2z" />
+    <!-- needle and hub -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M55.53,53.29L52.47,50.71L65.57,38.21Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,52m-4.2,0a4.2,4.2 0,1 1,8.4 0a4.2,4.2 0,1 1,-8.4 0" />
+    <path
+        android:fillColor="#FF0E2A20"
+        android:pathData="M54,52m-1.8,0a1.8,1.8 0,1 1,3.6 0a1.8,1.8 0,1 1,-3.6 0" />
+</vector>

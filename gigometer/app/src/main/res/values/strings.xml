@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- app_name is defined per build type in app/build.gradle.kts -->
+    <string name="privacy_policy_url">https://devatjunaid.github.io/gigometer/privacy</string>
+
+    <string name="channel_tracking">Trip recording</string>
+    <string name="channel_tracking_desc">Shown while a trip is being recorded</string>
+    <string name="channel_trips">Trips &amp; reminders</string>
+    <string name="channel_trips_desc">Saved trips and daily review reminders</string>
+
+    <string name="notif_recording">Recording trip</string>
+    <string name="notif_recording_auto">Drive detected — recording</string>
+    <string name="notif_paused">Trip paused</string>
+    <string name="notif_distance">%1$s mi so far</string>
+    <string name="notif_saved_title">Trip saved</string>
+    <string name="notif_saved_business">%1$s mi · %2$s deduction</string>
+    <string name="notif_saved_personal">%1$s mi · personal</string>
+    <string name="notif_saved_review">%1$s mi · tap to mark Business or Personal</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="end_trip">End trip</string>
+
+    <string name="reminder_title">Trips to review</string>
+    <plurals name="reminder_text">
+        <item quantity="one">%d trip is waiting — mark it Business or Personal.</item>
+        <item quantity="other">%d trips are waiting — mark them Business or Personal.</item>
+    </plurals>
+
+    <string name="ad_label">Ad</string>
+
+    <string name="backup_done">Backup saved</string>
+    <string name="backup_failed">Couldn\'t save the backup</string>
+    <string name="restore_failed">That file isn\'t a Gigometer backup</string>
+    <plurals name="restore_done">
+        <item quantity="one">Restored %d trip</item>
+        <item quantity="other">Restored %d trips</item>
+    </plurals>
+
+    <string name="disclosure_title">Location use</string>
+    <string name="disclosure_location">Gigometer collects location data to measure the miles you drive and record each trip\'s route, including when the app is closed or not in use, so drives are logged automatically. Your trips are stored only on this phone and are never uploaded or sold.</string>
+    <string name="disclosure_bg_title">Record drives automatically</string>
+    <string name="disclosure_bg">To start recording on its own when you drive — even when Gigometer is closed — Android needs location set to \"Allow all the time\". On the next screen choose \"Allow all the time\". You can still record trips manually without it.</string>
+    <string name="denied_title">Location is off</string>
+    <string name="denied_text">Gigometer can\'t measure miles without location access. Turn it on in Settings › Permissions › Location.</string>
+    <string name="continue_">Continue</string>
+    <string name="not_now">Not now</string>
+    <string name="open_settings">Continue</string>
+    <string name="go_to_settings">Open settings</string>
+    <string name="name_hint">Optional. Shown on the PDF mileage log you give your tax preparer.</string>
+</resources>
