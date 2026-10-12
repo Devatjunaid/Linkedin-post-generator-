@@ -39,20 +39,27 @@ function artKit() {
   </div>`;
 }
 
+const FLIGHT = require('./flight');
+const LOOP = [['03-robot-workshop', 'Build'], ['09-launch-pad', 'Launch'], ['10-space-flight', 'Fly: Space'],
+  ['11-sky-flight', 'Fly: Sky'], ['12-crash-repair', 'Bump? Repair!'], ['04-reward-stars', 'Stars & Rewards']];
 const SHOTS = [['01-home', 'Home'], ['02-adventure-map', 'Adventure Map'], ['03-robot-workshop', 'Build Workshop'],
   ['04-reward-stars', 'Stars & Rewards'], ['05-robot-garage', 'Robot Garage'], ['06-settings', 'Settings']];
 
-function overview() {
+function overview(shots = SHOTS, sub = 'Robot-building adventure for kids · screen concepts', arrows = false) {
   const dir = path.join(__dirname, '..');
   return `<div class="screen" style="width:1040px;height:1400px;background:radial-gradient(circle at 50% 0,#8B6CFF,#3A1E9E 60%,#1E1166)">
   <div class="abs lil ol" style="left:0;top:34px;width:100%;text-align:center;font-size:58px;color:#FFD43B">BOLT BUDDIES</div>
-  <div class="abs ol-s" style="left:0;top:110px;width:100%;text-align:center;font-size:22px">Robot-building adventure for kids · screen concepts</div>
-  ${SHOTS.map(([f, t], i) => {
+  <div class="abs ol-s" style="left:0;top:110px;width:100%;text-align:center;font-size:22px">${sub}</div>
+  ${shots.map(([f, t], i) => {
     const x = 40 + (i % 3) * 330, y = 170 + Math.floor(i / 3) * 610;
     return `<img class="abs" src="file://${dir}/${f}.png" style="left:${x}px;top:${y}px;width:300px;height:533px;border-radius:28px;border:5px solid ${OL};box-shadow:0 10px 0 ${OL},0 20px 40px rgba(0,0,0,.4)">
-      <div class="abs lil ol-s" style="left:${x}px;top:${y + 552}px;width:300px;text-align:center;font-size:26px">${i + 1}. ${t}</div>`;
+      <div class="abs lil ol-s" style="left:${x}px;top:${y + 552}px;width:300px;text-align:center;font-size:26px">${i + 1}. ${t}</div>` +
+      (arrows && i % 3 < 2 ? `<div class="abs lil ol" style="left:${x + 298}px;top:${y + 240}px;font-size:40px;color:#FFD43B">▶</div>` : '');
   }).join('')}
   </div>`;
 }
 
-module.exports = { jobs: [['07-art-kit', artKit, [1080, 1500], 1.5], ['00-overview', overview, [1040, 1400], 1.5]] };
+module.exports = { jobs: [['07-art-kit', artKit, [1080, 1500], 1.5],
+  ['09-launch-pad', FLIGHT.launch], ['10-space-flight', FLIGHT.spaceFlight], ['11-sky-flight', FLIGHT.skyFlight], ['12-crash-repair', FLIGHT.repair],
+  ['00-overview', () => overview(), [1040, 1400], 1.5],
+  ['00b-game-loop', () => overview(LOOP, 'Build it → launch it → fly it! Bumps knock parts off, so kids fix and fly again', true), [1040, 1400], 1.5]] };

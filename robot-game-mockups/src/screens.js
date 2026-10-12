@@ -150,7 +150,7 @@ function workshop() {
   <!-- parts tray -->
   <div class="abs" style="left:0;top:700px;width:540px;height:260px;background:linear-gradient(#3B3680,#24205A);border-top:6px solid ${OL};border-radius:36px 36px 0 0"></div>
   ${tab(18, 'Heads', true)}${tab(146, 'Arms')}${tab(274, 'Legs')}${tab(402, 'Fun ✦')}
-  ${headCard(20, {}, 'empty')}${headCard(148, { ...CAST.telly, color: '#3567B5' })}${headCard(276, { ...CAST.nimbus, mood: 'wow' }, 'new')}${headCard(404, { ...CAST.rex, color: '#7C4DDB' }, 'locked')}
+  ${headCard(20, {}, 'empty')}${headCard(148, { head: 'pot', color: '#E8692A', antenna: 'none' })}${headCard(276, { ...CAST.canny, antenna: 'none' }, 'new')}${headCard(404, { ...CAST.telly, color: '#7C4DDB' }, 'locked')}
   <div class="abs" style="left:0;top:908px;width:540px;height:52px;background:repeating-linear-gradient(-45deg,#FFD43B 0 22px,${OL} 22px 44px);border-top:5px solid ${OL}"></div>
   </div>`;
 }
@@ -238,4 +238,4 @@ function settings() {
   </div>`;
 }
 
-module.exports = { home, mapScreen, workshop, reward, garage, settings };
+module.exports = { home, mapScreen, workshop, reward, garage, settings, pill, rbtn, ribbon, bigStar };

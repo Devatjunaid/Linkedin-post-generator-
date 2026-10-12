@@ -183,6 +183,18 @@ function robot(o = {}) {
         ${[56, 78, 100, 122, 144].map(x => rivet(x, 59.5, 1.8) + rivet(x, 123.5, 1.8)).join('')}
         ${lens(78, 86, 13, lidOf(0))}${lens(122, 85, 15, lidOf(1))}${ledMouth(100, 102, 7)}${scratch(60, 70, 10, 0.9)}${chip(140, 108)}`;
       return { base, full, ant: [100, 36] };
+    },
+    pot: () => {
+      const handles = tube('M44 74 H32 Q26 74 26 80 V88 Q26 94 32 94 H44', 5, '#3A3F4C') + tube('M156 74 H168 Q174 74 174 80 V88 Q174 94 168 94 H156', 5, '#3A3F4C');
+      const base = `<path class="ln" d="M44 74 H28 V94 H44 M156 74 H172 V94 H156" stroke-width="7"/><rect x="44" y="58" width="112" height="74" rx="12" fill="${SC}"/><ellipse cx="100" cy="58" rx="60" ry="9" fill="${S}"/><rect x="92" y="42" width="16" height="12" rx="5" fill="#2A2E38"/>`;
+      const full = `${handles}<rect x="44" y="58" width="112" height="74" rx="12" fill="${SC}"/>
+        <rect x="56" y="66" width="6" height="58" rx="3" fill="#fff" opacity=".5" stroke="none"/><rect x="66" y="66" width="2.5" height="58" rx="1.2" fill="#fff" opacity=".4" stroke="none"/>
+        <path d="M140 116 q6 -4 8 2" stroke="#000" stroke-opacity=".3" stroke-width="1.4" fill="none"/>
+        <ellipse cx="100" cy="58" rx="60" ry="9" fill="${S}"/><ellipse cx="100" cy="57" rx="48" ry="5" fill="#fff" opacity=".35" stroke="none"/>
+        <rect x="92" y="42" width="16" height="12" rx="5" fill="#2A2E38"/><rect x="90" y="50" width="20" height="5" rx="2" fill="${SC}" stroke-width="1.4"/>
+        <path d="${'M'}138 70 l3 6 6 1 -4.5 4 1.2 6.5 -5.7 -3 -5.7 3 1.2 -6.5 -4.5 -4 6 -1Z" fill="${A}" stroke-width="1.4"/>
+        ${lens(78, 92, 13, lidOf(0))}${lens(122, 91, 14, lidOf(1))}${ledMouth(100, 110, 7)}`;
+      return { base, full, ant: [130, 54] };
     }
   };
 
@@ -261,7 +273,13 @@ function robot(o = {}) {
       `<circle cx="${s[0]}" cy="${s[1]}" r="10.5" fill="${RV}" stroke="${K}" stroke-width="2"/><circle cx="${s[0]}" cy="${s[1]}" r="5" fill="${A}" stroke="${K}" stroke-width="1.4"/>`;
   };
   const armBase = side => { const [s, el, h] = armPts(side); return `<path class="ln" d="M${s} L${el} L${h}" fill="none" stroke-width="12"/><circle cx="${h[0]}" cy="${h[1]}" r="8"/><circle cx="${s[0]}" cy="${s[1]}" r="10"/>`; };
-  const ARMS = { base: armBase(-1) + armBase(1), full: arm(-1) + arm(1) };
+  const sparks = (x, y) => `<circle cx="${x}" cy="${y}" r="9" fill="#2A2E38" stroke="${K}" stroke-width="2"/>` +
+    [0, 1, 2, 3, 4, 5].map(i => { const t = -0.4 - i * 0.55; return `<path d="M${f1(x + 10 * Math.cos(t))} ${f1(y + 10 * Math.sin(t))} l${f1(10 * Math.cos(t))} ${f1(10 * Math.sin(t))}" stroke="#FFD43B" stroke-width="2.4"/>`; }).join('') +
+    `<circle cx="${x}" cy="${y}" r="4" fill="#FFF3B0" stroke="none"/>`;
+  const ARMS = { base: armBase(-1) + armBase(1), full: arm(-1) + (o.missing === 'armR' ? sparks(SR[0] + 4, SR[1]) : arm(1)) };
+  const flame = (x, y, len) => `<path d="M${x - 8} ${y} Q${x - 12} ${y + len * 0.5} ${x} ${y + len} Q${x + 12} ${y + len * 0.5} ${x + 8} ${y}Z" fill="${U('fl')}" stroke="none"/><path d="M${x - 4} ${y} Q${x - 5} ${y + len * 0.3} ${x} ${y + len * 0.5} Q${x + 5} ${y + len * 0.3} ${x + 4} ${y}Z" fill="#FFFBEA" stroke="none"/>`;
+  const tank = x => `<rect x="${x - 12}" y="116" width="24" height="66" rx="12" fill="${SC}"/><rect x="${x - 12}" y="134" width="24" height="8" fill="${A}" stroke-width="1.6"/>${rivet(x, 124, 1.8)}<path d="M${x - 8} 182 H${x + 8} L${x + 5} 194 H${x - 5}Z" fill="#5E6576"/>` + (o.flame ? flame(x, 194, o.flame === 'big' ? 64 : 36) : '');
+  const JET = o.jetpack ? tank(40) + tank(160) : '';
 
   // ---------- LOCOMOTION
   const legsLib = {
@@ -310,6 +328,14 @@ function robot(o = {}) {
         <ellipse cx="100" cy="227" rx="34" ry="6.5" fill="#2A2E38" stroke="${K}" stroke-width="2"/><ellipse cx="100" cy="227.5" rx="26" ry="4" fill="${e}" stroke="none"/><ellipse cx="100" cy="227.5" rx="14" ry="2" fill="#fff" stroke="none"/>
         ${rivet(62, 211, 1.8)}${rivet(138, 211, 1.8)}`
     }),
+    springs: () => {
+      const leg = x => {
+        let d = `M${x} 210`; for (let i = 0; i < 7; i++) d += ` L${x + (i % 2 ? -9 : 9)} ${214 + i * 4}`; d += ` L${x} 242`;
+        return `<rect x="${x - 8}" y="203" width="16" height="9" rx="3" fill="${SC}"/>${tube(d, 3, '#C9CED8')}
+          <path d="M${x - 16} 252 Q${x - 16} 240 ${x - 4} 240 H${x + 8} Q${x + 18} 240 ${x + 18} 248 V252Z" fill="${P}"/><rect x="${x - 17}" y="249" width="36" height="5" rx="2" fill="#1F222B"/>`;
+      };
+      return { base: `<rect x="68" y="204" width="16" height="40" rx="3"/><rect x="116" y="204" width="16" height="40" rx="3"/><path d="M60 252 V240 H94 V252Z"/><path d="M108 252 V240 H142 V252Z"/>`, full: leg(76) + leg(124) };
+    },
     rocket: () => {
       const jet = x => `<path d="M${x - 9} 234 Q${x - 13} 254 ${x} 270 Q${x + 13} 254 ${x + 9} 234Z" fill="${U('fl')}" stroke="none"/><path d="M${x - 4} 234 Q${x - 5} 246 ${x} 254 Q${x + 5} 246 ${x + 4} 234Z" fill="#FFFBEA" stroke="none"/>
         <path d="M${x - 12} 204 H${x + 12} L${x + 9} 232 H${x - 9}Z" fill="${SC}"/><path d="M${x - 12} 204 H${x + 12} L${x + 9} 232 H${x - 9}Z" fill="${U('heat')}" stroke="none"/><rect x="${x - 10.5}" y="228" width="21" height="6" rx="2" fill="#5E6576"/>`;
@@ -347,7 +373,7 @@ function robot(o = {}) {
   const vb = o.viewBox || '0 -6 200 268';
   const shadow = o.shadow === false ? '' : `<ellipse cx="100" cy="254" rx="66" ry="8" fill="#000" opacity=".22"/>`;
   return `<svg viewBox="${vb}" class="${o.cls || ''}" style="${o.sil ? `--sil:${o.sil};` : ''}${o.style || ''}" xmlns="http://www.w3.org/2000/svg">${defs}${shadow}
-    <g stroke="${K}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">${render('antenna')}${render('legs')}${render('body')}${render('arms')}${render('head')}</g></svg>`;
+    <g stroke="${K}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">${render('antenna')}${render('legs')}${show('body') && !o.sil ? JET : ''}${render('body')}${render('arms')}${render('head')}</g></svg>`;
 }
 
 // The robot cast used across the mockups (real paint colours: safety yellow, rust orange, teal, enamel white...)
@@ -358,6 +384,7 @@ const CAST = {
   rex: { head: 'cyclops', body: 'barrel', legs: 'spider', color: '#D9433B', accent: '#F2B705', antenna: 'beacon', eye: '#FF9A3C', mood: 'focus' },
   canny: { head: 'bucket', body: 'barrel', legs: 'wheels', color: '#3567B5', accent: '#E8692A', antenna: 'prop', mood: 'wink' },
   zippy: { head: 'binocular', body: 'sphere', legs: 'rocket', color: '#7C4DDB', accent: '#4FE3FF', arms: 'bellows' },
+  junky: { head: 'pot', body: 'barrel', legs: 'springs', color: '#2BA3A0', accent: '#F2B705', antenna: 'ball', jetpack: true },
   bolt: { head: 'binocular', body: 'barrel', legs: 'wheels', color: '#2BA3A0', accent: '#F2B705', antenna: 'ball' }
 };
 
