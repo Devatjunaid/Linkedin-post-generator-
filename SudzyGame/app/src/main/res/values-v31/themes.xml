@@ -1,0 +1,11 @@
+<resources>
+    <!-- The system splash hands straight over to the in-game animated splash (same night-blue). -->
+    <style name="Theme.Sudzy" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/sudzy_night</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:statusBarColor">@color/sudzy_night</item>
+        <item name="android:navigationBarColor">@color/sudzy_night</item>
+        <item name="android:windowSplashScreenBackground">@color/sudzy_night</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+    </style>
+</resources>

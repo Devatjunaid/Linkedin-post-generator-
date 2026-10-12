@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.Sudzy" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/sudzy_night</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">@color/sudzy_night</item>
+        <item name="android:navigationBarColor">@color/sudzy_night</item>
+    </style>
+</resources>
