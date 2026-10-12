@@ -1,0 +1,104 @@
+<!--meta {
+  "route": "/contact",
+  "slug": "contact",
+  "crumb": "Contact",
+  "priority": 0.8,
+  "title": "Contact The Fast Designs — Talk to a Web Design & Development Expert",
+  "description": "Contact The Fast Designs to discuss your website, e-commerce store or web app. Email, call or WhatsApp our team, or send a message and we’ll reply within one business day.",
+  "schema": [{"@context":"https://schema.org","@type":"ContactPage","name":"Contact The Fast Designs"}]
+} -->
+<section class="phero">
+  <div class="phero__bg"><div class="grid-bg"></div></div>
+  <div class="container">
+    <ol class="crumbs" data-reveal><li><a href="/">Home</a></li><li aria-current="page">Contact</li></ol>
+    <div class="phero__grid">
+      <div>
+        <p class="eyebrow" data-reveal>Contact us</p>
+        <h1 class="h-xl" data-split>Let’s talk about your <em>next website.</em></h1>
+      </div>
+      <p class="phero__aside" data-reveal style="--d:.4s">Questions, ideas or a project brief — we’d love to hear it. A real human (not a bot) replies within one business day.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight" style="padding-top:0">
+  <div class="container">
+    <div class="ccards" data-stagger=".08">
+      <a class="ccard" href="mailto:{{EMAIL}}"><span class="ccard__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg></span><small>Email</small><b>{{EMAIL}}</b></a>
+      <a class="ccard" href="tel:{{PHONE_HREF}}"><span class="ccard__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span><small>Call</small><b>{{PHONE}}</b></a>
+      <a class="ccard" href="{{WHATSAPP}}" target="_blank" rel="noopener"><span class="ccard__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.6-4.7A9 9 0 1 1 8 19.6z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a4 4 0 0 1-2-2l1-1-1-2z"/></svg></span><small>WhatsApp</small><b>Chat with us</b></a>
+      <a class="ccard" href="/get-a-quote"><span class="ccard__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><small>Project quote</small><b>Get a free quote →</b></a>
+    </div>
+
+    <div class="form-shell">
+      <div class="panel" data-reveal>
+        <h2 class="h-md" style="margin-bottom:10px">Send us a message</h2>
+        <p class="muted" style="margin-bottom:30px">Tell us a little about yourself and what you’re looking for.</p>
+        <form data-form="contact" novalidate>
+          <input type="hidden" name="subject" value="New contact message — The Fast Designs">
+          <div class="row2">
+            <div class="field"><input id="c-name" name="name" type="text" placeholder=" " autocomplete="name" required><label for="c-name">Your name *</label><p class="field__err">Please enter your name.</p></div>
+            <div class="field"><input id="c-email" name="email" type="email" placeholder=" " autocomplete="email" required><label for="c-email">Email address *</label><p class="field__err">Please enter a valid email.</p></div>
+          </div>
+          <div class="row2">
+            <div class="field"><input id="c-phone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="c-phone">Phone (optional)</label></div>
+            <div class="field"><input id="c-company" name="company" type="text" placeholder=" " autocomplete="organization"><label for="c-company">Company / website</label></div>
+          </div>
+          <div class="field">
+            <select id="c-topic" name="topic"><option>New website</option><option>Website redesign</option><option>E‑commerce store</option><option>Web app / UI‑UX</option><option>SEO &amp; performance</option><option>Care plan / support</option><option>Something else</option></select>
+            <label for="c-topic">I’m interested in</label>
+          </div>
+          <div class="field"><textarea id="c-msg" name="message" placeholder=" " required></textarea><label for="c-msg">How can we help? *</label><p class="field__err">Please add a short message.</p></div>
+          <label class="hp" aria-hidden="true">Leave empty <input type="text" name="botcheck" tabindex="-1" autocomplete="off"></label>
+          <button type="submit" class="btn btn--primary btn--lg" data-magnetic><span>Send message</span><i class="btn__arrow" aria-hidden="true">→</i></button>
+          <p class="form-note">By sending this form you agree to be contacted about your enquiry. We never share your details.</p>
+          <div class="form-status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+
+      <aside>
+        <div class="globe" data-reveal="scale" aria-hidden="true">
+          <svg viewBox="0 0 400 400">
+            <defs><radialGradient id="gl" cx=".4" cy=".35"><stop offset="0" stop-color="#1b1d27"/><stop offset="1" stop-color="#0c0d12"/></radialGradient></defs>
+            <circle cx="200" cy="200" r="150" fill="url(#gl)" stroke="rgba(255,255,255,.12)"/>
+            <g class="spin" fill="none" stroke="rgba(255,255,255,.09)">
+              <ellipse cx="200" cy="200" rx="150" ry="50"/><ellipse cx="200" cy="200" rx="150" ry="100"/>
+              <ellipse cx="200" cy="200" rx="50" ry="150"/><ellipse cx="200" cy="200" rx="100" ry="150"/><line x1="200" y1="50" x2="200" y2="350"/>
+            </g>
+            <line x1="50" y1="200" x2="350" y2="200" stroke="rgba(255,255,255,.09)"/>
+            <path d="M120 150 Q200 60 280 170" fill="none" stroke="url(#ig)" stroke-width="2" stroke-dasharray="5 6"><animate attributeName="stroke-dashoffset" from="22" to="0" dur="1.2s" repeatCount="indefinite"/></path>
+            <path d="M280 170 Q260 260 160 260" fill="none" stroke="url(#ig)" stroke-width="2" stroke-dasharray="5 6"><animate attributeName="stroke-dashoffset" from="22" to="0" dur="1.2s" repeatCount="indefinite"/></path>
+            <g fill="#d4ff3a"><circle cx="120" cy="150" r="5"/><circle cx="280" cy="170" r="5"/><circle cx="160" cy="260" r="5"/></g>
+            <g fill="none" stroke="#d4ff3a"><circle class="ping" cx="120" cy="150" r="6"/><circle class="ping" cx="280" cy="170" r="6" style="animation-delay:.8s"/><circle class="ping" cx="160" cy="260" r="6" style="animation-delay:1.6s"/></g>
+          </svg>
+        </div>
+        <div class="side-card" data-reveal>
+          <h3>Where we work</h3>
+          <p class="muted" style="margin:0">{{LOCATION}}. We collaborate across time zones with clients in North America, Europe, the Middle East and Asia‑Pacific.</p>
+        </div>
+        <div class="side-card" data-reveal>
+          <h3>Office hours</h3>
+          <ul class="timeline">
+            <li data-n="M"><strong>Monday – Friday</strong>9:00 – 18:00</li>
+            <li data-n="S"><strong>Saturday</strong>By appointment</li>
+            <li data-n="⚡"><strong>Care‑plan clients</strong>Priority support, 7 days a week</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="cfaq-title">
+  <div class="container faq-wrap">
+    <div>
+      <p class="eyebrow" data-reveal>Before you reach out</p>
+      <h2 id="cfaq-title" class="h-lg" data-split>Quick answers</h2>
+    </div>
+    <div class="faq" data-reveal>
+      <details><summary>How quickly will you reply?<i aria-hidden="true"></i></summary><div class="faq__a"><p>We reply to every message within one business day — usually much faster. Quote requests receive a detailed proposal within 48 hours.</p></div></details>
+      <details><summary>Do you work with clients outside my country?<i aria-hidden="true"></i></summary><div class="faq__a"><p>Yes. We’re a remote‑first web design agency and work with businesses worldwide over video calls, shared project boards and live preview links.</p></div></details>
+      <details><summary>What should I prepare before our first call?<i aria-hidden="true"></i></summary><div class="faq__a"><p>Nothing formal. It helps to know your goals, a rough budget range, any deadlines and a few websites you like. We’ll guide you through the rest.</p></div></details>
+    </div>
+  </div>
+</section>

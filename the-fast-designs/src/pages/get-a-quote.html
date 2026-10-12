@@ -1,0 +1,155 @@
+<!--meta {
+  "route": "/get-a-quote",
+  "slug": "quote",
+  "crumb": "Get a Quote",
+  "priority": 0.9,
+  "title": "Get a Free Website Quote — Web Design & Development Pricing | The Fast Designs",
+  "description": "Request a free, fixed-price quote for your website, e-commerce store, web app or SEO project. Answer a few quick questions and receive a tailored proposal within 48 hours."
+} -->
+<section class="phero" style="padding-bottom:clamp(40px,5vw,60px)">
+  <div class="phero__bg"><div class="grid-bg"></div></div>
+  <div class="container">
+    <ol class="crumbs" data-reveal><li><a href="/">Home</a></li><li aria-current="page">Get a Quote</li></ol>
+    <div class="phero__grid">
+      <div>
+        <p class="eyebrow" data-reveal>Free project quote</p>
+        <h1 class="h-xl" data-split>Get your quote in <em>under 2 minutes.</em></h1>
+      </div>
+      <p class="phero__aside" data-reveal style="--d:.4s">Answer four quick questions. We’ll send you a fixed‑price proposal with a timeline and recommendations within 48 hours — free and with no obligation.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight" style="padding-top:0">
+  <div class="container form-shell">
+    <div class="panel" data-reveal>
+      <ol class="qsteps" aria-label="Quote progress">
+        <li><button type="button">1. Project</button></li>
+        <li><button type="button">2. Services</button></li>
+        <li><button type="button">3. Budget</button></li>
+        <li><button type="button">4. Details</button></li>
+      </ol>
+      <form data-form="quote" novalidate>
+        <input type="hidden" name="subject" value="New quote request — The Fast Designs">
+
+        <fieldset class="qstep" style="border:0;padding:0;margin:0">
+          <legend class="sr-only">Project type</legend>
+          <h2>What are we building?</h2>
+          <p>Choose the option that best describes your project.</p>
+          <div>
+            <div class="chips chips--cards" data-required-group>
+              <label class="chip"><input type="radio" name="project_type" value="New website"><span><b>✦</b>New website<small>A fresh site from scratch</small></span></label>
+              <label class="chip"><input type="radio" name="project_type" value="Website redesign"><span><b>↻</b>Redesign<small>Upgrade an existing site</small></span></label>
+              <label class="chip"><input type="radio" name="project_type" value="E-commerce store"><span><b>◫</b>Online store<small>Sell products online</small></span></label>
+              <label class="chip"><input type="radio" name="project_type" value="Web app / SaaS"><span><b>⌘</b>Web app<small>SaaS, portal or dashboard</small></span></label>
+              <label class="chip"><input type="radio" name="project_type" value="Landing page"><span><b>↗</b>Landing page<small>Campaign or product launch</small></span></label>
+              <label class="chip"><input type="radio" name="project_type" value="Other"><span><b>?</b>Something else<small>Tell us in step 4</small></span></label>
+            </div>
+            <p class="field__err">Please choose a project type.</p>
+          </div>
+          <div class="qnav"><span></span><button type="button" class="btn btn--primary" data-next><span>Continue</span><i class="btn__arrow" aria-hidden="true">→</i></button></div>
+        </fieldset>
+
+        <fieldset class="qstep" style="border:0;padding:0;margin:0">
+          <legend class="sr-only">Services needed</legend>
+          <h2>Which services do you need?</h2>
+          <p>Select all that apply — we’ll recommend anything you might be missing.</p>
+          <div>
+            <div class="chips" data-required-group>
+              <label class="chip"><input type="checkbox" name="services" value="Website Design"><span>Website design</span></label>
+              <label class="chip"><input type="checkbox" name="services" value="Web Development"><span>Web development</span></label>
+              <label class="chip"><input type="checkbox" name="services" value="E-commerce"><span>E‑commerce</span></label>
+              <label class="chip"><input type="checkbox" name="services" value="UI/UX Design"><span>UI/UX design</span></label>
+              <label class="chip"><input type="checkbox" name="services" value="SEO"><span>SEO</span></label>
+              <label class="chip"><input type="checkbox" name="services" value="Copywriting"><span>Copywriting</span></label>
+              <label class="chip"><input type="checkbox" name="services" value="Branding / Logo"><span>Branding / logo</span></label>
+              <label class="chip"><input type="checkbox" name="services" value="Care Plan"><span>Hosting &amp; care plan</span></label>
+            </div>
+            <p class="field__err">Please choose at least one service.</p>
+          </div>
+          <label class="qstep__label" for="q-pages">Roughly how many pages?</label>
+          <div class="field"><select id="q-pages" name="pages"><option>1–5 pages</option><option selected>6–15 pages</option><option>16–30 pages</option><option>30+ pages</option><option>Not sure yet</option></select><label for="q-pages">Page count</label></div>
+          <div class="qnav"><button type="button" class="btn btn--ghost" data-back><span>← Back</span></button><button type="button" class="btn btn--primary" data-next><span>Continue</span><i class="btn__arrow" aria-hidden="true">→</i></button></div>
+        </fieldset>
+
+        <fieldset class="qstep" style="border:0;padding:0;margin:0">
+          <legend class="sr-only">Budget and timeline</legend>
+          <h2>Budget &amp; timeline</h2>
+          <p>A rough range helps us recommend the right approach. No hard commitments.</p>
+          <span class="qstep__label">Estimated budget (USD)</span>
+          <div>
+            <div class="chips" data-required-group>
+              <label class="chip"><input type="radio" name="budget" value="Under $2,000"><span>Under $2k</span></label>
+              <label class="chip"><input type="radio" name="budget" value="$2,000 – $5,000"><span>$2k – $5k</span></label>
+              <label class="chip"><input type="radio" name="budget" value="$5,000 – $10,000"><span>$5k – $10k</span></label>
+              <label class="chip"><input type="radio" name="budget" value="$10,000 – $25,000"><span>$10k – $25k</span></label>
+              <label class="chip"><input type="radio" name="budget" value="$25,000+"><span>$25k+</span></label>
+              <label class="chip"><input type="radio" name="budget" value="Not sure"><span>Not sure yet</span></label>
+            </div>
+            <p class="field__err">Please choose a budget range.</p>
+          </div>
+          <span class="qstep__label">When do you want to launch?</span>
+          <div>
+            <div class="chips" data-required-group>
+              <label class="chip"><input type="radio" name="timeline" value="ASAP"><span>ASAP ⚡</span></label>
+              <label class="chip"><input type="radio" name="timeline" value="Within 1 month"><span>Within 1 month</span></label>
+              <label class="chip"><input type="radio" name="timeline" value="1–3 months"><span>1–3 months</span></label>
+              <label class="chip"><input type="radio" name="timeline" value="3+ months"><span>3+ months</span></label>
+              <label class="chip"><input type="radio" name="timeline" value="Flexible"><span>Flexible</span></label>
+            </div>
+            <p class="field__err">Please choose a timeline.</p>
+          </div>
+          <div class="qnav"><button type="button" class="btn btn--ghost" data-back><span>← Back</span></button><button type="button" class="btn btn--primary" data-next><span>Continue</span><i class="btn__arrow" aria-hidden="true">→</i></button></div>
+        </fieldset>
+
+        <fieldset class="qstep" style="border:0;padding:0;margin:0">
+          <legend class="sr-only">Your details</legend>
+          <h2>Almost done — tell us about you</h2>
+          <p>We’ll use this to send your proposal. No spam, ever.</p>
+          <div class="row2">
+            <div class="field"><input id="q-name" name="name" type="text" placeholder=" " autocomplete="name" required><label for="q-name">Full name *</label><p class="field__err">Please enter your name.</p></div>
+            <div class="field"><input id="q-email" name="email" type="email" placeholder=" " autocomplete="email" required><label for="q-email">Email address *</label><p class="field__err">Please enter a valid email.</p></div>
+          </div>
+          <div class="row2">
+            <div class="field"><input id="q-phone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="q-phone">Phone / WhatsApp</label></div>
+            <div class="field"><input id="q-site" name="current_website" type="text" placeholder=" " autocomplete="url"><label for="q-site">Current website (if any)</label></div>
+          </div>
+          <div class="field"><textarea id="q-msg" name="message" placeholder=" " required></textarea><label for="q-msg">Describe your project, goals and any must‑haves *</label><p class="field__err">Please tell us a little about your project.</p></div>
+          <label class="hp" aria-hidden="true">Leave empty <input type="text" name="botcheck" tabindex="-1" autocomplete="off"></label>
+          <div class="qnav"><button type="button" class="btn btn--ghost" data-back><span>← Back</span></button><button type="submit" class="btn btn--primary btn--lg" data-magnetic><span>Get My Free Quote</span><i class="btn__arrow" aria-hidden="true">→</i></button></div>
+          <div class="form-status" role="status" aria-live="polite"></div>
+        </fieldset>
+      </form>
+
+      <div class="qdone" role="status" aria-live="polite">
+        <svg class="qdone__icon" viewBox="0 0 96 96" fill="none" aria-hidden="true"><circle cx="48" cy="48" r="44" stroke="url(#ig)" stroke-width="4"/><path d="M30 49l12 12 24-26" stroke="#d4ff3a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h2 class="h-md">Thank you — request received!</h2>
+        <p class="muted" style="max-width:460px;margin:16px auto 30px">We’re reviewing your project now. Expect a tailored proposal in your inbox within 48 hours. Need us sooner? Message us on WhatsApp.</p>
+        <a href="/portfolio" class="btn btn--ghost"><span>Browse our work while you wait</span></a>
+      </div>
+    </div>
+
+    <aside>
+      <div class="side-card" data-reveal="right">
+        <h3>What happens next?</h3>
+        <ol class="timeline">
+          <li data-n="1"><strong>We review your brief</strong>A senior strategist studies your goals, market and competitors.</li>
+          <li data-n="2"><strong>Free discovery call</strong>A 30‑minute call to clarify scope and answer your questions.</li>
+          <li data-n="3"><strong>Fixed‑price proposal</strong>Itemised pricing, timeline and recommendations in 48 hours.</li>
+          <li data-n="4"><strong>Kick‑off</strong>Approve the proposal and we start within a week.</li>
+        </ol>
+      </div>
+      <div class="side-card" data-reveal="right" style="--d:.1s">
+        <div class="stars" aria-label="5 out of 5">★★★★★</div>
+        <p style="margin:14px 0 18px;color:#d9dae2">“Clear communication, weekly demos and zero surprises on the invoice. The smoothest website project I’ve run.”</p>
+        <div class="who"><span class="avatar" style="--c1:#A9823E;--c2:#E8E2D4">JH</span><div><strong>James Holloway</strong><span>Harbor &amp; Vale</span></div></div>
+      </div>
+      <div class="side-card" data-reveal="right" style="--d:.2s">
+        <h3>Prefer to talk?</h3>
+        <p class="muted" style="margin-bottom:14px">Reach us directly and we’ll get back to you the same day.</p>
+        <a href="mailto:{{EMAIL}}" class="link-arrow"><span>{{EMAIL}}</span></a><br>
+        <a href="{{WHATSAPP}}" class="link-arrow" target="_blank" rel="noopener" style="margin-top:8px"><span>WhatsApp us</span></a>
+      </div>
+    </aside>
+  </div>
+</section>
