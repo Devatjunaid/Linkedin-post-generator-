@@ -38,6 +38,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
@@ -242,3 +243,8 @@ fun SmallLabel(text: String, modifier: Modifier = Modifier) {
         letterSpacing = 0.6.sp,
     )
 }
+
+/** Severity colour that keeps 4.5:1 contrast as text on the current surface (dark ink in light mode). */
+@Composable
+fun Severity.readableColor(): Color =
+    if (MaterialTheme.colorScheme.surface.luminance() > 0.5f) onColor else color

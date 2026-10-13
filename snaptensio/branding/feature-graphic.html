@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Manrope;src:url("../app/src/main/res/font/manrope.ttf");font-weight:200 800}
+html,body{margin:0;width:1024px;height:500px;overflow:hidden}
+body{font-family:Manrope,sans-serif;background:linear-gradient(135deg,#2F6BFF 0%,#1F4FD8 45%,#1638A8 100%);color:#fff;position:relative}
+.ring{position:absolute;border:2px solid rgba(255,255,255,.10);border-radius:50%}
+.ecg{position:absolute;left:0;right:0;bottom:46px;opacity:.18}
+.left{position:absolute;left:64px;top:92px;width:520px}
+.brand{display:flex;align-items:center;gap:18px}
+.brand img{width:96px;height:96px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+h1{font-size:64px;font-weight:800;letter-spacing:-1.5px;margin:0}
+.tag{font-size:30px;font-weight:700;line-height:1.25;margin:34px 0 18px}
+.pills{display:flex;gap:10px}
+.pill{background:rgba(255,255,255,.16);padding:9px 16px;border-radius:999px;font-weight:700;font-size:17px}
+.phone{position:absolute;right:86px;top:40px;width:250px;height:500px;background:#0B1220;border-radius:40px;padding:12px;box-sizing:border-box;box-shadow:0 30px 60px rgba(0,0,0,.35);transform:rotate(4deg)}
+.screen{background:#F4F6F8;border-radius:30px;height:100%;padding:22px 16px;box-sizing:border-box;color:#0F1B2D}
+.card{background:#fff;border-radius:18px;padding:14px;border:1px solid #E2E7EE}
+.lab{font-size:11px;font-weight:700;color:#556274;display:flex;justify-content:space-between;align-items:center}
+.chip{background:#FDF0D5;color:#7A4D06;font-weight:800;font-size:10px;padding:3px 8px;border-radius:999px}
+.big{font-size:46px;font-weight:800;letter-spacing:-1.5px;margin:6px 0 8px}
+.big span{color:#9AA6B5}
+.bar{display:flex;gap:2px;height:7px}.bar div{flex:1;border-radius:2px}
+.btn{margin-top:12px;background:#1F4FD8;color:#fff;border-radius:14px;text-align:center;padding:12px;font-weight:800;font-size:14px}
+.chart{margin-top:12px}
+</style></head>
+<body>
+<div class="ring" style="width:620px;height:620px;right:-120px;top:-60px"></div>
+<div class="ring" style="width:860px;height:860px;right:-240px;top:-180px"></div>
+<svg class="ecg" width="1024" height="60" viewBox="0 0 1024 60"><polyline points="0,40 380,40 410,22 440,58 470,4 500,40 1024,40" fill="none" stroke="#fff" stroke-width="3"/></svg>
+<div class="left">
+  <div class="brand"><img src="logo-icon-rounded.svg" alt=""><h1>SnapTensio</h1></div>
+  <div class="tag">Snap your blood pressure monitor.<br>Know your numbers.</div>
+  <div class="pills"><div class="pill">Camera reading</div><div class="pill">Doctor PDF</div><div class="pill">Offline</div></div>
+</div>
+<div class="phone"><div class="screen">
+  <div class="card">
+    <div class="lab">Today 8:12 AM <span class="chip">Elevated</span></div>
+    <div class="big">128<span>/</span>82</div>
+    <div class="bar"><div style="background:#1E8E5A"></div><div style="background:#E0A526"></div><div style="background:#E07A2B"></div><div style="background:#C2272D"></div><div style="background:#7A1020"></div></div>
+  </div>
+  <div class="btn">Scan monitor</div>
+  <div class="card chart">
+    <div class="lab">Last 7 days</div>
+    <svg width="186" height="70" viewBox="0 0 186 70"><rect y="24" width="186" height="16" fill="#E7F4EC"/><polyline points="4,16 34,10 64,18 94,12 124,22 154,16 182,20" fill="none" stroke="#1F4FD8" stroke-width="3"/><polyline points="4,48 34,44 64,52 94,46 124,54 154,50 182,52" fill="none" stroke="#E07A2B" stroke-width="3"/></svg>
+  </div>
+</div></div>
+</body></html>

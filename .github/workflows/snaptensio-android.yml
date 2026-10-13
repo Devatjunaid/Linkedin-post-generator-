@@ -1,0 +1,40 @@
+name: SnapTensio Android
+
+on:
+  push:
+    paths:
+      - "snaptensio/**"
+      - ".github/workflows/snaptensio-android.yml"
+  pull_request:
+    paths:
+      - "snaptensio/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: snaptensio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Unit tests
+        run: ./gradlew --no-daemon testDebugUnitTest
+      - name: Build debug and release APKs
+        run: ./gradlew --no-daemon assembleDebug assembleRelease
+      - name: Lint
+        run: ./gradlew --no-daemon lintDebug
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: snaptensio-apks
+          path: |
+            snaptensio/app/build/outputs/apk/**/*.apk
+            snaptensio/app/build/reports/lint-results-debug.html
+            snaptensio/app/build/reports/tests/
+          if-no-files-found: ignore

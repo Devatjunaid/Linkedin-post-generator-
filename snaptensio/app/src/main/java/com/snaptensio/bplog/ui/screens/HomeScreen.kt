@@ -245,7 +245,7 @@ fun HomeScreen(vm: MainViewModel, nav: NavHostController) {
         // Native ad sits between content cards, never next to the primary buttons.
         NativeAdCard()
 
-        val upcoming = remember(reminders, meds) { upcomingItems(reminders.filter { it.enabled }.map { "%02d:%02d".format(it.hour, it.minute) to "${it.label} reading" }, meds.filter { it.active }.flatMap { m -> m.timeList().map { t -> t to "${m.name} ${m.dose}".trim() } }) }
+        val upcoming = remember(reminders, meds) { upcomingItems(reminders.filter { it.enabled }.map { hhmm(it.hour, it.minute) to "${it.label} reading" }, meds.filter { it.active }.flatMap { m -> m.timeList().map { t -> t to "${m.name} ${m.dose}".trim() } }) }
         if (upcoming.isNotEmpty()) {
             SectionCard(onClick = { nav.navigate(Routes.MEDS) }) {
                 Text("Coming up today", style = MaterialTheme.typography.titleMedium)
@@ -265,7 +265,7 @@ fun HomeScreen(vm: MainViewModel, nav: NavHostController) {
 
 private fun upcomingItems(vararg lists: List<Pair<String, String>>): List<Pair<String, String>> {
     val now = Calendar.getInstance()
-    val nowStr = "%02d:%02d".format(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))
+    val nowStr = hhmm(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))
     return lists.flatMap { it }.filter { it.first >= nowStr }.sortedBy { it.first }
 }
 
