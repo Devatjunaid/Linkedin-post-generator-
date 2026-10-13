@@ -61,6 +61,10 @@ class AdsManager(private val app: Application) {
     private var shownThisSession = 0
     private val sessionStart = SystemClock.elapsedRealtime()
 
+    /** True while an interstitial covers the app (so app lock doesn't treat it as leaving). */
+    @Volatile var isShowingFullScreen: Boolean = false
+        private set
+
     /** Users with app lock or an open full-screen flow can suppress interstitials. */
     @Volatile var suppressed: Boolean = false
 
@@ -69,7 +73,11 @@ class AdsManager(private val app: Application) {
             ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
 
     /** Call once per launch from the splash. [onDone] runs whether or not consent was given. */
+    var consentStarted: Boolean = false
+        private set
+
     fun gatherConsent(activity: Activity, onDone: () -> Unit) {
+        consentStarted = true
         val params = ConsentRequestParameters.Builder()
             .setTagForUnderAgeOfConsent(false)
             .build()
@@ -158,13 +166,16 @@ class AdsManager(private val app: Application) {
             return
         }
         Log.d(TAG, "Interstitial at $placement")
+        isShowingFullScreen = true
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdShowedFullScreenContent() {
+                isShowingFullScreen = true
                 lastShownAt = SystemClock.elapsedRealtime()
                 shownThisSession++
             }
 
             override fun onAdDismissedFullScreenContent() {
+                isShowingFullScreen = false
                 interstitial = null
                 lastShownAt = SystemClock.elapsedRealtime()
                 preloadInterstitial()
@@ -172,6 +183,7 @@ class AdsManager(private val app: Application) {
             }
 
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                isShowingFullScreen = false
                 interstitial = null
                 preloadInterstitial()
                 onContinue()

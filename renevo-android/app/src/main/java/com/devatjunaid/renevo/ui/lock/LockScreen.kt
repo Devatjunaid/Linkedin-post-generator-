@@ -1,6 +1,12 @@
 package com.devatjunaid.renevo.ui.lock
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,9 +37,13 @@ import com.devatjunaid.renevo.ui.theme.Brand
 @Composable
 fun LockScreen(message: String?, onUnlock: () -> Unit) {
     LaunchedEffect(Unit) { onUnlock() }
+    val activity = LocalContext.current as? Activity
+    BackHandler { activity?.moveTaskToBack(true) }
     Column(
         Modifier
             .fillMaxSize()
+            // Swallow touches so nothing underneath the lock can be tapped.
+            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {}
             .background(Brush.verticalGradient(listOf(Brand.Navy, Brand.NavyLight)))
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

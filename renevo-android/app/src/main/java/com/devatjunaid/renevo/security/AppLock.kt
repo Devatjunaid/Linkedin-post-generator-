@@ -38,3 +38,8 @@ object AppLock {
         prompt.authenticate(info)
     }
 }
+
+/** Tells the app-lock logic that the user is in a system picker we opened, not leaving the app. */
+object LockGate {
+    @Volatile var externalUiOpen: Boolean = false
+}

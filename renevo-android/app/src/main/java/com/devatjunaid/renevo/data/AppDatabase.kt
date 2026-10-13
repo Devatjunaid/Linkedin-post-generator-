@@ -14,51 +14,51 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface SubscriptionDao {
+abstract class SubscriptionDao {
     @Query("SELECT * FROM subscriptions ORDER BY name COLLATE NOCASE")
-    fun observeAll(): Flow<List<Subscription>>
+    abstract fun observeAll(): Flow<List<Subscription>>
 
     @Query("SELECT * FROM subscriptions ORDER BY name COLLATE NOCASE")
-    suspend fun getAll(): List<Subscription>
+    abstract suspend fun getAll(): List<Subscription>
 
     @Query("SELECT * FROM subscriptions WHERE id = :id")
-    suspend fun get(id: Long): Subscription?
+    abstract suspend fun get(id: Long): Subscription?
 
     @Insert
-    suspend fun insert(sub: Subscription): Long
+    abstract suspend fun insert(sub: Subscription): Long
 
     @Update
-    suspend fun update(sub: Subscription)
+    abstract suspend fun update(sub: Subscription)
 
     @Delete
-    suspend fun delete(sub: Subscription)
+    abstract suspend fun delete(sub: Subscription)
 
     @Query("DELETE FROM subscriptions")
-    suspend fun deleteAll()
+    abstract suspend fun deleteAll()
 
     @Query("SELECT * FROM price_points ORDER BY effectiveEpochDay")
-    fun observePrices(): Flow<List<PricePoint>>
+    abstract fun observePrices(): Flow<List<PricePoint>>
 
     @Query("SELECT * FROM price_points ORDER BY effectiveEpochDay")
-    suspend fun getAllPrices(): List<PricePoint>
+    abstract suspend fun getAllPrices(): List<PricePoint>
 
     @Query("SELECT * FROM price_points WHERE subscriptionId = :id ORDER BY effectiveEpochDay")
-    suspend fun pricesFor(id: Long): List<PricePoint>
+    abstract suspend fun pricesFor(id: Long): List<PricePoint>
 
     @Insert
-    suspend fun insertPrice(p: PricePoint): Long
+    abstract suspend fun insertPrice(p: PricePoint): Long
 
     @Query("DELETE FROM price_points WHERE subscriptionId = :id AND effectiveEpochDay = :day")
-    suspend fun deletePriceOn(id: Long, day: Long)
+    abstract suspend fun deletePriceOn(id: Long, day: Long)
 
     @Transaction
-    suspend fun replaceAll(subs: List<Subscription>, prices: List<PricePoint>) {
+    open suspend fun replaceAll(subs: List<Subscription>, prices: List<PricePoint>) {
         deleteAll()
         insertAll(subs, prices)
     }
 
     @Transaction
-    suspend fun insertAll(subs: List<Subscription>, prices: List<PricePoint>) {
+    open suspend fun insertAll(subs: List<Subscription>, prices: List<PricePoint>) {
         val idMap = HashMap<Long, Long>()
         for (s in subs) idMap[s.id] = insert(s.copy(id = 0))
         for (p in prices) {

@@ -63,8 +63,12 @@ fun SplashScreen(ready: Boolean, onFinished: () -> Unit) {
         delay(4200)
         timedOut = true
     }
+    var finished by remember { mutableStateOf(false) }
     LaunchedEffect(introDone, ready, timedOut) {
-        if (introDone && (ready || timedOut)) onFinished()
+        if (!finished && introDone && (ready || timedOut)) {
+            finished = true
+            onFinished()
+        }
     }
 
     val drift = rememberInfiniteTransition(label = "drift")

@@ -67,7 +67,7 @@ class Portfolio(
         subs.flatMap { sub ->
             val dates = when (sub.status) {
                 SubStatus.ACTIVE, SubStatus.TRIAL -> Billing.occurrences(sub, from, to)
-                else -> Billing.occurrences(sub, from, minOf(to, today))
+                else -> Billing.occurrences(sub, from, if (to.isBefore(today)) to else today)
             }
             dates.map { d ->
                 val amount = Billing.priceAt(sub, historyFor(sub.id), d)
