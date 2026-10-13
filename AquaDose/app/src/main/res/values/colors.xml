@@ -1,0 +1,10 @@
+<resources>
+    <color name="navy">#FF0E2A3B</color>
+    <color name="teal">#FF0B7A93</color>
+    <color name="aqua">#FF2BB7CF</color>
+    <color name="ground">#FFF3F8FA</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="ink_muted">#FF4E6573</color>
+    <color name="ad_badge">#FFF2A65A</color>
+    <color name="card_border">#FFE3ECF0</color>
+</resources>

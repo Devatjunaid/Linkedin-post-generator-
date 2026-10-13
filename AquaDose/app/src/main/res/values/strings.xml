@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AquaDose</string>
+    <!-- AdMob TEST App ID. Replace with your real App ID from the AdMob console before publishing. -->
+    <string name="admob_app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+</resources>
