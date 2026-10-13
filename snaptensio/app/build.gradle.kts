@@ -92,6 +92,8 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.mlkit.text.recognition)
+    // CameraX returns Guava ListenableFutures from its public API.
+    implementation(libs.guava)
 
     implementation(libs.play.services.ads)
     implementation(libs.ump)
