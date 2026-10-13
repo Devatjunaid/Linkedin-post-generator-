@@ -1,0 +1,12 @@
+<resources>
+    <color name="brand_blue">#1F4FD8</color>
+    <color name="brand_blue_dark">#1638A8</color>
+    <color name="brand_coral">#FF5A5F</color>
+    <color name="splash_bg">#1F4FD8</color>
+    <color name="white">#FFFFFF</color>
+    <color name="ink">#0F1B2D</color>
+    <color name="muted">#556274</color>
+    <color name="ad_badge">#E0A526</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="line">#E2E7EE</color>
+</resources>
