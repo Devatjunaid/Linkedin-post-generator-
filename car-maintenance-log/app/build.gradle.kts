@@ -95,6 +95,8 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.mlkit.text.recognition)
+    // CameraX returns Guava ListenableFuture; it must be on the compile classpath.
+    implementation(libs.guava)
 
     implementation(libs.play.services.ads)
     implementation(libs.ump)
