@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+<defs><linearGradient id="g10" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1024" y2="500"><stop offset="0" stop-color="#0B1026"/><stop offset="1" stop-color="#24206B"/></linearGradient><linearGradient id="g11" gradientUnits="userSpaceOnUse" x1="92" y1="150" x2="292" y2="350"><stop offset="0" stop-color="#3D63FF"/><stop offset="1" stop-color="#6A3DE8"/></linearGradient><linearGradient id="g12" gradientUnits="userSpaceOnUse" x1="170.75" y1="232.75" x2="213.25" y2="275.25"><stop offset="0" stop-color="#FFB547"/><stop offset="1" stop-color="#FF8A3D"/></linearGradient></defs>
+<path d="M0,0 H1024 V500 H0 Z" fill="url(#g10)"/>
+<path d="M640,90 A220,220 0 1 1 1080,90 A220,220 0 1 1 640,90 Z" fill="#6A3DE8" opacity="0.25"/>
+<path d="M-60,470 A180,180 0 1 1 300,470 A180,180 0 1 1 -60,470 Z" fill="#3D63FF" opacity="0.22"/>
+<path d="M148,150 H236 A56,56 0 0 1 292,206 V294 A56,56 0 0 1 236,350 H148 A56,56 0 0 1 92,294 V206 A56,56 0 0 1 148,150 Z" fill="url(#g11)"/>
+<path d="M230.3,221.86 A50,50 0 1 1 174.9,207.02" fill="none" stroke="#FFFFFF" stroke-width="17.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M192.52,200.6 L176.93,223.57 L165.82,193.03 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M170.75,254 A21.25,21.25 0 1 1 213.25,254 A21.25,21.25 0 1 1 170.75,254 Z" fill="url(#g12)"/>
+<path d="M183,254.5 L189.75,261.25 L202,247.5" fill="none" stroke="#FFFFFF" stroke-width="5.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M229.5,185 Q231.34,194.66 241,196.5 Q231.34,198.34 229.5,208 Q227.66,198.34 218,196.5 Q227.66,194.66 229.5,185 Z" fill="#FFFFFF"/>
+<path d="M247,221.5 A3.75,3.75 0 1 1 254.5,221.5 A3.75,3.75 0 1 1 247,221.5 Z" fill="#FFFFFF" opacity="0.75"/>
+<style>text{font-family:"Space Grotesk","DM Sans",sans-serif}</style>
+<text x="330" y="236" fill="#FFFFFF" font-size="76" font-weight="700" letter-spacing="-2">Renevo</text>
+<text x="334" y="290" fill="#C9CCF2" font-size="28" font-weight="500">Subscriptions, under control.</text>
+<text x="334" y="336" fill="#9FA6D9" font-size="22">Private · No bank link · Reminders</text>
+<g transform="rotate(-4 850 138)"><rect x="720" y="100" width="260" height="76" rx="20" fill="#FFFFFF"/><rect x="736" y="116" width="44" height="44" rx="12" fill="#F0E8FB"/><text x="758" y="146" text-anchor="middle" fill="#7A3FCB" font-size="22" font-weight="700">S</text><text x="794" y="146" fill="#15171C" font-size="20" font-weight="600">Streaming</text><text x="964" y="146" text-anchor="end" fill="#15171C" font-size="20" font-weight="700">$15.49</text></g>
+<g transform="rotate(3 882 238)"><rect x="752" y="200" width="260" height="76" rx="20" fill="#FFFFFF"/><rect x="768" y="216" width="44" height="44" rx="12" fill="#DFF3F1"/><text x="790" y="246" text-anchor="middle" fill="#0F7F77" font-size="22" font-weight="700">M</text><text x="826" y="246" fill="#15171C" font-size="20" font-weight="600">Music</text><text x="996" y="246" text-anchor="end" fill="#15171C" font-size="20" font-weight="700">$11.99</text></g>
+<g transform="rotate(-2 850 338)"><rect x="720" y="300" width="260" height="76" rx="20" fill="#FFFFFF"/><rect x="736" y="316" width="44" height="44" rx="12" fill="#FFE9DA"/><text x="758" y="346" text-anchor="middle" fill="#C2560C" font-size="22" font-weight="700">T</text><text x="794" y="346" fill="#15171C" font-size="20" font-weight="600">Trial ends Fri</text><text x="964" y="346" text-anchor="end" fill="#15171C" font-size="20" font-weight="700">$84</text></g></svg>

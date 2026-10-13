@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240" viewBox="0 0 320 240">
+<defs><linearGradient id="g6" gradientUnits="userSpaceOnUse" x1="148" y1="78" x2="168" y2="164"><stop offset="0" stop-color="#3D63FF"/><stop offset="1" stop-color="#6A3DE8"/></linearGradient></defs>
+<path d="M60,120 A100,100 0 1 1 260,120 A100,100 0 1 1 60,120 Z" fill="#F1EAFE"/>
+<path d="M46,186 A12,12 0 1 1 70,186 A12,12 0 1 1 46,186 Z" fill="#FFE9DA"/>
+<path d="M261,50 A9,9 0 1 1 279,50 A9,9 0 1 1 261,50 Z" fill="#E8EDFF"/>
+<path d="M64,46 H184 A18,18 0 0 1 202,64 V164 A18,18 0 0 1 184,182 H64 A18,18 0 0 1 46,164 V64 A18,18 0 0 1 64,46 Z" fill="#FFFFFF" stroke="#E1E5EF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M67.5,62 H120.5 A3.5,3.5 0 0 1 124,65.5 V65.5 A3.5,3.5 0 0 1 120.5,69 H67.5 A3.5,3.5 0 0 1 64,65.5 V65.5 A3.5,3.5 0 0 1 67.5,62 Z" fill="#C9CFE0"/>
+<path d="M70,128 H78 A6,6 0 0 1 84,134 V158 A6,6 0 0 1 78,164 H70 A6,6 0 0 1 64,158 V134 A6,6 0 0 1 70,128 Z" fill="#C9D3FF"/>
+<path d="M98,110 H106 A6,6 0 0 1 112,116 V158 A6,6 0 0 1 106,164 H98 A6,6 0 0 1 92,158 V116 A6,6 0 0 1 98,110 Z" fill="#C9D3FF"/>
+<path d="M126,96 H134 A6,6 0 0 1 140,102 V158 A6,6 0 0 1 134,164 H126 A6,6 0 0 1 120,158 V102 A6,6 0 0 1 126,96 Z" fill="#AEBBFF"/>
+<path d="M154,78 H162 A6,6 0 0 1 168,84 V158 A6,6 0 0 1 162,164 H154 A6,6 0 0 1 148,158 V84 A6,6 0 0 1 154,78 Z" fill="url(#g6)"/>
+<path d="M61.5,166 H184.5 A1.5,1.5 0 0 1 186,167.5 V167.5 A1.5,1.5 0 0 1 184.5,169 H61.5 A1.5,1.5 0 0 1 60,167.5 V167.5 A1.5,1.5 0 0 1 61.5,166 Z" fill="#E1E5EF"/>
+<path d="M74,118 L102,100 L130,86 L158,64" fill="none" stroke="#FF8A3D" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M152.5,64 A5.5,5.5 0 1 1 163.5,64 A5.5,5.5 0 1 1 152.5,64 Z" fill="#FF8A3D"/>
+<path d="M155.8,64 A2.2,2.2 0 1 1 160.2,64 A2.2,2.2 0 1 1 155.8,64 Z" fill="#FFFFFF"/>
+<path d="M200,150 A40,40 0 1 1 280,150 A40,40 0 1 1 200,150 Z" fill="#FFFFFF" stroke="#E1E5EF" stroke-width="2" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M240,124 A26,26 0 1 1 225.09,171.3" fill="none" stroke="#3D63FF" stroke-width="13" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M223.64,170.21 A26,26 0 0 1 218.7,135.09" fill="none" stroke="#FF8A3D" stroke-width="13" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M219.79,133.64 A26,26 0 0 1 238.19,124.06" fill="none" stroke="#6A3DE8" stroke-width="13" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M227,78 H269 A7,7 0 0 1 276,85 V85 A7,7 0 0 1 269,92 H227 A7,7 0 0 1 220,85 V85 A7,7 0 0 1 227,78 Z" fill="#FFB547"/>
+<path d="M233,66 H275 A7,7 0 0 1 282,73 V73 A7,7 0 0 1 275,80 H233 A7,7 0 0 1 226,73 V73 A7,7 0 0 1 233,66 Z" fill="#FF8A3D"/>
+<path d="M227,54 H269 A7,7 0 0 1 276,61 V61 A7,7 0 0 1 269,68 H227 A7,7 0 0 1 220,61 V61 A7,7 0 0 1 227,54 Z" fill="#FFB547"/>
+<path d="M212,28 Q212.96,33.04 218,34 Q212.96,34.96 212,40 Q211.04,34.96 206,34 Q211.04,33.04 212,28 Z" fill="#FF8A3D"/>
+<path d="M34,91 Q34.8,95.2 39,96 Q34.8,96.8 34,101 Q33.2,96.8 29,96 Q33.2,95.2 34,91 Z" fill="#6A3DE8"/>
+</svg>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Renevo</string>
+    <string name="app_tagline">Subscriptions, under control.</string>
+    <string name="widget_name">Renevo spending</string>
+    <string name="widget_description">Your monthly subscription total and the next charges.</string>
+    <!-- Host this page yourself (e.g. GitHub Pages) using PRIVACY_POLICY.md, then put its URL here. -->
+    <string name="privacy_policy_url" translatable="false">https://devatjunaid.github.io/renevo/privacy-policy</string>
+    <string name="channel_renewals">Renewal reminders</string>
+    <string name="channel_trials">Free-trial alerts</string>
+    <string name="channel_digest">Weekly summary</string>
+    <string name="ad_label">Ad</string>
+</resources>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
+<defs><linearGradient id="g1" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="108" y2="108"><stop offset="0" stop-color="#3D63FF"/><stop offset="1" stop-color="#6A3DE8"/></linearGradient><linearGradient id="g2" gradientUnits="userSpaceOnUse" x1="42.52" y1="44.52" x2="65.47" y2="67.47"><stop offset="0" stop-color="#FFB547"/><stop offset="1" stop-color="#FF8A3D"/></linearGradient></defs>
+<path d="M30,0 H78 A30,30 0 0 1 108,30 V78 A30,30 0 0 1 78,108 H30 A30,30 0 0 1 0,78 V30 A30,30 0 0 1 30,0 Z" fill="url(#g1)"/>
+<path d="M0,30 A30,30 0 0 1 30,0 H78 A30,30 0 0 1 108,30 V44 C76,58 32,58 0,44 Z" fill="#FFFFFF" opacity="0.08"/>
+<path d="M74.68,38.64 A27,27 0 1 1 44.77,30.63" fill="none" stroke="#FFFFFF" stroke-width="9.45" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M54.28,27.17 L45.86,39.57 L39.86,23.08 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2.16" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M42.52,56 A11.48,11.48 0 1 1 65.47,56 A11.48,11.48 0 1 1 42.52,56 Z" fill="url(#g2)"/>
+<path d="M49.14,56.27 L52.78,59.91 L59.4,52.49" fill="none" stroke="#FFFFFF" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M74.25,18.74 Q75.24,23.96 80.46,24.95 Q75.24,25.94 74.25,31.16 Q73.26,25.94 68.04,24.95 Q73.26,23.96 74.25,18.74 Z" fill="#FFFFFF"/>
+<path d="M83.7,38.45 A2.03,2.03 0 1 1 87.75,38.45 A2.03,2.03 0 1 1 83.7,38.45 Z" fill="#FFFFFF" opacity="0.75"/>
+</svg>
