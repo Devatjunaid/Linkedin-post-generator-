@@ -97,4 +97,6 @@ dependencies {
 
     implementation(libs.play.services.ads)
     implementation(libs.ump)
+
+    testImplementation(libs.junit)
 }
