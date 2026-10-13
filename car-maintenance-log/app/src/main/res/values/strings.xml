@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OdoMate</string>
+    <string name="channel_reminders">Service reminders</string>
+    <string name="channel_reminders_desc">Alerts when a maintenance service is due soon or overdue</string>
+    <string name="channel_nudges">Odometer nudges</string>
+    <string name="channel_nudges_desc">Weekly reminder to snap your odometer so estimates stay accurate</string>
+    <string name="ad_label">Ad</string>
+</resources>
