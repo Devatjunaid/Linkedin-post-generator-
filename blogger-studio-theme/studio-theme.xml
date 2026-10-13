@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<!--
-  ============================================================
-   PUBLISHING STUDIO - Blogger Theme
-   For Google Play Console developer websites.
-
-   HOW TO EDIT: search this file for "EDIT:" comments.
-   Replace "your studio name", the email address, the app
-   names/descriptions and the Google Play links with your own.
-  ============================================================
--->
 <html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' b:templateVersion='1.0.0' expr:dir='data:blog.languageDirection' lang='en' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
 <head>
   <meta charset='UTF-8'/>
   <meta content='width=device-width, initial-scale=1' name='viewport'/>
   <b:include data='blog' name='all-head-content'/>
-  <title><b:if cond='data:view.isHomepage'><data:blog.title.escaped/><b:else/><data:view.title.escaped/> | <data:blog.title.escaped/></b:if></title>
+  <title><data:view.title.escaped/></title>
   <!-- EDIT: short description used by Google search -->
   <meta content='Independent mobile app and game publishing studio. Discover our apps on Google Play.' name='description'/>
   <link href='https://fonts.googleapis.com' rel='preconnect'/>
@@ -135,7 +125,7 @@ img{max-width:100%;display:block}
 .about-visual:after{content:'';position:absolute;inset:0;background:radial-gradient(400px 200px at 80% 0%,rgba(255,255,255,.35),transparent 70%)}
 .checklist{list-style:none;margin-top:28px;display:grid;gap:14px}
 .checklist li{display:flex;gap:12px;align-items:flex-start;font-weight:500}
-.checklist li:before{content:'✓';flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(79,70,229,.12);color:var(--accent);display:grid;place-items:center;font-size:13px;font-weight:800}
+.checklist li:before{content:'\2713 ';flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(79,70,229,.12);color:var(--accent);display:grid;place-items:center;font-size:13px;font-weight:800}
 
 /* ---------- Contact ---------- */
 .contact-box{background:radial-gradient(700px 300px at 100% 0%,rgba(6,182,212,.3),transparent 60%),var(--bg);color:#fff;border-radius:28px;padding:64px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
@@ -239,7 +229,7 @@ img{max-width:100%;display:block}
         <h1>We build apps people <span class='grad'>love to use.</span></h1>
         <p>Super Intel is an independent mobile publishing studio crafting fast, beautiful and privacy-friendly apps and games for Android users worldwide.</p>
         <div class='hero-actions'>
-          <a class='btn btn-primary' href='#apps'>Explore Our Apps →</a>
+          <a class='btn btn-primary' href='#apps'>Explore Our Apps &#8594;</a>
           <a class='btn btn-ghost' href='#contact'>Get in Touch</a>
         </div>
       </div>
@@ -251,8 +241,8 @@ img{max-width:100%;display:block}
             <div class='phone-row'><div class='ic g3'></div><div style='flex:1'><b>Block Rush</b><small>Puzzle Game</small><div class='bar' style='width:90%'></div></div></div>
             <div class='phone-row'><div class='ic g4'></div><div style='flex:1'><b>Daily Habit</b><small>Health</small><div class='bar' style='width:70%'></div></div></div>
           </div>
-          <div class='float-card a'><span class='dot g1'>★</span> 4.8 average rating</div>
-          <div class='float-card b'><span class='dot g4'>↓</span> 1M+ downloads</div>
+          <div class='float-card a'><span class='dot g1'>&#9733;</span> 4.8 average rating</div>
+          <div class='float-card b'><span class='dot g4'>&#8595;</span> 1M+ downloads</div>
         </div>
       </div>
     </div>
@@ -263,7 +253,7 @@ img{max-width:100%;display:block}
     <div class='container stats-grid'>
       <div class='stat'><b>10+</b><span>Apps Published</span></div>
       <div class='stat'><b>1M+</b><span>Downloads</span></div>
-      <div class='stat'><b>4.8★</b><span>Average Rating</span></div>
+      <div class='stat'><b>4.8&#9733;</b><span>Average Rating</span></div>
       <div class='stat'><b>150+</b><span>Countries</span></div>
     </div>
   </section>
@@ -282,9 +272,9 @@ img{max-width:100%;display:block}
              To use a real icon, replace the emoji with:
              <img src='YOUR_ICON_URL' alt='App name'/> -->
         <article class='app-card reveal'>
-          <div class='app-icon g1'>⏱</div>
+          <div class='app-icon g1'>&#9201;</div>
           <h3>Focus Timer</h3>
-          <div class='app-meta'><span class='star'>★★★★★</span> 4.8 · Productivity</div>
+          <div class='app-meta'><span class='star'>&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 &#183; Productivity</div>
           <p>A minimal Pomodoro timer that helps you stay focused, track sessions and build better work habits.</p>
           <a class='play-btn' href='https://play.google.com/store/apps/details?id=com.yourstudio.app1' rel='noopener' target='_blank'>
             <svg viewBox='0 0 24 24'><path d='M3.6 1.8 13.8 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1Z' fill='#00d7fe'/><path d='m17.2 8.6-3.4 3.4-10.2-10.2c.2-.1.5-.1.8 0l12.8 6.8Z' fill='#00f076'/><path d='m17.2 15.4-12.8 6.8c-.3.1-.6.1-.8 0L13.8 12l3.4 3.4Z' fill='#ff3a44'/><path d='M20.4 12c0 .5-.3.9-.7 1.1l-2.5 2.3-3.4-3.4 3.4-3.4 2.5 2.3c.4.2.7.6.7 1.1Z' fill='#ffd500'/></svg>
@@ -294,9 +284,9 @@ img{max-width:100%;display:block}
 
         <!-- ===== APP CARD 2 (EDIT) ===== -->
         <article class='app-card reveal'>
-          <div class='app-icon g2'>📝</div>
+          <div class='app-icon g2'>&#128221;</div>
           <h3>Cloud Notes</h3>
-          <div class='app-meta'><span class='star'>★★★★★</span> 4.7 · Tools</div>
+          <div class='app-meta'><span class='star'>&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.7 &#183; Tools</div>
           <p>Fast, beautiful notes with folders, reminders and offline support. Your ideas, organised everywhere.</p>
           <a class='play-btn' href='https://play.google.com/store/apps/details?id=com.yourstudio.app2' rel='noopener' target='_blank'>
             <svg viewBox='0 0 24 24'><path d='M3.6 1.8 13.8 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1Z' fill='#00d7fe'/><path d='m17.2 8.6-3.4 3.4-10.2-10.2c.2-.1.5-.1.8 0l12.8 6.8Z' fill='#00f076'/><path d='m17.2 15.4-12.8 6.8c-.3.1-.6.1-.8 0L13.8 12l3.4 3.4Z' fill='#ff3a44'/><path d='M20.4 12c0 .5-.3.9-.7 1.1l-2.5 2.3-3.4-3.4 3.4-3.4 2.5 2.3c.4.2.7.6.7 1.1Z' fill='#ffd500'/></svg>
@@ -306,9 +296,9 @@ img{max-width:100%;display:block}
 
         <!-- ===== APP CARD 3 (EDIT) ===== -->
         <article class='app-card reveal'>
-          <div class='app-icon g3'>🎮</div>
+          <div class='app-icon g3'>&#127918;</div>
           <h3>Block Rush</h3>
-          <div class='app-meta'><span class='star'>★★★★★</span> 4.9 · Puzzle</div>
+          <div class='app-meta'><span class='star'>&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.9 &#183; Puzzle</div>
           <p>A relaxing yet addictive block puzzle game with hundreds of levels, daily challenges and leaderboards.</p>
           <a class='play-btn' href='https://play.google.com/store/apps/details?id=com.yourstudio.app3' rel='noopener' target='_blank'>
             <svg viewBox='0 0 24 24'><path d='M3.6 1.8 13.8 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1Z' fill='#00d7fe'/><path d='m17.2 8.6-3.4 3.4-10.2-10.2c.2-.1.5-.1.8 0l12.8 6.8Z' fill='#00f076'/><path d='m17.2 15.4-12.8 6.8c-.3.1-.6.1-.8 0L13.8 12l3.4 3.4Z' fill='#ff3a44'/><path d='M20.4 12c0 .5-.3.9-.7 1.1l-2.5 2.3-3.4-3.4 3.4-3.4 2.5 2.3c.4.2.7.6.7 1.1Z' fill='#ffd500'/></svg>
@@ -379,21 +369,21 @@ img{max-width:100%;display:block}
         <div>
           <span class='eyebrow' style='color:#67e8f9'>Contact</span>
           <h2 class='section-title'>Let's talk</h2>
-          <p class='section-lead'>Have a question about one of our apps, a business enquiry or feedback? We usually reply within 24–48 hours.</p>
+          <p class='section-lead'>Have a question about one of our apps, a business enquiry or feedback? We usually reply within 24&#8211;48 hours.</p>
         </div>
         <div class='contact-list'>
           <!-- EDIT: your support email (must match Google Play Console) -->
           <a class='contact-item' href='mailto:malikrizwan3659@gmail.com'>
-            <span class='ci'>✉️</span>
+            <span class='ci'>&#9993;&#65039;</span>
             <span><small>Email support</small><b>malikrizwan3659@gmail.com</b></span>
           </a>
           <a class='contact-item' href='https://play.google.com/store/apps/dev?id=YOUR_DEVELOPER_ID' rel='noopener' target='_blank'>
-            <span class='ci'>▶️</span>
+            <span class='ci'>&#9654;&#65039;</span>
             <span><small>Developer page</small><b>View on Google Play</b></span>
           </a>
           <!-- EDIT: your country / city -->
           <div class='contact-item'>
-            <span class='ci'>📍</span>
+            <span class='ci'>&#128205;</span>
             <span><small>Location</small><b>Your City, Country</b></span>
           </div>
         </div>
@@ -408,28 +398,12 @@ img{max-width:100%;display:block}
     <b:section class='main' id='main' maxwidgets='1' showaddelement='no'>
       <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2' visible='true'>
         <b:includable id='main'>
-          <b:if cond='data:view.isSingleItem'>
-            <b:loop values='data:posts' var='post'>
-              <article class='post'>
-                <h1 class='post-title'><data:post.title/></h1>
-                <b:if cond='data:view.isPost'>
-                  <div class='post-date'><data:post.date/></div>
-                </b:if>
-                <div class='post-body'><data:post.body/></div>
-              </article>
-            </b:loop>
-          <b:else/>
-            <b:loop values='data:posts' var='post'>
-              <a class='post-list-item' expr:href='data:post.url'>
-                <h2><data:post.title/></h2>
-                <div class='post-date'><data:post.date/></div>
-              </a>
-            </b:loop>
-            <div class='pager'>
-              <b:if cond='data:newerPageUrl'><a expr:href='data:newerPageUrl'>← Newer</a><b:else/><span></span></b:if>
-              <b:if cond='data:olderPageUrl'><a expr:href='data:olderPageUrl'>Older →</a></b:if>
-            </div>
-          </b:if>
+          <b:loop values='data:posts' var='post'>
+            <article class='post'>
+              <h1 class='post-title'><a expr:href='data:post.url'><data:post.title/></a></h1>
+              <div class='post-body'><data:post.body/></div>
+            </article>
+          </b:loop>
         </b:includable>
       </b:widget>
     </b:section>
@@ -455,7 +429,7 @@ img{max-width:100%;display:block}
       </nav>
     </div>
     <div class='footer-bottom'>
-      <span>© <span id='year'>2026</span> Super Intel. All rights reserved.</span>
+      <span>&#169; <span id='year'>2026</span> Super Intel. All rights reserved.</span>
       <span>Google Play and the Google Play logo are trademarks of Google LLC.</span>
     </div>
   </div>
