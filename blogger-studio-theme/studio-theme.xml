@@ -6,7 +6,7 @@
    For Google Play Console developer websites.
 
    HOW TO EDIT: search this file for "EDIT:" comments.
-   Replace "Nova Pixel Studio", the email address, the app
+   Replace "your studio name", the email address, the app
    names/descriptions and the Google Play links with your own.
   ============================================================
 -->
@@ -212,8 +212,8 @@ img{max-width:100%;display:block}
   <div class='container nav'>
     <!-- EDIT: studio initial + name -->
     <a class='brand' expr:href='data:blog.homepageUrl'>
-      <span class='brand-mark'>N</span>
-      <span>Nova Pixel Studio</span>
+      <span class='brand-mark'>S</span>
+      <span>Super Intel</span>
     </a>
     <ul class='nav-links' id='navLinks'>
       <li><a expr:href='data:blog.homepageUrl + &quot;#apps&quot;'>Apps</a></li>
@@ -237,7 +237,7 @@ img{max-width:100%;display:block}
         <span class='badge'><i></i> Now live on Google Play</span>
         <!-- EDIT: headline + tagline -->
         <h1>We build apps people <span class='grad'>love to use.</span></h1>
-        <p>Nova Pixel Studio is an independent mobile publishing studio crafting fast, beautiful and privacy-friendly apps and games for Android users worldwide.</p>
+        <p>Super Intel is an independent mobile publishing studio crafting fast, beautiful and privacy-friendly apps and games for Android users worldwide.</p>
         <div class='hero-actions'>
           <a class='btn btn-primary' href='#apps'>Explore Our Apps →</a>
           <a class='btn btn-ghost' href='#contact'>Get in Touch</a>
@@ -356,7 +356,7 @@ img{max-width:100%;display:block}
   <!-- ABOUT -->
   <section class='section' id='about'>
     <div class='container about-grid'>
-      <div class='about-visual reveal'><span class='big'>NPS</span></div>
+      <div class='about-visual reveal'><span class='big'>SI</span></div>
       <div class='reveal'>
         <span class='eyebrow'>About Us</span>
         <!-- EDIT: your story -->
@@ -383,9 +383,9 @@ img{max-width:100%;display:block}
         </div>
         <div class='contact-list'>
           <!-- EDIT: your support email (must match Google Play Console) -->
-          <a class='contact-item' href='mailto:support@yourstudio.com'>
+          <a class='contact-item' href='mailto:malikrizwan3659@gmail.com'>
             <span class='ci'>✉️</span>
-            <span><small>Email support</small><b>support@yourstudio.com</b></span>
+            <span><small>Email support</small><b>malikrizwan3659@gmail.com</b></span>
           </a>
           <a class='contact-item' href='https://play.google.com/store/apps/dev?id=YOUR_DEVELOPER_ID' rel='noopener' target='_blank'>
             <span class='ci'>▶️</span>
@@ -441,8 +441,8 @@ img{max-width:100%;display:block}
   <div class='container'>
     <div class='footer-top'>
       <a class='brand' expr:href='data:blog.homepageUrl'>
-        <span class='brand-mark'>N</span>
-        <span>Nova Pixel Studio</span>
+        <span class='brand-mark'>S</span>
+        <span>Super Intel</span>
       </a>
       <!-- These links point to Blogger Pages. Create pages with these exact titles
            (Privacy Policy, Terms and Conditions) and Blogger gives them these URLs. -->
@@ -455,7 +455,7 @@ img{max-width:100%;display:block}
       </nav>
     </div>
     <div class='footer-bottom'>
-      <span>© <span id='year'>2026</span> Nova Pixel Studio. All rights reserved.</span>
+      <span>© <span id='year'>2026</span> Super Intel. All rights reserved.</span>
       <span>Google Play and the Google Play logo are trademarks of Google LLC.</span>
     </div>
   </div>

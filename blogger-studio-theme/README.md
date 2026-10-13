@@ -15,12 +15,12 @@ It works on desktop and phones.
 
 | What | Replace |
 |---|---|
-| Studio name | `Nova Pixel Studio` (header, footer, hero text) and the `N` / `NPS` letters |
+| Studio name | Set to `Super Intel` (logo letters `S` / `SI`) |
 | Developer page | `https://play.google.com/store/apps/dev?id=YOUR_DEVELOPER_ID` |
 | App links | `com.yourstudio.app1`, `app2`, `app3` → your real package names |
 | App names, ratings and descriptions | Inside each `<article class='app-card'>` block |
 | App icon | Replace the emoji with `<img src='ICON_URL' alt='App name'/>` |
-| Email | `support@yourstudio.com` (use the same email as in Play Console) |
+| Email | Set to `malikrizwan3659@gmail.com` (must match Play Console) |
 | Location and stats | The contact section and the stats strip |
 
 Copy an `<article class='app-card'>` block to add another app.
