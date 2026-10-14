@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.YearMonth
 
 /** Raw text the user typed, always in the units in effect when it was typed. */
 data class CalculatorForm(
@@ -35,12 +37,16 @@ data class CalculatorForm(
     val price: String = "",
     val efficiency: String = "",
     val selectedVehicleId: Long? = null,
+    /** Set when the efficiency came from a model on the Cars screen instead of a saved vehicle. */
+    val modelLabel: String? = null,
 )
 
 data class CalculatorUiState(
     val form: CalculatorForm = CalculatorForm(),
     val settings: UserSettings = UserSettings(),
     val vehicles: List<Vehicle> = emptyList(),
+    /** Total fuel spend saved for the current calendar month. */
+    val monthSpent: Double = 0.0,
 ) {
     val units: UnitPrefs get() = settings.units
     val selectedVehicle: Vehicle? get() = vehicles.firstOrNull { it.id == form.selectedVehicleId }
@@ -79,8 +85,16 @@ class CalculatorViewModel(
     val events: Flow<CalculatorEvent> = _events.receiveAsFlow()
 
     val uiState: StateFlow<CalculatorUiState> =
-        combine(form, settingsRepository.settings, repository.vehicles) { f, s, v ->
-            CalculatorUiState(form = f, settings = s, vehicles = v)
+        combine(form, settingsRepository.settings, repository.vehicles, repository.trips) { f, s, v, trips ->
+            val thisMonth = YearMonth.now()
+            CalculatorUiState(
+                form = f,
+                settings = s,
+                vehicles = v,
+                monthSpent = trips
+                    .filter { YearMonth.from(LocalDate.ofEpochDay(it.dateEpochDay)) == thisMonth }
+                    .sumOf { it.totalCost },
+            )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CalculatorUiState())
 
     init {
@@ -96,6 +110,18 @@ class CalculatorViewModel(
                 }
                 currentUnits = units
                 previous = units
+            }
+        }
+        viewModelScope.launch {
+            CalculatorPrefillBus.request.filterNotNull().collect { request ->
+                form.update {
+                    it.copy(
+                        selectedVehicleId = null,
+                        modelLabel = request.label,
+                        efficiency = Fmt.input(FuelMath.kmPerLToEfficiency(request.kmPerL, currentUnits)),
+                    )
+                }
+                CalculatorPrefillBus.request.value = null
             }
         }
     }
@@ -125,6 +151,7 @@ class CalculatorViewModel(
     fun onVehicleSelected(vehicle: Vehicle) = form.update {
         it.copy(
             selectedVehicleId = vehicle.id,
+            modelLabel = null,
             efficiency = Fmt.input(FuelMath.kmPerLToEfficiency(vehicle.efficiencyKmPerL, currentUnits)),
         )
     }
@@ -148,6 +175,7 @@ class CalculatorViewModel(
             form.update {
                 it.copy(
                     selectedVehicleId = id,
+                    modelLabel = null,
                     efficiency = Fmt.input(FuelMath.kmPerLToEfficiency(efficiencyKmPerL, currentUnits)),
                 )
             }
@@ -165,7 +193,7 @@ class CalculatorViewModel(
             repository.saveTrip(
                 Trip(
                     vehicleId = vehicle?.id,
-                    vehicleName = vehicle?.name ?: "No vehicle",
+                    vehicleName = vehicle?.name ?: state.form.modelLabel ?: "No vehicle",
                     dateEpochDay = date.toEpochDay(),
                     distanceKm = distanceKm,
                     fuelPricePerLiter = pricePerLiter,

@@ -49,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.harrycodess.fueltracker.data.local.Vehicle
 import com.harrycodess.fueltracker.domain.Fmt
+import com.harrycodess.fueltracker.ui.theme.InstrumentLabel
 import java.time.LocalDate
 
 private const val MILLIS_PER_DAY = 86_400_000L
@@ -65,14 +66,14 @@ fun ScreenTopBar(
         modifier = modifier,
         title = {
             Column {
-                Text(title, style = MaterialTheme.typography.titleLarge)
                 if (subtitle != null) {
                     Text(
-                        subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        subtitle.uppercase(),
+                        style = InstrumentLabel,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
+                Text(title, style = MaterialTheme.typography.headlineSmall)
             }
         },
         navigationIcon = {
@@ -83,7 +84,10 @@ fun ScreenTopBar(
             }
         },
         actions = actions,
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
     )
 }
 

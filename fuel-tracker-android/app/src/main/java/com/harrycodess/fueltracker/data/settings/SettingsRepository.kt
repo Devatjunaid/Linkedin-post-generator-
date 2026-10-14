@@ -22,10 +22,12 @@ enum class ThemeMode { SYSTEM, LIGHT, DARK }
 data class UserSettings(
     val units: UnitPrefs = UnitPrefs(),
     val currency: String = "$",
-    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val themeMode: ThemeMode = ThemeMode.DARK,
     /** Last fuel price used, in price per litre, to pre-fill the calculator. */
     val lastPricePerLiter: Double? = null,
     val lastVehicleId: Long? = null,
+    /** Monthly fuel budget in the user's currency, or null when not set. */
+    val monthlyBudget: Double? = null,
 )
 
 private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "user_settings")
@@ -42,9 +44,10 @@ class SettingsRepository(context: Context) {
                     efficiencyFormat = enumOrDefault(p[Keys.EFFICIENCY_FORMAT], EfficiencyFormat.KM_PER_L),
                 ),
                 currency = p[Keys.CURRENCY] ?: "$",
-                themeMode = enumOrDefault(p[Keys.THEME_MODE], ThemeMode.SYSTEM),
+                themeMode = enumOrDefault(p[Keys.THEME_MODE], ThemeMode.DARK),
                 lastPricePerLiter = p[Keys.LAST_PRICE_PER_LITER],
                 lastVehicleId = p[Keys.LAST_VEHICLE_ID],
+                monthlyBudget = p[Keys.MONTHLY_BUDGET],
             )
         }
 
@@ -71,6 +74,12 @@ class SettingsRepository(context: Context) {
         }
     }
 
+    suspend fun setMonthlyBudget(amount: Double?) {
+        store.edit {
+            if (amount != null && amount > 0) it[Keys.MONTHLY_BUDGET] = amount else it.remove(Keys.MONTHLY_BUDGET)
+        }
+    }
+
     private object Keys {
         val UNIT_SYSTEM = stringPreferencesKey("unit_system")
         val EFFICIENCY_FORMAT = stringPreferencesKey("efficiency_format")
@@ -78,6 +87,7 @@ class SettingsRepository(context: Context) {
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val LAST_PRICE_PER_LITER = doublePreferencesKey("last_price_per_liter")
         val LAST_VEHICLE_ID = longPreferencesKey("last_vehicle_id")
+        val MONTHLY_BUDGET = doublePreferencesKey("monthly_budget")
     }
 }
 

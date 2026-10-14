@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -68,11 +69,15 @@ import com.harrycodess.fueltracker.domain.Fmt
 import com.harrycodess.fueltracker.domain.UnitPrefs
 import com.harrycodess.fueltracker.export.CsvExporter
 import com.harrycodess.fueltracker.ui.AppViewModelProvider
+import com.harrycodess.fueltracker.ui.components.CockpitCard
 import com.harrycodess.fueltracker.ui.components.EmptyState
+import com.harrycodess.fueltracker.ui.components.Readout
 import com.harrycodess.fueltracker.ui.components.ScreenTopBar
 import com.harrycodess.fueltracker.ui.components.TripCard
 import com.harrycodess.fueltracker.ui.preview.PreviewData
 import com.harrycodess.fueltracker.ui.theme.FuelTrackerTheme
+import com.harrycodess.fueltracker.ui.theme.InstrumentLabel
+import com.harrycodess.fueltracker.ui.theme.ReadoutLarge
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -218,66 +223,42 @@ fun HistoryContent(
 private fun StatsCard(state: HistoryUiState, units: UnitPrefs, currency: String) {
     val stats = state.stats
     val period = state.filter.month?.let { Fmt.shortMonth(it) } ?: "All time"
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
-    ) {
-        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                StatTile(
-                    icon = Icons.Rounded.Payments,
-                    label = "Spent · $period",
-                    value = Fmt.money(stats.totalCost, currency),
-                    highlighted = true,
-                    modifier = Modifier.weight(1f),
-                )
-                StatTile(
-                    icon = Icons.Rounded.Place,
-                    label = "Distance",
-                    value = "${Fmt.number(FuelMath.kmToDistance(stats.totalKm, units.system), 0)} ${units.distanceUnit}",
-                    modifier = Modifier.weight(1f),
-                )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                StatTile(
-                    icon = Icons.Rounded.Speed,
-                    label = "Avg efficiency",
-                    value = if (stats.avgKmPerL > 0) {
-                        "${Fmt.number(FuelMath.kmPerLToEfficiency(stats.avgKmPerL, units))} ${units.efficiencyUnit}"
-                    } else {
-                        "—"
-                    },
-                    modifier = Modifier.weight(1f),
-                )
-                StatTile(
-                    icon = Icons.Rounded.LocalGasStation,
-                    label = "Avg cost / ${units.distanceUnit}",
-                    value = Fmt.money(FuelMath.costPerDistance(stats.costPerKm, units.system), currency),
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun StatTile(
-    icon: ImageVector,
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    highlighted: Boolean = false,
-) {
-    val container = if (highlighted) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surface
-    val content = if (highlighted) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurface
-    Surface(modifier = modifier, shape = RoundedCornerShape(14.dp), color = container, contentColor = content) {
-        Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(icon, contentDescription = null, modifier = Modifier.size(14.dp))
-                Spacer(Modifier.width(4.dp))
-                Text(label, style = MaterialTheme.typography.labelSmall, maxLines = 1)
-            }
-            Text(value, style = MaterialTheme.typography.titleMedium, maxLines = 1)
+    CockpitCard {
+        Text(
+            "SPENT · ${period.uppercase()}",
+            style = InstrumentLabel,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            Fmt.money(stats.totalCost, currency),
+            style = ReadoutLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            "${stats.tripCount} trips",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Readout(
+                label = "Distance",
+                value = "${Fmt.number(FuelMath.kmToDistance(stats.totalKm, units.system), 0)} ${units.distanceUnit}",
+                icon = Icons.Rounded.Place,
+                modifier = Modifier.weight(1f),
+            )
+            Readout(
+                label = "Avg ${units.efficiencyUnit}",
+                value = if (stats.avgKmPerL > 0) Fmt.number(FuelMath.kmPerLToEfficiency(stats.avgKmPerL, units)) else "—",
+                icon = Icons.Rounded.Speed,
+                modifier = Modifier.weight(1f),
+            )
+            Readout(
+                label = "Per ${units.distanceUnit}",
+                value = Fmt.money(FuelMath.costPerDistance(stats.costPerKm, units.system), currency),
+                icon = Icons.Rounded.LocalGasStation,
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }
@@ -391,7 +372,7 @@ private fun SwipeToDeleteTrip(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(20.dp))
                     .background(MaterialTheme.colorScheme.errorContainer)
                     .padding(horizontal = 24.dp),
                 contentAlignment = Alignment.CenterEnd,

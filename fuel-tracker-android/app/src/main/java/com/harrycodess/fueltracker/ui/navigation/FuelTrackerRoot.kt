@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Calculate
+import androidx.compose.material.icons.rounded.AccountBalanceWallet
+import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -33,7 +36,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.harrycodess.fueltracker.AppContainer
+import com.harrycodess.fueltracker.ui.budget.BudgetScreen
 import com.harrycodess.fueltracker.ui.calculator.CalculatorScreen
+import com.harrycodess.fueltracker.ui.cars.CarsScreen
 import com.harrycodess.fueltracker.ui.components.AdBannerSlot
 import com.harrycodess.fueltracker.ui.edit.EditTripScreen
 import com.harrycodess.fueltracker.ui.edit.EditTripViewModel
@@ -45,6 +50,8 @@ import com.harrycodess.fueltracker.util.findActivity
 object Routes {
     const val CALCULATOR = "calculator"
     const val HISTORY = "history"
+    const val CARS = "cars"
+    const val BUDGET = "budget"
     const val SETTINGS = "settings"
     const val VEHICLES = "vehicles"
     const val EDIT_TRIP = "trip/{${EditTripViewModel.TRIP_ID_ARG}}"
@@ -52,8 +59,10 @@ object Routes {
 }
 
 private enum class TopLevel(val route: String, val label: String, val icon: ImageVector) {
-    CALCULATOR(Routes.CALCULATOR, "Calculator", Icons.Rounded.Calculate),
+    CALCULATOR(Routes.CALCULATOR, "Trip", Icons.Rounded.Speed),
     HISTORY(Routes.HISTORY, "History", Icons.Rounded.History),
+    CARS(Routes.CARS, "Cars", Icons.Rounded.DirectionsCar),
+    BUDGET(Routes.BUDGET, "Budget", Icons.Rounded.AccountBalanceWallet),
 }
 
 @Composable
@@ -82,13 +91,18 @@ fun FuelTrackerRoot(container: AppContainer) {
                     modifier = if (showNavBar) Modifier else Modifier.navigationBarsPadding(),
                 )
                 if (showNavBar) {
-                    NavigationBar {
+                    NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest) {
                         TopLevel.entries.forEach { dest ->
                             NavigationBarItem(
                                 selected = currentRoute == dest.route,
                                 onClick = { navController.navigateTopLevel(dest.route) },
                                 icon = { Icon(dest.icon, contentDescription = null) },
                                 label = { Text(dest.label) },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = MaterialTheme.colorScheme.primary,
+                                ),
                             )
                         }
                     }
@@ -110,7 +124,17 @@ fun FuelTrackerRoot(container: AppContainer) {
                     showInterstitial = ads::showInterstitial,
                     onViewHistory = { navController.navigateTopLevel(Routes.HISTORY) },
                     onOpenSettings = { navController.navigate(Routes.SETTINGS) },
+                    onBrowseCars = { navController.navigateTopLevel(Routes.CARS) },
                 )
+            }
+            composable(Routes.CARS) {
+                CarsScreen(
+                    snackbarHostState = snackbarHostState,
+                    onUseInCalculator = { navController.navigateTopLevel(Routes.CALCULATOR) },
+                )
+            }
+            composable(Routes.BUDGET) {
+                BudgetScreen()
             }
             composable(Routes.HISTORY) {
                 HistoryScreen(

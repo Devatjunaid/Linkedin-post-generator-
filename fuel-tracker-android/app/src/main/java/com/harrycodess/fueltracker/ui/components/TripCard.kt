@@ -2,7 +2,6 @@ package com.harrycodess.fueltracker.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +29,7 @@ import com.harrycodess.fueltracker.data.local.date
 import com.harrycodess.fueltracker.domain.FuelMath
 import com.harrycodess.fueltracker.domain.Fmt
 import com.harrycodess.fueltracker.domain.UnitPrefs
+import com.harrycodess.fueltracker.ui.theme.ReadoutMedium
 
 @Composable
 fun TripCard(
@@ -42,44 +42,31 @@ fun TripCard(
     Surface(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surfaceContainer,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.size(44.dp),
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(Icons.Rounded.DirectionsCar, contentDescription = null)
-                }
-            }
+            IconTile(Icons.Rounded.DirectionsCar)
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.Bottom) {
+                Text(
+                    trip.vehicleName,
+                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                if (trip.note.isNotBlank()) {
                     Text(
-                        trip.vehicleName,
-                        style = MaterialTheme.typography.titleSmall,
+                        trip.note,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false),
                     )
-                    if (trip.note.isNotBlank()) {
-                        Text(
-                            " · ${trip.note}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f, fill = false),
-                        )
-                    }
                 }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -94,11 +81,15 @@ fun TripCard(
             }
             Spacer(Modifier.width(8.dp))
             Column(horizontalAlignment = Alignment.End) {
-                Text(Fmt.money(trip.totalCost, currency), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    Fmt.money(trip.totalCost, currency),
+                    style = ReadoutMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
                 Text(
                     "${Fmt.number(FuelMath.kmPerLToEfficiency(trip.efficiencyKmPerL, units))} ${units.efficiencyUnit}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.tertiary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -111,7 +102,7 @@ private fun MetaItem(icon: ImageVector, text: String) {
         Icon(
             icon,
             contentDescription = null,
-            modifier = Modifier.size(14.dp),
+            modifier = Modifier.size(13.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(Modifier.width(4.dp))

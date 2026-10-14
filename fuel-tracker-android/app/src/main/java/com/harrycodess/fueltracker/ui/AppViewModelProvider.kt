@@ -7,7 +7,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.harrycodess.fueltracker.AppContainer
 import com.harrycodess.fueltracker.FuelTrackerApp
+import com.harrycodess.fueltracker.ui.budget.BudgetViewModel
 import com.harrycodess.fueltracker.ui.calculator.CalculatorViewModel
+import com.harrycodess.fueltracker.ui.cars.CarsViewModel
 import com.harrycodess.fueltracker.ui.edit.EditTripViewModel
 import com.harrycodess.fueltracker.ui.history.HistoryViewModel
 import com.harrycodess.fueltracker.ui.settings.SettingsViewModel
@@ -35,6 +37,14 @@ object AppViewModelProvider {
         initializer {
             val c = container()
             VehiclesViewModel(c.repository, c.settingsRepository)
+        }
+        initializer {
+            val c = container()
+            CarsViewModel(c.repository, c.settingsRepository)
+        }
+        initializer {
+            val c = container()
+            BudgetViewModel(c.repository, c.settingsRepository)
         }
     }
 }
