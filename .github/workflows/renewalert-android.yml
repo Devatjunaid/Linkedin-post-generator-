@@ -1,0 +1,49 @@
+name: Renew Alert Android
+
+on:
+  push:
+    paths:
+      - "renewalert-android/**"
+      - ".github/workflows/renewalert-android.yml"
+  pull_request:
+    paths:
+      - "renewalert-android/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: renewalert-android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Unit tests
+        run: ./gradlew --no-daemon testDebugUnitTest
+
+      - name: Build debug APK (test ads)
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Build release bundle (unsigned)
+        run: ./gradlew --no-daemon bundleRelease
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: renewalert-debug-apk
+          path: renewalert-android/app/build/outputs/apk/debug/*.apk
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: renewalert-test-reports
+          path: renewalert-android/app/build/reports
