@@ -1,0 +1,16 @@
+<resources>
+    <style name="Theme.EvCalc" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/ink</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/ink</item>
+        <item name="android:colorAccent">@color/volt</item>
+    </style>
+
+    <!-- System splash (Android 12+ animates the icon; older versions show it static). -->
+    <style name="Theme.EvCalc.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/ink</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration">900</item>
+        <item name="postSplashScreenTheme">@style/Theme.EvCalc</item>
+    </style>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <color name="ink">#FF0B0B0C</color>
+    <color name="ink2">#FF1F1F22</color>
+    <color name="paper">#FFFFFFFF</color>
+    <color name="mist">#FFF2F2F0</color>
+    <color name="volt">#FFD4FF3A</color>
+    <color name="muted">#FF5B5B60</color>
+    <color name="ic_launcher_background">#FF0B0B0C</color>
+</resources>
