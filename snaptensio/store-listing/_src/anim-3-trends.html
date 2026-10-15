@@ -1,0 +1,128 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>See your trends at a glance</title>
+<style>
+@font-face{font-family:Manrope;src:url("fonts/manrope.ttf");font-weight:200 800}
+@font-face{font-family:'Share Tech Mono';src:url("fonts/ShareTechMono.ttf")}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden}
+body{font-family:Manrope,sans-serif;position:relative;background:linear-gradient(160deg,#2F6BFF 0%,#1F4FD8 45%,#1638A8 100%);color:#FFFFFF}
+a{color:inherit;text-decoration:none}
+.ring{position:absolute;border-radius:50%;border:3px solid rgba(255,255,255,.10)}
+.head{position:absolute;left:80px;right:80px;top:110px;text-align:center}
+.head h1{margin:0;font-size:80px;line-height:1.08;font-weight:800;letter-spacing:-2px}
+.head p{margin:26px auto 0;max-width:820px;font-size:36px;line-height:1.35;font-weight:600;opacity:.86}
+.phone{position:absolute;left:50%;top:430px;transform:translateX(-50%);width:703px;height:1484px;background:#0B1220;border-radius:84px;padding:16px;box-sizing:border-box;box-shadow:0 40px 90px rgba(10,20,60,.38)}
+.screen{width:671px;height:1452px;border-radius:70px;overflow:hidden;position:relative;background:#F4F6F8}
+.screen>.inner{width:390px;height:844px;transform:scale(1.72);transform-origin:0 0}
+.sticker{position:absolute;background:#FFFFFF;color:#0F1B2D;border-radius:28px;padding:22px 28px;display:flex;align-items:center;gap:14px;font-size:30px;box-shadow:0 18px 40px rgba(10,20,60,.25);z-index:3}
+.sticker b{font-weight:800}
+.sticker span{font-weight:600;color:#556274}
+.sticker .pill{font-weight:800;padding:6px 16px;border-radius:999px}
+.ecg{position:absolute;left:0;right:0;top:1650px;opacity:.22}
+
+.head{opacity:0;animation:rise .7s .2s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes rise{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:none}}
+.phone{opacity:0;animation:phoneIn .9s .35s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes phoneIn{from{opacity:0;transform:translate(-50%,220px) scale(.94)}to{opacity:1;transform:translateX(-50%)}}
+.inner svg polyline{stroke-dasharray:900;stroke-dashoffset:900;animation:draw 1.8s 1.2s ease-out forwards}
+.inner svg polyline+polyline{animation-delay:1.5s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.inner section:nth-of-type(2) div[style*="height: 14px"]>div{transform-origin:left;transform:scaleX(0);animation:grow .6s ease-out forwards}
+.inner section:nth-of-type(2) div[style*="height: 14px"]>div:nth-child(1){animation-delay:2.6s}
+.inner section:nth-of-type(2) div[style*="height: 14px"]>div:nth-child(2){animation-delay:2.8s}
+.inner section:nth-of-type(2) div[style*="height: 14px"]>div:nth-child(3){animation-delay:3.0s}
+.inner section:nth-of-type(2) div[style*="height: 14px"]>div:nth-child(4){animation-delay:3.2s}
+@keyframes grow{to{transform:scaleX(1)}}
+.sticker{opacity:0;animation:pop .5s 3.6s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes pop{from{opacity:0;transform:scale(.6) rotate(4deg)}to{opacity:1;transform:scale(1) rotate(4deg)}}
+.ecg polyline{stroke-dasharray:1300;stroke-dashoffset:1300;animation:draw 2s .3s linear forwards}
+</style></head><body>
+<div class="ring" style="width:1300px;height:1300px;left:-110px;top:700px"></div>
+<div class="ring" style="width:900px;height:900px;left:90px;top:900px"></div>
+<svg class="ecg" width="1080" height="120" viewBox="0 0 1080 120"><polyline points="0,80 400,80 440,40 480,110 520,10 560,80 1080,80" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round"/></svg>
+<div class="head"><h1>See your trends at a glance</h1><p>Averages, highs and lows, morning vs evening and time in range.</p></div>
+<div class="phone"><div class="screen"><div class="inner"><div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F4F6F8; font-family: 'Manrope', system-ui, sans-serif; color: #0F1B2D; font-variant-numeric: tabular-nums; box-sizing: border-box">
+<div style="padding: 20px 20px 96px; display: flex; flex-direction: column; gap: 12px">
+
+<header style="display: flex; align-items: center; justify-content: space-between">
+<h1 style="margin: 0; font-size: 26px; font-weight: 800">Trends</h1>
+<a href="Insights.dc.html" style="display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px; border-radius: 20px; background: #E8EEFC; color: #1F4FD8; font-weight: 800; font-size: 13px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path></svg>
+4 insights</a>
+</header>
+
+<div style="display: flex; background: #E6EAF0; border-radius: 12px; padding: 3px; font-size: 13px; font-weight: 800">
+<button aria-pressed="false" style="all: unset; cursor: pointer; flex: 1; text-align: center; padding: 9px 0; border-radius: 10px; color: #3B4A5E">7D</button>
+<button aria-pressed="true" style="all: unset; cursor: pointer; flex: 1; text-align: center; padding: 9px 0; border-radius: 10px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(15,27,45,0.12)">30D</button>
+<button aria-pressed="false" style="all: unset; cursor: pointer; flex: 1; text-align: center; padding: 9px 0; border-radius: 10px; color: #3B4A5E">90D</button>
+<button aria-pressed="false" style="all: unset; cursor: pointer; flex: 1; text-align: center; padding: 9px 0; border-radius: 10px; color: #3B4A5E">1Y</button>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #E2E7EE; border-radius: 20px; padding: 14px 14px 10px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 12px; font-weight: 700; color: #556274">30-day average</span>
+<span style="font-size: 28px; font-weight: 800">131/84 <span style="font-size: 13px; color: #556274">mmHg</span></span>
+</div>
+<span style="font-size: 12px; font-weight: 800; color: #14633F; background: #E7F4EC; padding: 5px 9px; border-radius: 999px">−5 vs prior 30d</span>
+</div>
+<svg width="320" height="169" viewBox="0 0 360 190" role="img" aria-label="Line chart: systolic about 125 to 142 and diastolic about 78 to 91 over 30 days, both drifting down; dashed target lines at 130 and 80">
+<text x="0" y="37" font-size="10" font-weight="700" fill="#556274" font-family="Manrope">140</text>
+<text x="0" y="88" font-size="10" font-weight="700" fill="#556274" font-family="Manrope">110</text>
+<text x="0" y="139" font-size="10" font-weight="700" fill="#556274" font-family="Manrope">80</text>
+<line x1="26" y1="34" x2="360" y2="34" stroke="#EEF1F5"></line>
+<line x1="26" y1="85" x2="360" y2="85" stroke="#EEF1F5"></line>
+<line x1="26" y1="136" x2="360" y2="136" stroke="#C9D2DE" stroke-dasharray="4 4"></line>
+<line x1="26" y1="51" x2="360" y2="51" stroke="#C9D2DE" stroke-dasharray="4 4"></line>
+<text x="358" y="47" font-size="10" font-weight="700" fill="#556274" text-anchor="end" font-family="Manrope">target 130</text>
+<polyline points="30.0,37.4 41.3,32.3 52.6,40.8 63.9,34.0 75.2,30.6 86.6,39.1 97.9,35.7 109.2,42.5 120.5,32.3 131.8,37.4 143.1,40.8 154.4,44.2 165.7,39.1 177.0,45.9 188.3,49.3 199.7,42.5 211.0,51.0 222.3,47.6 233.6,52.7 244.9,45.9 256.2,54.4 267.5,49.3 278.8,56.1 290.1,51.0 301.4,57.8 312.8,52.7 324.1,49.3 335.4,56.1 346.7,57.8 358.0,54.4" fill="none" stroke="#1F4FD8" stroke-width="2.4" stroke-linejoin="round"></polyline>
+<polyline points="30.0,122.4 41.3,119.0 52.6,124.1 63.9,120.7 75.2,117.3 86.6,122.4 97.9,120.7 109.2,125.8 120.5,119.0 131.8,122.4 143.1,124.1 154.4,127.5 165.7,124.1 177.0,129.2 188.3,130.9 199.7,125.8 211.0,132.6 222.3,129.2 233.6,134.3 244.9,129.2 256.2,136.0 267.5,130.9 278.8,136.0 290.1,132.6 301.4,137.7 312.8,134.3 324.1,130.9 335.4,136.0 346.7,137.7 358.0,132.6" fill="none" stroke="#E07A2B" stroke-width="2.4" stroke-linejoin="round"></polyline>
+<text x="26" y="186" font-size="10" font-weight="700" fill="#556274" font-family="Manrope">14 Sep</text>
+<text x="190" y="186" font-size="10" font-weight="700" fill="#556274" text-anchor="middle" font-family="Manrope">28 Sep</text>
+<text x="360" y="186" font-size="10" font-weight="700" fill="#556274" text-anchor="end" font-family="Manrope">13 Oct</text>
+<line x1="150" y1="20" x2="150" y2="168" stroke="#0F1B2D" stroke-width="1" stroke-dasharray="2 3"></line>
+<text x="154" y="18" font-size="10" font-weight="800" fill="#0F1B2D" font-family="Manrope">Started Amlodipine</text>
+</svg>
+<div style="display: flex; gap: 14px; font-size: 11px; font-weight: 700; color: #556274">
+<span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 3px; background: #1F4FD8; border-radius: 2px"></span>Systolic</span>
+<span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 3px; background: #E07A2B; border-radius: 2px"></span>Diastolic</span>
+<span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 0; border-top: 2px dashed #8A96A8"></span>Target</span>
+</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #E2E7EE; border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 800">Time in each range</span>
+<div style="display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px">
+<div style="width: 22%; background: #1E8E5A"></div>
+<div style="width: 20%; background: #E0A526"></div>
+<div style="width: 46%; background: #E07A2B"></div>
+<div style="width: 12%; background: #C2272D"></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); font-size: 11px; font-weight: 700; color: #556274; gap: 4px">
+<span><b style="color: #0F1B2D; font-size: 15px">22%</b><br>Normal</span>
+<span><b style="color: #0F1B2D; font-size: 15px">20%</b><br>Elevated</span>
+<span><b style="color: #0F1B2D; font-size: 15px">46%</b><br>Stage 1</span>
+<span><b style="color: #0F1B2D; font-size: 15px">12%</b><br>Stage 2</span>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<div style="background: #FFFFFF; border: 1px solid #E2E7EE; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; font-weight: 700; color: #556274">Morning</span><span style="font-size: 18px; font-weight: 800">127/81</span></div>
+<div style="background: #FFFFFF; border: 1px solid #E2E7EE; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; font-weight: 700; color: #556274">Evening</span><span style="font-size: 18px; font-weight: 800">136/87</span></div>
+<div style="background: #FFFFFF; border: 1px solid #E2E7EE; border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; font-weight: 700; color: #556274">Avg pulse</span><span style="font-size: 18px; font-weight: 800">73</span></div>
+</div>
+</div>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: #FFFFFF; border-top: 1px solid #E2E7EE; display: flex; justify-content: space-around; align-items: flex-start; padding-top: 8px; box-sizing: border-box">
+<a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 60px; height: 48px; justify-content: center; font-size: 11px; font-weight: 700; color: #556274">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg>Home</a>
+<a href="History.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 60px; height: 48px; justify-content: center; font-size: 11px; font-weight: 700; color: #556274">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path></svg>History</a>
+<a href="Scan.dc.html" aria-label="Scan monitor" style="width: 60px; height: 60px; border-radius: 30px; background: #1F4FD8; color: #FFFFFF; display: flex; align-items: center; justify-content: center; margin-top: -26px; box-shadow: 0 6px 16px rgba(31,79,216,0.35)">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h2.5l1.5-2h6l1.5 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><circle cx="12" cy="13" r="4"></circle></svg></a>
+<a href="Trends.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 60px; height: 48px; justify-content: center; font-size: 11px; font-weight: 800; color: #1F4FD8">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg>Trends</a>
+<a href="Meds.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 60px; height: 48px; justify-content: center; font-size: 11px; font-weight: 700; color: #556274">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 20.5a4.9 4.9 0 0 1-7-7l10-10a4.9 4.9 0 0 1 7 7z"></path><path d="M8.5 8.5l7 7"></path></svg>Meds</a>
+</nav>
+</div></div></div></div>
+<div class="sticker" style="right:22px;top:1600px;transform:rotate(4deg)"><span class="pill" style="background:#E7F4EC;color:#14633F">−8 mmHg</span><span>since new meds</span></div>
+</body></html>

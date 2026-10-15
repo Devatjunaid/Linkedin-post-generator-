@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="anim-common.css"><style>
+.screen{background:#0B1220}
+.top{position:absolute;top:44px;left:0;right:0;text-align:center;font-weight:800;font-size:30px;color:#fff}
+.cam{position:absolute;top:0;left:0;right:0;height:900px;background:#26303F;display:flex;align-items:center;justify-content:center}
+.device{width:400px;height:560px;border-radius:56px;background:#E9ECEF;box-shadow:inset 0 -12px 0 #CDD3DA;padding-top:50px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:30px;transform:rotate(-3deg);animation:shake 2.4s ease-in-out infinite}
+@keyframes shake{0%,100%{transform:rotate(-3deg) translate(0,0)}50%{transform:rotate(-2deg) translate(4px,-6px)}}
+.lcd{width:320px;height:360px;border-radius:18px;background:#A9B8A2;box-shadow:inset 0 0 0 6px #8E9C88;padding:20px 26px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:6px;color:#1B2418;font-family:'Share Tech Mono',monospace}
+.lcd div{display:flex;justify-content:space-between;align-items:baseline}
+.lcd small{font-family:Manrope;font-weight:800;font-size:18px}
+.btns{display:flex;gap:24px}.btns i{width:76px;height:36px;border-radius:18px;background:#3C6FE0;display:block}.btns i+i{background:#B4BCC6}
+.corner{position:absolute;width:60px;height:60px;border:7px solid #fff}
+.scanline{position:absolute;left:110px;right:110px;height:6px;border-radius:3px;background:#3DDC84;box-shadow:0 0 24px #3DDC84;top:190px;animation:sweep 1.4s ease-in-out 3 alternate,out .3s 4.2s forwards}
+@keyframes sweep{from{top:190px}to{top:700px}}
+.box{position:absolute;border:5px solid #3DDC84;border-radius:16px;opacity:0;animation:fade .3s forwards}
+.tag{position:absolute;background:#3DDC84;color:#062814;font-weight:800;font-size:20px;padding:4px 12px;border-radius:10px;opacity:0;animation:fade .3s forwards}
+@keyframes fade{to{opacity:1}}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:470px;background:#0B1220;border-radius:44px 44px 0 0;padding:34px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px}
+.status{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:700}
+.status i{width:16px;height:16px;border-radius:8px;background:#FFD34D;animation:dot 0s 4.2s forwards}
+@keyframes dot{to{background:#3DDC84}}
+.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.v{background:#18223A;border-radius:24px;padding:18px 20px}
+.v small{display:block;font-size:20px;color:#AEB9CB;font-weight:700}
+.v b{font-size:52px;font-weight:800;display:block;height:64px}
+.v b span{opacity:0;animation:fade .25s forwards}
+.cta{height:96px;border-radius:28px;background:#1F4FD8;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;opacity:0;transform:translateY(40px);animation:rise .5s 4.4s cubic-bezier(.2,.8,.2,1) forwards}
+.msg1,.msg2{position:absolute}
+.msg2{opacity:0;animation:fade .2s 4.2s forwards}
+.msg1{animation:out .2s 4.2s forwards}@keyframes out{to{opacity:0}}
+</style></head><body>
+<div class="head"><h1>Snap your BP monitor</h1><p>Point the camera. The numbers fill in by themselves.</p></div>
+<div class="phone"><div class="screen">
+ <div class="cam"><div class="device"><div class="lcd">
+   <div><small>SYS</small><span style="font-size:110px;line-height:1">128</span></div>
+   <div><small>DIA</small><span style="font-size:88px;line-height:1">82</span></div>
+   <div><small>PUL</small><span style="font-size:60px;line-height:1">72</span></div>
+ </div><div class="btns"><i></i><i></i></div></div></div>
+ <div class="top">Scan your monitor</div>
+ <div class="corner" style="left:80px;top:150px;border-right:0;border-bottom:0;border-radius:24px 0 0 0"></div>
+ <div class="corner" style="right:80px;top:150px;border-left:0;border-bottom:0;border-radius:0 24px 0 0"></div>
+ <div class="corner" style="left:80px;top:760px;border-right:0;border-top:0;border-radius:0 0 0 24px"></div>
+ <div class="corner" style="right:80px;top:760px;border-left:0;border-top:0;border-radius:0 0 24px 0"></div>
+ <div class="scanline"></div>
+ <div class="box" style="left:278px;top:254px;width:200px;height:112px;animation-delay:2.2s"></div><span class="tag" style="left:356px;top:220px;animation-delay:2.2s">SYS 128</span>
+ <div class="box" style="left:364px;top:374px;width:116px;height:86px;animation-delay:2.9s"></div><span class="tag" style="left:490px;top:398px;animation-delay:2.9s">DIA 82</span>
+ <div class="box" style="left:394px;top:464px;width:86px;height:64px;animation-delay:3.5s"></div><span class="tag" style="left:490px;top:490px;animation-delay:3.5s">PULSE 72</span>
+ <div class="sheet">
+  <div class="status"><i></i><span style="position:relative;flex:1;height:34px"><span class="msg1">Hold steady… matching frames</span><span class="msg2">Got it. All numbers matched.</span></span></div>
+  <div class="vals">
+   <div class="v"><small>Systolic</small><b><span style="animation-delay:2.3s">128</span></b></div>
+   <div class="v"><small>Diastolic</small><b><span style="animation-delay:3s">82</span></b></div>
+   <div class="v"><small>Pulse</small><b><span style="animation-delay:3.6s">72</span></b></div>
+  </div>
+  <div class="cta">&#10003;&nbsp; Use these numbers</div>
+ </div>
+</div></div>
+</body></html>

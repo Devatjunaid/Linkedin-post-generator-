@@ -1,8 +1,8 @@
 # SnapTensio Privacy Policy
 
-_Last updated: [DATE]_
+_Last updated: 15 October 2026_
 
-SnapTensio ("the app") is a blood pressure logbook published by [DEVELOPER NAME]. This policy explains what data the app handles.
+SnapTensio ("the app") is a blood pressure logbook published by [PUBLISHER NAME]. This policy explains what data the app handles.
 
 ## Health data stays on your device
 - Blood pressure readings, pulse, notes, tags, medications and reminders are stored **only on your phone**, in the app's private storage.
@@ -27,6 +27,9 @@ The app shows ads through **Google AdMob** to stay free. AdMob may collect and u
 Google's privacy policy: https://policies.google.com/privacy
 How Google uses data from partner apps: https://policies.google.com/technologies/partner-sites
 
+## Changes to this policy
+If this policy changes, the new version will be posted at this address with a new "Last updated" date.
+
 ## Children
 The app is not directed to children under 13 (or the minimum age in your country).
 
@@ -37,4 +40,6 @@ Delete a reading or person inside the app, or uninstall the app to delete everyt
 SnapTensio is a logbook. It does not diagnose, treat or prevent any condition. Always follow your doctor's advice.
 
 ## Contact
-[YOUR SUPPORT EMAIL]
+Questions or requests about this policy: **inboxatjunaid@gmail.com**
+
+Publisher: [PUBLISHER NAME]

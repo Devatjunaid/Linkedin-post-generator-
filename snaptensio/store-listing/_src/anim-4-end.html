@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="anim-common.css"><style>
+.tile{position:absolute;left:50%;top:560px;width:360px;height:360px;margin-left:-180px;border-radius:84px;background:linear-gradient(135deg,#2F6BFF,#1638A8);box-shadow:0 30px 80px rgba(0,0,0,.3),inset 0 0 0 3px rgba(255,255,255,.15);animation:tile .8s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes tile{from{transform:scale(.4) rotate(-10deg);opacity:0}to{transform:none;opacity:1}}
+.tile svg{width:100%;height:100%}
+.heart{transform-origin:54px 55px;animation:beat 1.2s .6s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.13)}24%{transform:scale(1)}36%{transform:scale(1.07)}48%{transform:scale(1)}}
+.t{position:absolute;left:60px;right:60px;text-align:center;opacity:0;animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
+.list{display:flex;flex-direction:column;gap:20px;align-items:center}
+.list span{background:rgba(255,255,255,.14);padding:16px 34px;border-radius:999px;font-weight:700;font-size:36px}
+</style></head><body>
+<div class="ring" style="width:600px;height:600px;top:740px"></div><div class="ring" style="width:600px;height:600px;top:740px;animation-delay:1.5s"></div>
+<div class="tile"><svg viewBox="18 18 72 72"><g class="corners"><path d="M33,43V38Q33,33 38,33H43M65,33H70Q75,33 75,38V43M75,65V70Q75,75 70,75H65M43,75H38Q33,75 33,70V65" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g><g class="heart"><g transform="translate(39 40) scale(1.25)"><path d="M12,21.35l-1.45,-1.32C5.4,15.36 2,12.28 2,8.5 2,5.42 4.42,3 7.5,3c1.74,0 3.41,0.81 4.5,2.09C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.42 22,8.5c0,3.78 -3.4,6.86 -8.55,11.54L12,21.35z" fill="#FF5A5F"/></g></g><path d="M35,55H45L48,49L52,62L56,45L59,55H73" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div class="t" style="top:990px;font-size:104px;font-weight:800;letter-spacing:-3px;animation-delay:.4s">SnapTensio</div>
+<div class="t" style="top:1140px;font-size:42px;font-weight:700;animation-delay:.7s">Blood pressure log &amp; tracker</div>
+<div class="t list" style="top:1270px;animation-delay:1s"><span>Free · No sign-up · Works offline</span><span>Your readings stay on your phone</span></div>
+<div class="t" style="top:1700px;font-size:28px;font-weight:600;opacity:0;animation-delay:1.4s;color:rgba(255,255,255,.8)">Requires a digital blood pressure monitor. Not a medical device.</div>
+</body></html>

@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Spot patterns automatically</title>
+<style>
+@font-face{font-family:Manrope;src:url("fonts/manrope.ttf");font-weight:200 800}
+@font-face{font-family:'Share Tech Mono';src:url("fonts/ShareTechMono.ttf")}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden}
+body{font-family:Manrope,sans-serif;position:relative;background:linear-gradient(160deg,#F2F6FF 0%,#E3EBFF 100%);color:#0F1B2D}
+a{color:inherit;text-decoration:none}
+.ring{position:absolute;border-radius:50%;border:3px solid rgba(31,79,216,.08)}
+.head{position:absolute;left:80px;right:80px;top:110px;text-align:center}
+.head h1{margin:0;font-size:80px;line-height:1.08;font-weight:800;letter-spacing:-2px}
+.head p{margin:26px auto 0;max-width:820px;font-size:36px;line-height:1.35;font-weight:600;opacity:.86}
+.phone{position:absolute;left:50%;top:430px;transform:translateX(-50%);width:703px;height:1484px;background:#0B1220;border-radius:84px;padding:16px;box-sizing:border-box;box-shadow:0 40px 90px rgba(10,20,60,.38)}
+.screen{width:671px;height:1452px;border-radius:70px;overflow:hidden;position:relative;background:#F4F6F8}
+.screen>.inner{width:390px;height:844px;transform:scale(1.72);transform-origin:0 0}
+.sticker{position:absolute;background:#FFFFFF;color:#0F1B2D;border-radius:28px;padding:22px 28px;display:flex;align-items:center;gap:14px;font-size:30px;box-shadow:0 18px 40px rgba(10,20,60,.25);z-index:3}
+.sticker b{font-weight:800}
+.sticker span{font-weight:600;color:#556274}
+.sticker .pill{font-weight:800;padding:6px 16px;border-radius:999px}
+.ecg{position:absolute;left:0;right:0;top:1650px;opacity:.5}
+</style></head><body>
+<div class="ring" style="width:1300px;height:1300px;left:-110px;top:700px"></div>
+<div class="ring" style="width:900px;height:900px;left:90px;top:900px"></div>
+<svg class="ecg" width="1080" height="120" viewBox="0 0 1080 120"><polyline points="0,80 400,80 440,40 480,110 520,10 560,80 1080,80" fill="none" stroke="#C9D6FF" stroke-width="5" stroke-linejoin="round"/></svg>
+<div class="head"><h1>Spot patterns automatically</h1><p>Simple, private analysis of your own readings. No AI service, nothing uploaded.</p></div>
+<div class="phone"><div class="screen"><div class="inner"><div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F4F6F8; font-family: 'Manrope', system-ui, sans-serif; color: #0F1B2D; font-variant-numeric: tabular-nums; box-sizing: border-box">
+
+<header style="display: flex; align-items: center; gap: 8px; padding: 14px 12px 4px">
+<a href="Trends.dc.html" aria-label="Back to trends" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></a>
+<h1 style="margin: 0; font-size: 20px; font-weight: 800; flex: 1">Insights</h1>
+</header>
+
+<div style="padding: 0 20px 24px; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0 0 2px; font-size: 13px; font-weight: 600; color: #3B4A5E">Patterns found in your last 30 days. Simple math on your phone, no AI service.</p>
+
+<article style="background:#FFFFFF;border:1px solid #E2E7EE;border-radius:18px;padding:14px;display:flex;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:#E7F4EC;color:#14633F;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px">−8</div><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:15px;font-weight:800;line-height:1.3">Systolic down 8 mmHg since starting Amlodipine</span><span style="font-size:13px;font-weight:600;color:#3B4A5E;line-height:1.4">Average 137 before 26 Sep, 129 since. Share this with your doctor.</span></div></article><article style="background:#FFFFFF;border:1px solid #E2E7EE;border-radius:18px;padding:14px;display:flex;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:#E8EEFC;color:#1F4FD8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px">9</div><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:15px;font-weight:800;line-height:1.3">Evenings run 9 mmHg higher</span><span style="font-size:13px;font-weight:600;color:#3B4A5E;line-height:1.4">Morning average 127/81, evening average 136/87 over the last 30 days.</span></div></article><article style="background:#FFFFFF;border:1px solid #E2E7EE;border-radius:18px;padding:14px;display:flex;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:#FDF0D5;color:#7A4D06;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px">+7</div><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:15px;font-weight:800;line-height:1.3">Readings tagged “After coffee” are 7 higher</span><span style="font-size:13px;font-weight:600;color:#3B4A5E;line-height:1.4">Average 136/86 with this tag vs 129/82 without it.</span></div></article><article style="background:#FFFFFF;border:1px solid #E2E7EE;border-radius:18px;padding:14px;display:flex;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:#FDF0D5;color:#7A4D06;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px">12</div><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:15px;font-weight:800;line-height:1.3">Your arms differ by 12 mmHg</span><span style="font-size:13px;font-weight:600;color:#3B4A5E;line-height:1.4">A gap over 10 mmHg is worth mentioning at your next visit.</span></div></article><article style="background:#FFFFFF;border:1px solid #E2E7EE;border-radius:18px;padding:14px;display:flex;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:#E7F4EC;color:#14633F;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px">7</div><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:15px;font-weight:800;line-height:1.3">Measured on 7 of the last 7 days</span><span style="font-size:13px;font-weight:600;color:#3B4A5E;line-height:1.4">Great consistency. Regular readings make your averages more reliable.</span></div></article>
+
+<section style="background: #FFFFFF; border: 1px solid #E2E7EE; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 8px; margin-top: 4px">
+<span style="font-size: 15px; font-weight: 800">What the ranges mean</span>
+<table style="border-collapse: collapse; font-size: 12px; font-weight: 700; width: 100%">
+<thead><tr style="color: #556274; text-align: left"><th style="padding: 4px 0; font-weight: 800">Range</th><th style="padding: 4px 0; font-weight: 800">Systolic</th><th style="padding: 4px 0; font-weight: 800"></th><th style="padding: 4px 0; font-weight: 800">Diastolic</th></tr></thead>
+<tbody>
+<tr style="border-top: 1px solid #EEF1F5"><td style="padding: 6px 0; color: #14633F; font-weight: 800">Normal</td><td>under 120</td><td style="color: #556274">and</td><td>under 80</td></tr>
+<tr style="border-top: 1px solid #EEF1F5"><td style="padding: 6px 0; color: #7A4D06; font-weight: 800">Elevated</td><td>120–129</td><td style="color: #556274">and</td><td>under 80</td></tr>
+<tr style="border-top: 1px solid #EEF1F5"><td style="padding: 6px 0; color: #9A4512; font-weight: 800">Stage 1</td><td>130–139</td><td style="color: #556274">or</td><td>80–89</td></tr>
+<tr style="border-top: 1px solid #EEF1F5"><td style="padding: 6px 0; color: #A11E24; font-weight: 800">Stage 2</td><td>140+</td><td style="color: #556274">or</td><td>90+</td></tr>
+<tr style="border-top: 1px solid #EEF1F5"><td style="padding: 6px 0; color: #7A1020; font-weight: 800">Very high</td><td>over 180</td><td style="color: #556274">and/or</td><td>over 120</td></tr>
+</tbody>
+</table>
+<span style="font-size: 11px; font-weight: 600; color: #556274">AHA/ACC 2017. Switch to ESC 2023 in Settings.</span>
+</section>
+</div>
+</div></div></div></div>
+<div class="sticker" style="right:24px;top:640px;transform:rotate(4deg)"><span style="color:#E0A526"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></span><b>5 new insights</b></div>
+</body></html>
