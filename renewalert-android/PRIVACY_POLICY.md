@@ -2,7 +2,7 @@
 
 **Effective date:** October 15, 2026
 
-This Privacy Policy explains how the Renew Alert mobile application ("Renew Alert", "the app", "we", "us" or "our") handles information. The app is developed and published by [YOUR NAME OR COMPANY NAME] ("the developer"). By using the app you agree to this policy.
+This Privacy Policy explains how the Renew Alert mobile application ("Renew Alert", "the app", "we", "us" or "our") handles information. The app is developed and published by Super Dev Labs ("the developer"). By using the app you agree to this policy.
 
 ## 1. Summary
 
@@ -84,8 +84,8 @@ We may update this Privacy Policy from time to time. Changes are posted on this 
 ## 11. Contact
 
 If you have questions about this Privacy Policy, contact:
-[YOUR NAME OR COMPANY NAME]
-Email: [YOUR EMAIL]
+Super Dev Labs
+Email: ELONOPO@GMAIL.COM
 
 ---
 
