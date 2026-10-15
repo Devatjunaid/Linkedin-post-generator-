@@ -83,6 +83,8 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
+    // CameraX returns ListenableFuture; this puts the class on the compile classpath.
+    implementation(libs.guava)
 
     implementation(libs.kotlinx.coroutines.android)
 
