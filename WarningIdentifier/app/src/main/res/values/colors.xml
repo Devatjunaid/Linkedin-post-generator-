@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#0A0C16</color>
+    <color name="surface">#12162A</color>
+    <color name="surface_high">#1A1F38</color>
+    <color name="stroke">#252B47</color>
+    <color name="text_primary">#EEF1FA</color>
+    <color name="text_secondary">#A3AAC6</color>
+    <color name="cyan">#46CBE0</color>
+    <color name="on_cyan">#03141A</color>
+    <color name="amber">#F0B13E</color>
+    <color name="on_amber">#1A1200</color>
+    <color name="ic_launcher_background">#0A0C16</color>
+</resources>

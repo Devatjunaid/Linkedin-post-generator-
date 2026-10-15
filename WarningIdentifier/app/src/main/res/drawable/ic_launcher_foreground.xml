@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Dim gauge ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M26,54a28,28 0 1,0 56,0a28,28 0 1,0 -56,0"
+        android:strokeWidth="3"
+        android:strokeColor="#252B47" />
+    <!-- Cyan sweep -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,26a28,28 0 0,1 28,28"
+        android:strokeWidth="3.5"
+        android:strokeColor="#46CBE0"
+        android:strokeLineCap="round" />
+    <!-- Pink sweep -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,82a28,28 0 0,1 -24.2,-14"
+        android:strokeWidth="3.5"
+        android:strokeColor="#EA5A90"
+        android:strokeLineCap="round" />
+    <!-- Amber warning triangle -->
+    <path
+        android:fillColor="#F0B13E"
+        android:pathData="M51.4,39.5 L37.6,64.2 A3,3 0 0,0 40.2,68.7 L67.8,68.7 A3,3 0 0,0 70.4,64.2 L56.6,39.5 A3,3 0 0,0 51.4,39.5 Z" />
+    <!-- Exclamation mark -->
+    <path
+        android:fillColor="#0A0C16"
+        android:pathData="M52,47.5h4v10h-4z M52,60.5h4v4h-4z" />
+</vector>
