@@ -5,7 +5,7 @@ usage limits, works offline. Photos never leave the phone.
 
 - **Package:** `com.glowdash.warningidentifier` (debug builds add `.debug`)
 - **Min SDK:** 26 · **Target/Compile SDK:** 35
-- **Stack:** Kotlin, Jetpack Compose, CameraX, LiteRT (TensorFlow Lite), AdMob and UMP consent
+- **Stack:** Kotlin, Jetpack Compose, CameraX, AdMob and UMP consent
 
 ## Screens
 | Screen | What it does |
@@ -19,26 +19,12 @@ usage limits, works offline. Photos never leave the phone.
 | History | Scans saved locally, with a clear button |
 
 ## How identification works (free and unlimited)
-1. **Colour analysis** (always on): finds bright red/amber/green/blue symbols in the frame.
-2. **Image classifier** (optional, recommended): if `app/src/main/assets/model/warning_lights.tflite`
-   and `labels.txt` exist, the model names the exact symbol. Inference runs on the phone, so
-   it is free and has no limits.
+On-device **colour analysis** finds the lit red/amber/green/blue symbols in the frame, then the
+app shows the matching symbols so the user can tap the exact one. Everything runs on the phone.
 
-Without a model the app still works: it detects the lit colours and asks the user to
-pick the matching symbol.
-
-### Train the model for free (no coding)
-1. Collect photos for each light, ideally 50+ per class. Use your own dashboard photos plus free datasets
-   (search "dashboard warning lights" on Roboflow Universe or Kaggle).
-2. Open **https://teachablemachine.withgoogle.com → Image Project → Standard**.
-3. Create one class per light. **Name each class exactly like an `id` in
-   `tools/labels_template.txt`** (e.g. `check_engine`, `oil_pressure`). The display name also works.
-4. Train, then **Export → TensorFlow Lite → Floating point → Download**.
-5. Unzip, rename `model_unquant.tflite` → `warning_lights.tflite`, and put it together with
-   `labels.txt` in `app/src/main/assets/model/`.
-
-Labels that don't match a catalog `id`/name are ignored and logged with the tag `LightClassifier`.
-To add a new symbol, add it to `data/LightsCatalog.kt` and add a class with the same `id`.
+> The TensorFlow Lite / LiteRT runtime was removed in v1.0.1: its native library (`libtensorflowlite_jni.so`)
+> is aligned to 4 KB, and Google Play requires 16 KB page-size support. To add an image model later, use a
+> 16 KB-compatible runtime version and return its results from `ai/LightClassifier.kt`.
 
 ## Ads (AdMob)
 | Format | Where | Behaviour |
@@ -67,7 +53,7 @@ Before publishing, check Google Play's current target-API requirement and raise 
 app/src/main/java/com/glowdash/warningidentifier/
   MainActivity.kt          splash handoff, edge-to-edge, consent + ads init
   ads/                     AdsManager (consent, interstitial cap, native cache), banner, native card
-  ai/                      LightClassifier (TFLite), ColorAnalyzer, bitmap helpers
+  ai/                      LightClassifier, ColorAnalyzer, bitmap helpers
   data/                    WarningLight model, 32-symbol catalog, local history
   ui/                      navigation, theme, components, and one package per screen
 ```

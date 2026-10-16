@@ -21,8 +21,8 @@ android {
         applicationId = "com.glowdash.warningidentifier"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         manifestPlaceholders["admobAppId"] = testAppId
         buildConfigField("String", "ADMOB_BANNER_ID", "\"$testBannerId\"")
@@ -57,9 +57,11 @@ android {
         compose = true
         buildConfig = true
     }
-    androidResources {
-        // The on-device model must stay uncompressed so it can be memory-mapped.
-        noCompress.add("tflite")
+    packaging {
+        jniLibs {
+            // Keep native libraries uncompressed so they are 16 KB-aligned in the APK/AAB.
+            useLegacyPackaging = false
+        }
     }
 }
 
@@ -91,5 +93,4 @@ dependencies {
     implementation(libs.play.services.ads)
     implementation(libs.user.messaging.platform)
 
-    implementation(libs.litert)
 }
