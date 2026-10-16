@@ -21,8 +21,8 @@ android {
         applicationId = "com.glowdash.warningidentifier"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         manifestPlaceholders["admobAppId"] = testAppId
         buildConfigField("String", "ADMOB_BANNER_ID", "\"$testBannerId\"")
@@ -92,5 +92,7 @@ dependencies {
 
     implementation(libs.play.services.ads)
     implementation(libs.user.messaging.platform)
+    // AdMob pulls in androidx.fragment 1.1.0 via Play services; Play Console flags it as outdated.
+    implementation(libs.androidx.fragment)
 
 }
