@@ -1,0 +1,22 @@
+{
+  "title": "Referral reel: 1-click AI agent tool",
+  "duration": 28,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "scenes": [
+    {"id": "hook", "start": 0, "end": 5, "vo_offset": 0.12, "vo": [
+      "Stop scrolling--",
+      "if you are still trying to make money manually in 2026, look at THIS website right now."]},
+    {"id": "showcase", "start": 5, "end": 14, "vo_offset": 0.25, "vo": [
+      "This hidden AI tool automatically scans trending business gaps and runs 1-click lead generation bots on total autopilot.",
+      "Look at the logs--",
+      "it literally found 40 high-ticket clients while I was asleep."]},
+    {"id": "proof", "start": 14, "end": 21, "vo_offset": 0.25, "vo": [
+      "People are charging THOUSANDS for this exact setup,",
+      "but the platform just opened a zero-cost FREE trial for their early access tier."]},
+    {"id": "cta", "start": 21, "end": 28, "vo_offset": 0.25, "vo": [
+      "I dropped the exact referral link in my bio and pinned comment.",
+      "Grab your FREE account before they put it behind a paywall!"]}
+  ]
+}
