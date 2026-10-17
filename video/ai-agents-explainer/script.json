@@ -1,0 +1,110 @@
+{
+ "title": "4 AI Agents That Automate 99% of Your Work",
+ "duration": 270,
+ "fps": 30,
+ "scenes": [
+  {
+   "id": "hook",
+   "start": 0,
+   "end": 30,
+   "vo_offset": 0.8,
+   "vo": [
+    "Most people are using AI completely wrong.",
+    "They ask ChatGPT one simple question, get a mediocre answer, and call it a day.",
+    "But while you're micro-managing chatbots, top solo entrepreneurs are deploying teams of Autonomous AI Agents.",
+    "Software that doesn't just chat, but actually plans, executes, and scales entire businesses, twenty-four seven, without human intervention.",
+    "Today, we break down the exact four-agent ecosystem powering the future of work."
+   ]
+  },
+  {
+   "id": "research",
+   "start": 30,
+   "end": 75,
+   "vo_offset": 1.6,
+   "vo": [
+    "First up: The Market Intelligence Agent.",
+    "Instead of spending ten hours scanning Reddit, Google Trends, and Twitter for viral business ideas, this agent constantly monitors real-time API feeds.",
+    "It analyzes audience search volume, identifies competitor content gaps, and outputs a ranked list of high-ticket market opportunities directly to your database.",
+    "All while you sleep."
+   ],
+   "at": [
+    31.6,
+    34.0,
+    45.2,
+    56.5
+   ]
+  },
+  {
+   "id": "creative",
+   "start": 75,
+   "end": 120,
+   "vo_offset": 1.6,
+   "vo": [
+    "Second: The Multi-Modal Creative Agent.",
+    "Feeding off the research data, this agent drafts full scripts, crafts viral thumbnail hooks, and generates brand-aligned visual assets.",
+    "But it doesn't just write. It self-corrects.",
+    "It runs its own output through a secondary Editor prompt chain to purge fluff, fact-check claims, and guarantee a high audience-retention framework."
+   ],
+   "at": [
+    76.6,
+    79.2,
+    90.6,
+    93.0
+   ]
+  },
+  {
+   "id": "execution",
+   "start": 120,
+   "end": 165,
+   "vo_offset": 1.6,
+   "vo": [
+    "Third: The Execution Agent.",
+    "This is where automation meets reality.",
+    "Connected to platforms like n eight n and Make, this agent executes full technical pipelines.",
+    "It schedules videos, sends personalized email campaigns, manages client onboarding, and triggers API webhooks to run complex workflows without human intervention."
+   ],
+   "at": [
+    121.6,
+    123.8,
+    126.0,
+    131.6
+   ]
+  },
+  {
+   "id": "optimizer",
+   "start": 165,
+   "end": 225,
+   "vo_offset": 1.6,
+   "vo": [
+    "Finally: The Optimizer Agent.",
+    "Most businesses fail because they ignore the numbers.",
+    "This agent connects directly to your monetization analytics.",
+    "It tracks click-through rates, audience drop-off points, and sales conversions.",
+    "If a video underperforms, it automatically A B tests new thumbnail layouts and updates descriptions to maximize total revenue per view."
+   ],
+   "at": [
+    166.6,
+    169.0,
+    172.0,
+    175.6,
+    181.2
+   ]
+  },
+  {
+   "id": "outro",
+   "start": 225,
+   "end": 270,
+   "vo_offset": 1.2,
+   "vo": [
+    "The gap between those using single AI prompts and those deploying multi-agent systems is widening every single day.",
+    "You don't need a ten-person team anymore. You just need a well-designed agentic workflow.",
+    "Drop a comment below if you want the complete step-by-step blueprint to build your first agent, and subscribe to stay ahead of the AI shift."
+   ],
+   "at": [
+    226.2,
+    233.0,
+    251.0
+   ]
+  }
+ ]
+}
