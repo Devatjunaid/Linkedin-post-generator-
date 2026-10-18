@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Unpin</string>
+    <string name="share_target_label">Unpin – remove metadata</string>
+    <!-- AdMob App ID (production). Ad unit IDs live in app/build.gradle.kts. -->
+    <string name="admob_app_id" translatable="false">ca-app-pub-1948347222012540~9486612319</string>
+    <!-- TODO: replace with your hosted privacy policy URL (required by Google Play and AdMob). -->
+    <string name="privacy_policy_url" translatable="false">https://example.com/unpin/privacy</string>
+    <string name="ad_badge">Ad</string>
+</resources>

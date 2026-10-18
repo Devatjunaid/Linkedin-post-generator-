@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="paper">#FFF3F0E9</color>
+    <color name="ink">#FF15161A</color>
+    <color name="ink_soft">#FF24252B</color>
+    <color name="muted">#FF5B5A55</color>
+    <color name="line">#FFE2DDD1</color>
+    <color name="card">#FFFFFFFF</color>
+    <color name="signal">#FFFF5B1F</color>
+    <color name="clean">#FF1F6F5C</color>
+    <color name="photo_sky">#FF9CB7C9</color>
+    <color name="photo_sun">#FFF6D27A</color>
+    <color name="photo_hill">#FF3E5A4C</color>
+</resources>
