@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- spool track -->
+    <path
+        android:pathData="M27,54 A27,27 0 1,1 81,54 A27,27 0 1,1 27,54 Z"
+        android:strokeColor="#FF2C3136"
+        android:strokeWidth="7" />
+    <!-- filament left on the spool -->
+    <path
+        android:pathData="M40.50,77.38 A27,27 0 1,1 77.38,40.50"
+        android:strokeColor="#FFC8F03C"
+        android:strokeWidth="7"
+        android:strokeLineCap="round" />
+    <!-- filament strand feeding the hotend -->
+    <path
+        android:pathData="M77.38,40.50 Q71.5,41.5 67,46"
+        android:strokeColor="#FFC8F03C"
+        android:strokeWidth="2"
+        android:strokeLineCap="round" />
+    <!-- L built from printed layers -->
+    <path
+        android:pathData="M39,41h8v3h-8z M39,46h8v3h-8z M39,51h8v3h-8z M39,56h8v3h-8z"
+        android:fillColor="#FFC8F03C" />
+    <path
+        android:pathData="M39,61h28v4h-28z"
+        android:fillColor="#FFECEEE8" />
+    <!-- hotend: heater block, nozzle, hot tip -->
+    <path
+        android:pathData="M61,46h12v7h-12z"
+        android:fillColor="#FFECEEE8" />
+    <path
+        android:pathData="M64,53L70,53L68,58L66,58Z"
+        android:fillColor="#FFFF8A52" />
+    <path
+        android:pathData="M65.8,59.6a1.2,1.2 0 1,0 2.4,0a1.2,1.2 0 1,0 -2.4,0"
+        android:fillColor="#FFFF8A52" />
+</vector>
