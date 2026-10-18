@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Inkform launcher foreground: stacked pages, form lines, ink signature, fountain pen and a check badge. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.42" android:pathData="M44.99,20.94 L84.38,27.88 L75.01,81.06 L35.62,74.12 Z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M34,26 L59,26 L70,37 L70,76 Q70,80 66,80 L34,80 Q30,80 30,76 L30,30 Q30,26 34,26 Z"/>
+    <path android:fillColor="#D9D6CD" android:pathData="M59,26 L59,33 Q59,37 63,37 L70,37 Z"/>
+    <path android:strokeColor="#D9D6CD" android:strokeWidth="3.2" android:strokeLineCap="round" android:pathData="M36,40 L52,40"/>
+    <path android:strokeColor="#ECEAE3" android:strokeWidth="2.6" android:strokeLineCap="round" android:pathData="M36,47 L63,47 M36,53 L58,53"/>
+    <path android:strokeColor="#B9B5AA" android:strokeWidth="1.4" android:pathData="M36,58.5 L63,58.5 L63,63.5 L36,63.5 Z"/>
+    <path android:strokeColor="#1F3FBF" android:strokeWidth="2.4" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M35,71 C37,66 40,63 42,67 C43,70 44,73 47,69 C49,66 51,63 53,67 C54,70 56,71 59,67"/>
+    <path android:fillColor="#17181C" android:pathData="M53.71,76.1 L73.75,56.06 L68.94,51.25 L48.9,71.29 Z"/>
+    <path android:fillColor="#FF7A45" android:pathData="M73.75,56.06 L78.34,51.46 Q78.06,46.94 73.54,46.66 L68.94,51.25 Z"/>
+    <path android:fillColor="#F4F2EC" android:pathData="M46.0,79.0 L53.71,76.1 L48.9,71.29 Z"/>
+    <path android:fillColor="#17181C" android:pathData="M46.0,79.0 L49.29,77.76 L47.24,75.71 Z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M71,73 m-12.9,0 a12.9,12.9 0 1,0 25.8,0 a12.9,12.9 0 1,0 -25.8,0"/>
+    <path android:fillColor="#D7F25A" android:pathData="M71,73 m-10.5,0 a10.5,10.5 0 1,0 21.0,0 a10.5,10.5 0 1,0 -21.0,0"/>
+    <path android:strokeColor="#17181C" android:strokeWidth="2.6" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M66.2,73.2 L69.6,76.6 L76,69.8"/>
+</vector>
