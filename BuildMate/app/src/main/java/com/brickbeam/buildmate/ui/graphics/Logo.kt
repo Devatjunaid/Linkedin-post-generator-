@@ -94,17 +94,17 @@ fun DrawScope.drawLogoMark(p: Float, badge: Color?, roof: Color) {
     if (dp > 0f) {
         val fall = (1f - easeOutCubic(dp)) * -24f
         val drop = Path().apply {
-            moveTo(ox + 75f * s, oy + (22f + fall) * s)
-            cubicTo(ox + 75f * s, oy + (22f + fall) * s, ox + 69f * s, oy + (29.5f + fall) * s, ox + 69f * s, oy + (33.5f + fall) * s)
-            cubicTo(ox + 69f * s, oy + (41.5f + fall) * s, ox + 81f * s, oy + (41.5f + fall) * s, ox + 81f * s, oy + (33.5f + fall) * s)
-            cubicTo(ox + 81f * s, oy + (29.5f + fall) * s, ox + 75f * s, oy + (22f + fall) * s, ox + 75f * s, oy + (22f + fall) * s)
+            moveTo(ox + 72f * s, oy + (25f + fall) * s)
+            cubicTo(ox + 72f * s, oy + (25f + fall) * s, ox + 66f * s, oy + (32.5f + fall) * s, ox + 66f * s, oy + (36.5f + fall) * s)
+            cubicTo(ox + 66f * s, oy + (44.5f + fall) * s, ox + 78f * s, oy + (44.5f + fall) * s, ox + 78f * s, oy + (36.5f + fall) * s)
+            cubicTo(ox + 78f * s, oy + (32.5f + fall) * s, ox + 72f * s, oy + (25f + fall) * s, ox + 72f * s, oy + (25f + fall) * s)
             close()
         }
         drawPath(drop, M.Paint, alpha = dp)
-        drawCircle(M.PaintPink, 1.4f * s, o(73f, 34f + fall), alpha = dp)
+        drawCircle(M.PaintPink, 1.4f * s, o(70f, 37f + fall), alpha = dp)
         val ripple = phase(p, 0.76f, 0.2f)
         if (ripple in 0.01f..0.99f) {
-            drawCircle(M.PaintPink, (6f + 10f * ripple) * s, o(75f, 34f), alpha = 1f - ripple, style = Stroke(1.2f * s))
+            drawCircle(M.PaintPink, (6f + 10f * ripple) * s, o(72f, 37f), alpha = 1f - ripple, style = Stroke(1.2f * s))
         }
     }
 

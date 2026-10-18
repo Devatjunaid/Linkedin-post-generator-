@@ -61,8 +61,8 @@ fun BannerAdBar(modifier: Modifier = Modifier) {
         val widthDp = maxWidth.value.toInt().coerceAtLeast(320)
         var loaded by remember { mutableStateOf(false) }
         val handler = remember { Handler(Looper.getMainLooper()) }
-        @Suppress("DEPRECATION")
-        val adSize = remember(widthDp) { AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, widthDp) }
+        // SDK 25+: "large" anchored adaptive size (replaces the deprecated current-orientation API).
+        val adSize = remember(widthDp) { AdSize.getLargeAnchoredAdaptiveBannerAdSize(context, widthDp) }
         val adView = remember(widthDp) {
             AdView(context).apply {
                 adUnitId = AdUnits.BANNER

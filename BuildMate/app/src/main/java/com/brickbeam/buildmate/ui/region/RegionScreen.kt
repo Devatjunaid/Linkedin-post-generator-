@@ -64,7 +64,7 @@ fun RegionScreen(firstRun: Boolean) {
     fun pick(r: Region) {
         env.vm.setRegion(r.code)
         if (firstRun) {
-            env.nav.navigate(Routes.HOME) { popUpTo(0) { inclusive = true } }
+            env.nav.navigate(Routes.HOME) { popUpTo("region?first={first}") { inclusive = true } }
         } else {
             env.back()
         }

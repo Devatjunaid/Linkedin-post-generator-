@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -121,7 +120,7 @@ fun BuildMateRoot(vm: AppViewModel, ads: AdsManager, activity: ComponentActivity
                             Column(Modifier.navigationBarsPadding()) {
                                 if (route in Routes.TOP_LEVEL) BottomTabs(route) { tab ->
                                     nav.navigate(tab) {
-                                        popUpTo(nav.graph.findStartDestination().id) { saveState = true }
+                                        popUpTo(Routes.HOME) { saveState = true }
                                         launchSingleTop = true
                                         restoreState = true
                                     }

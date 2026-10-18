@@ -311,11 +311,11 @@ fun PaintRoomPreview(wallColor: Color, floorColor: Color, ink: Color, modifier: 
         val ox = (size.width - 350f * s) / 2
         val oy = (size.height - 222f * s) / 2
         fun o(x: Float, y: Float) = Offset(ox + x * s, oy + y * s)
-        fun poly(vararg pts: Offset) = Path().apply {
+        fun poly(pts: List<Offset>) = Path().apply {
             moveTo(pts[0].x, pts[0].y); pts.drop(1).forEach { lineTo(it.x, it.y) }; close()
         }
-        val leftWall = poly(o(40f, 150f), o(175f, 85f), o(175f, 8f), o(40f, 73f))
-        val rightWall = poly(o(175f, 85f), o(310f, 150f), o(310f, 73f), o(175f, 8f))
+        val leftWall = poly(listOf(o(40f, 150f), o(175f, 85f), o(175f, 8f), o(40f, 73f)))
+        val rightWall = poly(listOf(o(175f, 85f), o(310f, 150f), o(310f, 73f), o(175f, 8f)))
         drawPath(leftWall, Color(0xFFEDE8DF))
         drawPath(rightWall, Color(0xFFE2DCD1))
         val washTop = oy + (150f - 150f * wash.value) * s
@@ -324,11 +324,11 @@ fun PaintRoomPreview(wallColor: Color, floorColor: Color, ink: Color, modifier: 
             drawPath(rightWall, animated)
             drawPath(rightWall, Color.Black.copy(alpha = 0.12f))
         }
-        drawPath(poly(o(70f, 136f), o(100f, 121f), o(100f, 64f), o(70f, 79f)), Color(0xFF7A5A3C))
+        drawPath(poly(listOf(o(70f, 136f), o(100f, 121f), o(100f, 64f), o(70f, 79f))), Color(0xFF7A5A3C))
         drawCircle(Color(0xFFE9D8B8), 1.6f * s, o(95f, 98f))
-        drawPath(poly(o(220f, 92f), o(270f, 116f), o(270f, 84f), o(220f, 60f)), Color(0xFFBFE3F2))
-        drawPath(poly(o(220f, 92f), o(270f, 116f), o(270f, 84f), o(220f, 60f)), Color.White, style = Stroke(2f * s))
-        drawPath(poly(o(40f, 150f), o(175f, 85f), o(310f, 150f), o(175f, 215f)), floorColor)
+        drawPath(poly(listOf(o(220f, 92f), o(270f, 116f), o(270f, 84f), o(220f, 60f))), Color(0xFFBFE3F2))
+        drawPath(poly(listOf(o(220f, 92f), o(270f, 116f), o(270f, 84f), o(220f, 60f))), Color.White, style = Stroke(2f * s))
+        drawPath(poly(listOf(o(40f, 150f), o(175f, 85f), o(310f, 150f), o(175f, 215f))), floorColor)
         // Floor boards.
         for (i in 1..6) {
             val f = i / 7f
