@@ -17,7 +17,7 @@ class PdfPrintAdapter(private val file: File, private val jobName: String) : Pri
         oldAttributes: PrintAttributes?,
         newAttributes: PrintAttributes?,
         cancellationSignal: CancellationSignal?,
-        callback: LayoutResultCallback?,
+        callback: PrintDocumentAdapter.LayoutResultCallback?,
         extras: Bundle?,
     ) {
         if (cancellationSignal?.isCanceled == true) {
@@ -34,7 +34,7 @@ class PdfPrintAdapter(private val file: File, private val jobName: String) : Pri
         pages: Array<out PageRange>?,
         destination: ParcelFileDescriptor?,
         cancellationSignal: CancellationSignal?,
-        callback: WriteResultCallback?,
+        callback: PrintDocumentAdapter.WriteResultCallback?,
     ) {
         if (destination == null) {
             callback?.onWriteFailed("No destination")
