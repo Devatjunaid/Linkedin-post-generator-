@@ -51,16 +51,18 @@ class BrickCalculatorTest {
         tiesPerM2 = Markets.US.wallTiesPerM2, palletSize = 500, tiedVeneer = true,
     )
 
-    @Test fun modularBrickMatchesBiaRuleOf675PerSqFt() {
+    @Test fun modularBrickPerSqFt() {
+        // Actual 7⅝ × 2¼ in + ⅜ in joints = 8 × 2⅝ in per brick -> 144 / 21 = 6.857.
+        // (BIA's rounded 6.75 assumes 2⅔ in modular coursing.)
         val perFt2 = BrickCalculator.unitsPerM2(MasonryUnits.US_MODULAR, 9.525) * Conv.M2_PER_FT2
-        assertEquals(6.75, perFt2, 0.05)
+        assertEquals(144.0 / 21.0, perFt2, 0.01)
     }
 
     @Test fun usWallWithOpenings() {
         val r = BrickCalculator.calculate(usWall())
         assertEquals(127.0, Conv.m2ToFt2(r.netAreaM2), 1e-6)
-        // 127 ft² × ~6.75 × 1.05 ≈ 900
-        assertTrue(r.unitsToBuy in 890..910)
+        // 127 ft² × 6.857 × 1.05 = 914.4 -> 915
+        assertTrue(r.unitsToBuy.toString(), r.unitsToBuy in 912..917)
         assertEquals(r.unitsToBuy / 500, r.fullPallets)
         assertEquals(48, r.wallTies) // 127 / 2.67 = 47.6
         // BIA: ~5.5 ft³ mortar per 100 ft² of modular brick (no waste)
@@ -97,8 +99,8 @@ class ConcreteCalculatorTest {
         val r = ConcreteCalculator.calculate(d, MixGrades.EN[2], 0.0, Markets.EU, Markets.EU.premixBags[0])
         assertEquals(1152.0, r.cementKg, 1e-6)
         assertEquals(47, r.cementBags)
-        assertEquals(576.0, r.waterL, 1e-6)
-        assertEquals(3.6, r.readyMixOrderM3, 1e-9)
+        assertEquals(1152.0 * 0.55, r.waterL, 1e-6)
+        assertEquals(3.75, r.readyMixOrderM3, 1e-9) // next 0.25 m³ step
         assertEquals(1, r.trucks)
         assertTrue(r.recommendReadyMix)
     }
