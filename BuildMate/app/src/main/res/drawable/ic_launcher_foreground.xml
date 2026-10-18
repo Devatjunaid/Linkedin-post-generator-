@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Roof line -->
+    <path
+        android:pathData="M30,50 L54,28 L78,50"
+        android:strokeColor="#FFFF7A1A"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+    <!-- Tile window (2x2) -->
+    <path android:pathData="M49,37h4.5v4.5h-4.5z" android:fillColor="#FF2BB3A3" />
+    <path android:pathData="M54.5,37h4.5v4.5h-4.5z" android:fillColor="#FFD8F1EE" />
+    <path android:pathData="M49,42.5h4.5v4.5h-4.5z" android:fillColor="#FFD8F1EE" />
+    <path android:pathData="M54.5,42.5h4.5v4.5h-4.5z" android:fillColor="#FF2BB3A3" />
+    <!-- Steel I-beam -->
+    <path android:pathData="M32,48.5h44v2h-44z" android:fillColor="#FF8EA3B6" />
+    <path android:pathData="M34,50.5h40v2.5h-40z" android:fillColor="#FF6B8196" />
+    <path android:pathData="M32,53h44v2h-44z" android:fillColor="#FF5A6F83" />
+    <!-- Brick courses (running bond) -->
+    <path android:pathData="M34,57h12v5.5h-12z" android:fillColor="#FFC4532F" />
+    <path android:pathData="M47,57h13v5.5h-13z" android:fillColor="#FFA9452A" />
+    <path android:pathData="M61,57h13v5.5h-13z" android:fillColor="#FFCF6440" />
+    <path android:pathData="M34,63.5h6v5.5h-6z" android:fillColor="#FFA9452A" />
+    <path android:pathData="M41,63.5h13v5.5h-13z" android:fillColor="#FFCF6440" />
+    <path android:pathData="M55,63.5h12v5.5h-12z" android:fillColor="#FFC4532F" />
+    <path android:pathData="M68,63.5h6v5.5h-6z" android:fillColor="#FFA9452A" />
+    <path android:pathData="M34,70h12v5.5h-12z" android:fillColor="#FFCF6440" />
+    <path android:pathData="M47,70h13v5.5h-13z" android:fillColor="#FFC4532F" />
+    <path android:pathData="M61,70h13v5.5h-13z" android:fillColor="#FFA9452A" />
+    <!-- Paint drop -->
+    <path
+        android:pathData="M75,22 C75,22 69,29.5 69,33.5 A6,6 0 0,0 81,33.5 C81,29.5 75,22 75,22 Z"
+        android:fillColor="#FF8B5CF6" />
+    <path
+        android:pathData="M72.6,33.2 A2.6,2.6 0 0,0 75,36"
+        android:strokeColor="#FFEC4899"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <!-- Trowel -->
+    <path android:pathData="M60,75 L77,66.5 L74.5,81 Z" android:fillColor="#FFC9D3DC" />
+    <path android:pathData="M60,75 L77,66.5" android:strokeColor="#FF8EA3B6" android:strokeWidth="1.2" android:fillColor="#00000000" />
+    <path
+        android:pathData="M76,67.5 L83,60.5"
+        android:strokeColor="#FF8A5A2B"
+        android:strokeWidth="3.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

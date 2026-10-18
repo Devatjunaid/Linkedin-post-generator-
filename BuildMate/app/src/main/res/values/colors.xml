@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bm_night_bg">#FF15171C</color>
+    <color name="bm_icon_bg_top">#FF20232A</color>
+    <color name="bm_icon_bg_bottom">#FF101216</color>
+    <color name="bm_orange">#FFFF7A1A</color>
+</resources>
