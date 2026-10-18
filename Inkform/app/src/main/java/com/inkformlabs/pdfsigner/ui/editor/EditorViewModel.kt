@@ -191,7 +191,6 @@ class EditorViewModel(
                 return true
             }
         }
-        activateField(list.first().name)
         return false
     }
 
