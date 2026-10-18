@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -41,6 +42,7 @@ object LL {
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 object LLFonts {
     val Display = FontFamily(
         Font(R.font.chakra_petch_semibold, FontWeight.SemiBold),

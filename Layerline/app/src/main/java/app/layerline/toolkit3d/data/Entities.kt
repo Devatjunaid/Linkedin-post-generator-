@@ -2,6 +2,7 @@ package app.layerline.toolkit3d.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
@@ -57,8 +58,11 @@ data class Spool(
     val lowThreshold: Double = 200.0,
     val createdAt: Long = System.currentTimeMillis(),
 ) {
+    @get:Ignore
     val isLow: Boolean get() = remainingGrams < lowThreshold
+    @get:Ignore
     val pricePerKg: Double get() = if (totalGrams > 0) price / totalGrams * 1000.0 else 0.0
+    @get:Ignore
     val value: Double get() = remainingGrams / 1000.0 * pricePerKg
 }
 
@@ -93,9 +97,11 @@ data class PrintJob(
     /** True once filament and machine hours have been taken off the spool / added to the printer. */
     val accounted: Boolean = false,
 ) {
+    @get:Ignore
     val jobStatus: JobStatus get() = runCatching { JobStatus.valueOf(status) }.getOrDefault(JobStatus.DONE)
 
     /** Share of the planned print that actually ran. */
+    @get:Ignore
     val usedFraction: Double
         get() = if (jobStatus == JobStatus.FAILED) (failedAtPercent / 100.0).coerceIn(0.0, 1.0) else 1.0
 

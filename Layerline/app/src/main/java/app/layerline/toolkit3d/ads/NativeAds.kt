@@ -230,7 +230,7 @@ internal object NativeAdViews {
         }
         view.mediaView?.apply {
             val content = ad.mediaContent
-            if (content != null) mediaContent = content
+            if (content != null) setMediaContent(content)
             visibility = if (content == null) View.GONE else View.VISIBLE
         }
         view.setNativeAd(ad)

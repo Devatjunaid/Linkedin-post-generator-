@@ -84,7 +84,7 @@ class CostViewModel : ViewModel() {
 
     fun rates(form: CostForm, w: Workshop, spool: Spool?): CostRates {
         val usingWorkshop = form.regionCode == null || form.regionCode == w.regionCode
-        val region = if (usingWorkshop) w.region else Presets.region(form.regionCode!!)
+        val region = if (usingWorkshop) w.region else Presets.region(form.regionCode)
         val money = if (usingWorkshop) w.money else Money(region.symbol, region.decimals)
         val perUsd = if (usingWorkshop) w.perUsd else region.perUsd
         val baseFilament = if (usingWorkshop) w.filamentPerKg else region.filamentPerKg
