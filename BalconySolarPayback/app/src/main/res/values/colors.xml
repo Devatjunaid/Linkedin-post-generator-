@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="night">#FF0B1622</color>
+    <color name="night_deep">#FF07101A</color>
+    <color name="surface">#FF132338</color>
+    <color name="surface_high">#FF1B2F4A</color>
+    <color name="line">#FF22385A</color>
+    <color name="ink">#FFEEF3F8</color>
+    <color name="muted">#FF9DB2C8</color>
+    <color name="amber">#FFFFB547</color>
+    <color name="on_amber">#FF1A1204</color>
+    <color name="mint">#FF5BE3BE</color>
+</resources>

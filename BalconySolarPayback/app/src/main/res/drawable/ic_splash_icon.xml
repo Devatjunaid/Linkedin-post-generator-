@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Balcony Solar mark: sun on its daily arc, two panels on a railing, payback coin. Scaled to fit the round splash-screen mask. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <group android:pivotX="54" android:pivotY="57" android:scaleX="0.8" android:scaleY="0.8">
+    <path android:pathData="M28,70 A27,27 0 0,1 82,70" android:strokeColor="#FFFFCD7A" android:strokeWidth="1.4" android:strokeLineCap="round" android:strokeLineJoin="round" android:strokeAlpha="0.55" />
+    <path android:pathData="M66,42m-13,0a13,13 0,1 1,26,0a13,13 0,1 1,-26,0" android:fillColor="#FFFFB547" android:fillAlpha="0.22" />
+    <path android:pathData="M76.80,42.00L81.20,42.00M75.35,47.40L77.22,48.48M71.40,51.35L73.60,55.16M66.00,52.80L66.00,54.96M60.60,51.35L58.40,55.16M56.65,47.40L54.78,48.48M55.20,42.00L50.80,42.00M56.65,36.60L54.78,35.52M60.60,32.65L58.40,28.84M66.00,31.20L66.00,29.04M71.40,32.65L73.60,28.84M75.35,36.60L77.22,35.52" android:strokeColor="#FFFFCD7A" android:strokeWidth="1.8" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M66,42m-8,0a8,8 0,1 1,16,0a8,8 0,1 1,-16,0" android:fillColor="#FFFFB547" />
+    <path android:pathData="M31,73L51,73L54,58L34,58Z" android:fillColor="#FF1E4C8F" />
+    <path android:pathData="M31,73L51,73L54,58L34,58Z" android:strokeColor="#FFA9CBFF" android:strokeWidth="0.8" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M36.00,73L39.00,58M41.00,73L44.00,58M46.00,73L49.00,58M32.5,65.5L52.5,65.5" android:strokeColor="#FFA9CBFF" android:strokeWidth="0.5" android:strokeLineCap="round" android:strokeLineJoin="round" android:strokeAlpha="0.6" />
+    <path android:pathData="M54,73L74,73L77,58L57,58Z" android:fillColor="#FF1E4C8F" />
+    <path android:pathData="M54,73L74,73L77,58L57,58Z" android:strokeColor="#FFA9CBFF" android:strokeWidth="0.8" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M59.00,73L62.00,58M64.00,73L67.00,58M69.00,73L72.00,58M55.5,65.5L75.5,65.5" android:strokeColor="#FFA9CBFF" android:strokeWidth="0.5" android:strokeLineCap="round" android:strokeLineJoin="round" android:strokeAlpha="0.6" />
+    <path android:pathData="M27,75L81,75" android:strokeColor="#FF5BE3BE" android:strokeWidth="2.4" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M32,75L32,84M40,75L40,84M48,75L48,84M56,75L56,84M64,75L64,84M72,75L72,84" android:strokeColor="#FF5BE3BE" android:strokeWidth="1.4" android:strokeLineCap="round" android:strokeLineJoin="round" android:strokeAlpha="0.8" />
+    <path android:pathData="M77,79m-8.6,0a8.6,8.6 0,1 1,17.2 0a8.6,8.6 0,1 1,-17.2 0" android:strokeColor="#FF5BE3BE" android:strokeWidth="1.6" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M77,79m-6.8,0a6.8,6.8 0,1 1,13.6 0a6.8,6.8 0,1 1,-13.6 0" android:fillColor="#FFFFB547" />
+    <path android:pathData="M77,82.5L77,75.5M74.2,78.2L77,75.3L79.8,78.2" android:strokeColor="#FF1A1204" android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    </group>
+</vector>
