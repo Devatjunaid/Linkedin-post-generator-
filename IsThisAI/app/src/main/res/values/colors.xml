@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ink">#FF0D0E0B</color>
+    <color name="surface">#FF171914</color>
+    <color name="surface_high">#FF1F221B</color>
+    <color name="line">#FF2A2D25</color>
+    <color name="paper">#FFEEEADF</color>
+    <color name="muted">#FF9A9D90</color>
+    <color name="lime">#FFD4FF3A</color>
+    <color name="ai_orange">#FFFF7A45</color>
+    <color name="camera_blue">#FF6FA8FF</color>
+</resources>

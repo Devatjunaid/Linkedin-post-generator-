@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Is This AI?</string>
+    <string name="share_target_label">Check with Is This AI?</string>
+    <string name="ad_badge">Ad</string>
+</resources>
