@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sunarc mark: sun on its arc, rays, a solar panel catching light and an energy bolt. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:pathData="M22,66A32,32 0,0 1,86 66" android:strokeColor="#3A4556" android:strokeWidth="1.6" android:fillColor="#00000000" android:strokeLineCap="round"/>
+    <path android:pathData="M22,66A32,32 0,0 1,62.5 35.2" android:strokeColor="#FFB020" android:strokeWidth="2.6" android:fillColor="#00000000" android:strokeLineCap="round"/>
+    <path android:pathData="M70.0,38.0m-13,0a13,13 0,1 1,26 0a13,13 0,1 1,-26 0" android:fillColor="#33FFB020"/>
+    <path android:pathData="M70.00,26.50L70.00,22.50M78.13,29.87L79.90,28.10M81.50,38.00L85.50,38.00M78.13,46.13L79.90,47.90M70.00,49.50L70.00,53.50M61.87,46.13L60.10,47.90M58.50,38.00L54.50,38.00M61.87,29.87L60.10,28.10" android:strokeColor="#FFC65C" android:strokeWidth="2" android:strokeLineCap="round" android:fillColor="#00000000"/>
+    <path android:pathData="M70.0,38.0m-8.0,0a8.0,8.0 0,1 1,16.0 0a8.0,8.0 0,1 1,-16.0 0" android:fillColor="#FFB020"/>
+    <path android:pathData="M67.0,35.0m-2.2,0a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0" android:fillColor="#FFE3A3"/>
+    <path android:pathData="M32,61L76,61L84,79L24,79Z" android:fillColor="#1E3550" android:strokeColor="#5AB8FF" android:strokeWidth="1.6" android:strokeLineJoin="round"/>
+    <path android:pathData="M54.00,61.00L65.00,61.00L67.00,70.00L54.00,70.00Z" android:fillColor="#5AB8FF" android:fillAlpha="0.45"/>
+    <path android:pathData="M43.00,61.00L39.00,79.00M54.00,61.00L54.00,79.00M65.00,61.00L69.00,79.00M28.00,70.00L80.00,70.00" android:strokeColor="#5AB8FF" android:strokeWidth="1.1" android:strokeAlpha="0.8" android:fillColor="#00000000"/>
+    <path android:pathData="M54,79L54,84M46,84L62,84" android:strokeColor="#3A4556" android:strokeWidth="1.8" android:strokeLineCap="round" android:fillColor="#00000000"/>
+    <path android:pathData="M54,59L48.5,69.5H53.5L51,78L59.5,66H54.5L57.5,59Z" android:fillColor="#FFB020" android:strokeColor="#0C0F14" android:strokeWidth="1.2" android:strokeLineJoin="round"/>
+</vector>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sunarc Inverter Logger</string>
+    <string name="widget_name">Sunarc today</string>
+    <string name="widget_description">Today\'s solar energy from your last scan</string>
+    <string name="notif_channel_reminders">Scan reminders</string>
+    <string name="notif_channel_reminders_desc">Sunset reminder to scan your inverter and the monthly summary</string>
+    <string name="ad_label">Ad</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="night">#FF0C0F14</color>
+    <color name="surface">#FF151A22</color>
+    <color name="line">#FF2A3240</color>
+    <color name="ink">#FFF2F4F7</color>
+    <color name="muted">#FF9AA4B2</color>
+    <color name="sun">#FFFFB020</color>
+    <color name="on_sun">#FF1A1204</color>
+    <color name="sky">#FF5AB8FF</color>
+</resources>
