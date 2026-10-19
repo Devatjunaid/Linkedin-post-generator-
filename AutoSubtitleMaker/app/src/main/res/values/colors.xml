@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ink">#FF0E0E12</color>
+    <color name="surface">#FF17171D</color>
+    <color name="surface_high">#FF202029</color>
+    <color name="line">#FF2A2A35</color>
+    <color name="text">#FFF2F1EC</color>
+    <color name="muted">#FF9A99A6</color>
+    <color name="lime">#FFD4FF3A</color>
+    <color name="coral">#FFFF7A59</color>
+</resources>
