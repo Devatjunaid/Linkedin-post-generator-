@@ -2,6 +2,9 @@
 // The classpath entry below pins the Kotlin compiler that built-in Kotlin uses to the same
 // version as the Compose compiler plugin, so the two always match.
 buildscript {
+    repositories {
+        mavenCentral()
+    }
     dependencies {
         classpath(libs.kotlin.gradle.plugin)
     }

@@ -35,7 +35,8 @@ class MainActivity : ComponentActivity() {
 
     /** Images shared to the app ("Share" / "Open with") are queued and checked after the splash. */
     private fun handleIntent(intent: Intent?) {
-        val uri: Uri? = when (intent?.action) {
+        if (intent == null) return
+        val uri: Uri? = when (intent.action) {
             Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
             Intent.ACTION_VIEW -> intent.data
             else -> null
