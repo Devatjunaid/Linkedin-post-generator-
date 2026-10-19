@@ -57,7 +57,7 @@ Unit tests (engine plus ad rules): `./gradlew :app:testDebugUnitTest`. The sampl
 - [ ] **Add `app-ads.txt`** to your developer website (AdMob → Apps → app-ads.txt).
 - [ ] **Data safety form**: *Device or other IDs* (advertising ID), *App activity / interactions* and *Approximate location*, collected by the AdMob SDK for Advertising, Analytics and Fraud prevention; shared with Google; encrypted in transit. Images and history are **not collected** (they never leave the device).
 - [ ] **Ads declaration**: "Yes, my app contains ads". Target audience 13+ (not designed for children).
-- [ ] Replace `[YOUR SUPPORT EMAIL]` in `HistoryAndAbout.kt` and `PRIVACY_POLICY.md`.
+- [x] Publisher (Super Dev Labs) and contact email set in `HistoryAndAbout.kt` and `PRIVACY_POLICY.md`.
 
 Store graphics: `store/play_icon_512.png`, `store/feature_graphic_1024x500.png`.
 Fonts: Bricolage Grotesque and JetBrains Mono (SIL OFL 1.1, see `licenses/`).

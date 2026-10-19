@@ -269,4 +269,4 @@ const val PRIVACY_POLICY = """Is This AI? checks images entirely on your device.
 • History: the file name, result, report and a small preview of each image you check are saved on your phone only, and excluded from backups. Delete them in History at any time, or by uninstalling the app.
 • Ads: the app uses Google AdMob. Google may collect your device's advertising ID, IP address and app usage to show and measure ads, as described at policies.google.com/technologies/ads. In regions where consent is required, you choose this in the consent form, and you can change it under "Ad privacy choices". You can also reset or delete your advertising ID in your phone's settings.
 • Children: the app is not directed at children under 13.
-• Contact: [YOUR SUPPORT EMAIL]"""
+• Publisher: Super Dev Labs · Contact: ELONOPO@GMAIL.COM"""

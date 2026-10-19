@@ -14,4 +14,4 @@ Is This AI? checks images by reading labels stored inside the image file. All ch
 
 **Changes.** Updates to this policy will be posted at this address.
 
-**Contact.** [YOUR SUPPORT EMAIL]
+**Contact.** Super Dev Labs, ELONOPO@GMAIL.COM
