@@ -793,18 +793,18 @@ private fun Toolbar(state: EditorState, onNextField: () -> Unit, onTool: (Editor
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         if (state.fillable.isNotEmpty()) {
-            item { ToolButton(InkIcons.Fields, "Next field", false, onNextField) }
+            item { ToolButton(InkIcons.Fields, "Next field", selected = false, onClick = onNextField) }
         }
         item { ToolButton(InkIcons.Text, "Text", state.tool == EditorTool.Text) { onTool(EditorTool.Text) } }
         item { ToolButton(InkIcons.Calendar, "Date", state.tool == EditorTool.Date) { onTool(EditorTool.Date) } }
         item { ToolButton(InkIcons.Tick, "Tick", state.tool == EditorTool.Check) { onTool(EditorTool.Check) } }
         item { ToolButton(InkIcons.Cross, "Cross", state.tool == EditorTool.Cross) { onTool(EditorTool.Cross) } }
-        item { ToolButton(InkIcons.Signature, "Sign", false, onSign, highlight = true) }
+        item { ToolButton(InkIcons.Signature, "Sign", selected = false, highlight = true, onClick = onSign) }
     }
 }
 
 @Composable
-private fun ToolButton(icon: ImageVector, label: String, selected: Boolean, onClick: () -> Unit, highlight: Boolean = false) {
+private fun ToolButton(icon: ImageVector, label: String, selected: Boolean, highlight: Boolean = false, onClick: () -> Unit) {
     val p = LocalInk.current
     val bg = when {
         selected -> p.ink
