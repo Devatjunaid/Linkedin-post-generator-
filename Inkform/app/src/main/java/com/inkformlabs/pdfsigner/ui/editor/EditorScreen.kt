@@ -47,6 +47,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -91,6 +92,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.asImageBitmap
@@ -111,6 +113,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -236,7 +239,7 @@ fun EditorScreen(documentId: String, appViewModel: AppViewModel) {
                     }
                     Box {
                         IconButton(onClick = { menu = true }) { Icon(InkIcons.More, contentDescription = "More options", tint = p.ink) }
-                        DropdownMenu(expanded = menu, onDismissRequest = { menu = false }, containerColor = p.surface) {
+                        DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                             if (state.fillable.isNotEmpty()) {
                                 MenuItem("Auto-fill from my details", InkIcons.Sparkle) {
                                     menu = false
@@ -265,7 +268,6 @@ fun EditorScreen(documentId: String, appViewModel: AppViewModel) {
                         modifier = Modifier.fillMaxWidth().height(3.dp),
                         color = p.hi,
                         trackColor = p.line,
-                        drawStopIndicator = {},
                     )
                 }
             }
@@ -287,8 +289,8 @@ fun EditorScreen(documentId: String, appViewModel: AppViewModel) {
                     label = "bottomPanel",
                 ) { panel ->
                     when (panel) {
-                        "field" -> if (active != null) {
-                            FieldPanel(
+                        "field" -> {
+                            if (active != null) FieldPanel(
                                 field = active,
                                 value = state.values[active.name].orEmpty(),
                                 index = state.fillable.indexOfFirst { it.name == active.name },
@@ -302,8 +304,8 @@ fun EditorScreen(documentId: String, appViewModel: AppViewModel) {
                             )
                         }
 
-                        "overlay" -> if (selected != null) {
-                            OverlayBar(
+                        "overlay" -> {
+                            if (selected != null) OverlayBar(
                                 overlay = selected,
                                 onEdit = { vm.startEditingText(selected.id) },
                                 onColor = { vm.setOverlayColor(selected.id, it) },
@@ -330,7 +332,7 @@ fun EditorScreen(documentId: String, appViewModel: AppViewModel) {
         Box(Modifier.fillMaxSize().padding(padding)) {
             when {
                 state.loading && state.pages.isEmpty() -> LoadingState()
-                state.error != null -> ErrorState(state.error!!) { appViewModel.pop() }
+                state.error != null -> ErrorState(state.error.orEmpty()) { appViewModel.pop() }
                 else -> PagesList(
                     state = state,
                     vm = vm,
@@ -489,7 +491,7 @@ private fun PagesList(
     state: EditorState,
     vm: EditorViewModel,
     signatureBitmaps: Map<String, ImageBitmap>,
-    listState: androidx.compose.foundation.lazy.LazyListState,
+    listState: LazyListState,
     onSignatureField: (FormField) -> Unit,
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -524,7 +526,7 @@ private fun PagesList(
 private fun PageView(
     index: Int,
     geom: PageGeom,
-    pageWidth: androidx.compose.ui.unit.Dp,
+    pageWidth: Dp,
     state: EditorState,
     vm: EditorViewModel,
     signatureBitmaps: Map<String, ImageBitmap>,
@@ -546,11 +548,11 @@ private fun PageView(
             .shadow(6.dp, RoundedCornerShape(4.dp))
             .background(Color.White)
             .pointerInput(index) {
-                detectTapGestures { offset -> vm.placeAt(index, offset.x / size.width, offset.y / size.height) }
+                detectTapGestures(onTap = { offset -> vm.placeAt(index, offset.x / size.width, offset.y / size.height) })
             },
     ) {
         bitmap?.let {
-            Image(it, contentDescription = "Page ${index + 1}", contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
+            Image(bitmap = it, contentDescription = "Page ${index + 1}", contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
         }
 
         state.fields.forEach { field ->
@@ -613,12 +615,14 @@ private fun FieldBox(
     val r = widget.rect
     val wPx = r.width * pageWpx
     val hPx = r.height * pageHpx
-    val pulse = if (active) {
-        val t = rememberInfiniteTransition(label = "pulse")
-        t.animateFloat(1f, 3.5f, infiniteRepeatable(tween(700), RepeatMode.Reverse), label = "w").value
-    } else {
-        1f
-    }
+    val pulseTransition = rememberInfiniteTransition(label = "pulse")
+    val pulseWidth by pulseTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 3.5f,
+        animationSpec = infiniteRepeatable(tween(700), RepeatMode.Reverse),
+        label = "pulseWidth",
+    )
+    val pulse = if (active) pulseWidth else 1f
     val shape = if (field.type == FieldType.RADIO) CircleShape else RoundedCornerShape(2.dp)
 
     Box(
@@ -648,12 +652,16 @@ private fun FieldBox(
                 )
             }
 
-            FieldType.CHECKBOX -> if (value.isNotEmpty()) {
-                Icon(InkIcons.Tick, contentDescription = "Checked", tint = PageInk, modifier = Modifier.fillMaxSize().padding(1.dp))
+            FieldType.CHECKBOX -> {
+                if (value.isNotEmpty()) {
+                    Icon(InkIcons.Tick, contentDescription = "Checked", tint = PageInk, modifier = Modifier.fillMaxSize().padding(1.dp))
+                }
             }
 
-            FieldType.RADIO -> if (value.isNotEmpty() && value == widget.onValue) {
-                Box(Modifier.fillMaxSize().padding(3.dp).clip(CircleShape).background(PageInk))
+            FieldType.RADIO -> {
+                if (value.isNotEmpty() && value == widget.onValue) {
+                    Box(Modifier.fillMaxSize().padding(3.dp).clip(CircleShape).background(PageInk))
+                }
             }
 
             FieldType.SIGNATURE -> Row(
@@ -701,15 +709,18 @@ private fun OverlayView(
             .then(sizeModifier)
             .border(if (selected) 1.5.dp else 0.dp, if (selected) p.hi else Color.Transparent, RoundedCornerShape(3.dp))
             .pointerInput(overlay.id, pageWpx, pageHpx) {
-                detectDragGestures(onDragStart = { vm.selectOverlay(overlay.id) }) { change, drag ->
-                    change.consume()
-                    vm.moveOverlay(overlay.id, drag.x / pageWpx, drag.y / pageHpx)
-                }
+                detectDragGestures(
+                    onDragStart = { _ -> vm.selectOverlay(overlay.id) },
+                    onDrag = { change, drag ->
+                        change.consume()
+                        vm.moveOverlay(overlay.id, drag.x / pageWpx, drag.y / pageHpx)
+                    },
+                )
             }
             .pointerInput(overlay.id) {
-                detectTapGestures {
+                detectTapGestures(onTap = { _ ->
                     if (currentSelected && isText) vm.startEditingText(overlay.id) else vm.selectOverlay(overlay.id)
-                }
+                })
             },
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -729,7 +740,7 @@ private fun OverlayView(
             )
 
             OverlayKind.CHECK -> Canvas(Modifier.fillMaxSize()) {
-                val path = androidx.compose.ui.graphics.Path().apply {
+                val path = Path().apply {
                     moveTo(size.width * 0.16f, size.height * 0.55f)
                     lineTo(size.width * 0.42f, size.height * 0.80f)
                     lineTo(size.width * 0.86f, size.height * 0.22f)
@@ -743,8 +754,10 @@ private fun OverlayView(
                 drawLine(color, Offset(size.width * 0.8f, size.height * 0.2f), Offset(size.width * 0.2f, size.height * 0.8f), stroke, StrokeCap.Round)
             }
 
-            OverlayKind.SIGNATURE -> if (bitmap != null) {
-                Image(bitmap, contentDescription = "Signature", contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
+            OverlayKind.SIGNATURE -> {
+                if (bitmap != null) {
+                    Image(bitmap = bitmap, contentDescription = "Signature", contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxSize())
+                }
             }
         }
 
@@ -759,11 +772,13 @@ private fun OverlayView(
                     .background(p.hi)
                     .border(2.dp, Color.White, CircleShape)
                     .pointerInput(overlay.id) {
-                        detectDragGestures { change, drag ->
-                            change.consume()
-                            val base = currentW.coerceAtLeast(1f)
-                            vm.resizeOverlay(overlay.id, 1f + drag.x / base)
-                        }
+                        detectDragGestures(
+                            onDrag = { change, drag ->
+                                change.consume()
+                                val base = currentW.coerceAtLeast(1f)
+                                vm.resizeOverlay(overlay.id, 1f + drag.x / base)
+                            },
+                        )
                     },
             )
         }
@@ -860,6 +875,11 @@ private fun FieldPanel(
                     "zip" in hint || "postal" in hint || "amount" in hint || "number" in hint -> KeyboardType.Number
                     else -> KeyboardType.Text
                 }
+                val counter: (@Composable () -> Unit)? = if (field.maxLength > 0) {
+                    { Text("${text.text.length} / ${field.maxLength}") }
+                } else {
+                    null
+                }
                 OutlinedTextField(
                     value = text,
                     onValueChange = {
@@ -881,11 +901,7 @@ private fun FieldPanel(
                         imeAction = if (field.multiline) ImeAction.Default else ImeAction.Next,
                     ),
                     keyboardActions = KeyboardActions(onNext = { onNext() }),
-                    supportingText = if (field.maxLength > 0) {
-                        { Text("${text.text.length} / ${field.maxLength}") }
-                    } else {
-                        null
-                    },
+                    supportingText = counter,
                     colors = inkTextFieldColors(),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.fillMaxWidth().focusRequester(focus),
@@ -910,7 +926,7 @@ private fun FieldPanel(
                         Text(shown, style = MaterialTheme.typography.bodyLarge, color = p.ink, modifier = Modifier.weight(1f))
                         Icon(InkIcons.Forward, contentDescription = null, tint = p.muted)
                     }
-                    DropdownMenu(expanded = open, onDismissRequest = { open = false }, containerColor = p.surface) {
+                    DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
                         field.options.forEach { option ->
                             DropdownMenuItem(
                                 text = { Text(option.display, color = p.ink) },
