@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kelvin mark: thermal ring, ice/ember split core, snowflake, flame, orbiting particles,
+     steam wisps, water ripples and sparkles. All inside the 66dp adaptive-icon safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- thermal ring -->
+    <path
+        android:pathData="M54,25a29,29 0 1,1 0,58a29,29 0 1,1 0,-58"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:type="sweep"
+                android:centerX="54"
+                android:centerY="54">
+                <item android:offset="0" android:color="#FFFF7A3D" />
+                <item android:offset="0.18" android:color="#FFFFC56B" />
+                <item android:offset="0.38" android:color="#FF5CE1FF" />
+                <item android:offset="0.55" android:color="#FF2B7BFF" />
+                <item android:offset="0.75" android:color="#FF8B5CFF" />
+                <item android:offset="0.9" android:color="#FFFF3D5A" />
+                <item android:offset="1" android:color="#FFFF7A3D" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- ember half (full disc, ice half drawn over it) -->
+    <path android:pathData="M54,34a20,20 0 1,1 0,40a20,20 0 1,1 0,-40">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="54"
+                android:startY="34"
+                android:endX="54"
+                android:endY="74">
+                <item android:offset="0" android:color="#FFFFC56B" />
+                <item android:offset="0.5" android:color="#FFFF7A3D" />
+                <item android:offset="1" android:color="#FFFF3D5A" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- ice half -->
+    <path android:pathData="M54,34A20,20 0 0,0 54,74A10,10 0 0,1 54,54A10,10 0 0,0 54,34Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="36"
+                android:startY="36"
+                android:endX="62"
+                android:endY="72">
+                <item android:offset="0" android:color="#FFB8F3FF" />
+                <item android:offset="0.5" android:color="#FF5CE1FF" />
+                <item android:offset="1" android:color="#FF2B7BFF" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- snowflake on the cold half -->
+    <path
+        android:pathData="M54,38.5L54,49.5M58.76,41.25L49.24,46.75M58.76,46.75L49.24,41.25"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round"
+        android:strokeColor="#E6070B10" />
+
+    <!-- flame on the hot half -->
+    <path
+        android:fillColor="#FFFFF1D6"
+        android:pathData="M54,57.4C56.16,61.6 59.04,63.4 58.32,66.4C57.6,69.4 55.44,70 54,70C52.56,70 50.4,69.4 49.68,66.4C48.96,63.4 52.56,62.2 54,57.4Z" />
+    <path
+        android:fillColor="#FFFF7A3D"
+        android:pathData="M54,62.5C55.2,64.8 56.8,65.8 56.4,67.4C56,69 54.8,69.4 54,69.4C53.2,69.4 52,69 51.6,67.4C51.2,65.8 53.2,65.1 54,62.5Z" />
+
+    <!-- orbiting particles -->
+    <path android:fillColor="#665CE1FF" android:pathData="M33.5,28.5a5,5 0 1,1 0,10a5,5 0 1,1 0,-10" />
+    <path android:fillColor="#FFB8F3FF" android:pathData="M33.5,31a2.5,2.5 0 1,1 0,5a2.5,2.5 0 1,1 0,-5" />
+    <path android:fillColor="#66FF7A3D" android:pathData="M74.5,69.5a5,5 0 1,1 0,10a5,5 0 1,1 0,-10" />
+    <path android:fillColor="#FFFFC56B" android:pathData="M74.5,72.2a2.3,2.3 0 1,1 0,4.6a2.3,2.3 0 1,1 0,-4.6" />
+
+    <!-- steam wisps (hot side) -->
+    <path
+        android:pathData="M67.5,38.5C66.3,37.4 68.7,36.3 67.5,34.8M71.5,41.8C70.3,40.7 72.7,39.6 71.5,38.1"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeColor="#CCFFD9C4" />
+
+    <!-- water ripples (cold side) -->
+    <path
+        android:pathData="M35.5,71.5Q37.5,70 39.5,71.5T43.5,71.5"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeColor="#CC5CE1FF" />
+    <path
+        android:pathData="M38,75Q40,73.5 42,75T46,75"
+        android:strokeWidth="1.3"
+        android:strokeLineCap="round"
+        android:strokeColor="#805CE1FF" />
+
+    <!-- sparkles -->
+    <path
+        android:fillColor="#FFB8F3FF"
+        android:pathData="M28,47Q28.4,49.6 31,50Q28.4,50.4 28,53Q27.6,50.4 25,50Q27.6,49.6 28,47Z" />
+    <path
+        android:fillColor="#FFFFC56B"
+        android:pathData="M81,55Q81.35,57.15 83.5,57.5Q81.35,57.85 81,60Q80.65,57.85 78.5,57.5Q80.65,57.15 81,55Z" />
+</vector>

@@ -1,0 +1,9 @@
+<resources>
+    <color name="ink">#FF0B0F14</color>
+    <color name="ink_deep">#FF070B10</color>
+    <color name="surface">#FF131A22</color>
+    <color name="text">#FFEEF3F7</color>
+    <color name="muted">#FF8A99A8</color>
+    <color name="ice">#FF5CE1FF</color>
+    <color name="ember">#FFFF7A3D</color>
+</resources>
