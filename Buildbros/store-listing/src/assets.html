@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Buildbros store assets</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Archivo',sans-serif;overflow:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+.cond{font-stretch:72%}
+#stage{position:relative;overflow:hidden}
+.abs{position:absolute}
+.phone{position:absolute;border-radius:64px;padding:16px;box-shadow:0 60px 120px rgba(0,0,0,.45),0 0 0 2px rgba(255,255,255,.08) inset}
+.screen{position:relative;width:390px;height:844px;border-radius:46px;overflow:hidden;transform-origin:0 0}
+.layer{position:absolute;border-radius:64px}
+.pop{position:absolute;border-radius:28px;box-shadow:0 30px 70px rgba(0,0,0,.40),0 8px 18px rgba(0,0,0,.25)}
+.dot{position:absolute;width:22px;height:22px;border-radius:50%;border:5px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.head{position:absolute;left:0;right:0;text-align:center}
+.card{border-radius:20px;padding:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 11px;border-radius:11px;font-size:12px;font-weight:700;white-space:nowrap}
+.tile{border-radius:18px;padding:10px;height:108px;display:flex;flex-direction:column;justify-content:space-between}
+.lbl{font-size:10.5px}
+.row{display:flex;gap:8px}
+.col{display:flex;flex-direction:column}
+.inp{border-radius:14px;padding:8px 11px}
+.inp .k{font-size:10px}
+.inp .v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;margin-top:2px}
+.seg{display:flex;padding:3px;border-radius:12px;gap:3px}
+.seg div{flex:1;text-align:center;font-size:11.5px;font-weight:800;padding:8px 2px;border-radius:9px}
+.nav{position:absolute;left:12px;right:12px;bottom:14px;height:64px;border-radius:22px;display:flex;align-items:center;justify-content:space-around;font-size:10px}
+.nav div{display:flex;flex-direction:column;align-items:center;gap:3px}
+.btn{height:52px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+const T = {
+  night:{bg:'#15171C',surf:'#20232A',surf2:'#2A2E37',line:'#343945',ink:'#F3EFE8',mute:'#A7ADB8',acc:'#FF7A1A',accInk:'#1A0E05',accText:'#FF9A4D',glow:'rgba(255,122,26,.18)'},
+  blue:{bg:'#0D2744',surf:'#123358',surf2:'#18416D',line:'#2A5A8C',ink:'#EAF4FF',mute:'#A9C3DE',acc:'#62D6FF',accInk:'#04223A',accText:'#7FDEFF',glow:'rgba(98,214,255,.18)'},
+  clay:{bg:'#F3ECE2',surf:'#FFFFFF',surf2:'#EADFD1',line:'#DCCDBA',ink:'#2A1D15',mute:'#6E5D50',acc:'#B9472A',accInk:'#FFFFFF',accText:'#A63D22',glow:'rgba(185,71,42,.14)'},
+  vis:{bg:'#F5F5EF',surf:'#FFFFFF',surf2:'#ECECE2',line:'#D9D9CC',ink:'#111111',mute:'#55554D',acc:'#FFD60A',accInk:'#111111',accText:'#111111',glow:'rgba(255,214,10,.35)'}
+};
+const M = {brick:'#C4532F',brickD:'#A9452A',brickL:'#CF6440',cem:'#A3AAB3',cemD:'#7D858F',tile:'#2BB3A3',tileL:'#D8F1EE',paint:'#8B5CF6',pink:'#EC4899',steel:'#6B8196',steelD:'#5A6F83',steelL:'#C9D3DC',rust:'#B7652B',wood:'#8A5A2B'};
+
+/* ---------- colour helpers ---------- */
+function shade(hex, f){ // f>0 lighter, f<0 darker
+  const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f);
+  r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+/* ---------- isometric primitives (unit u px) ---------- */
+function Iso(u){ this.u=u; this.parts=[]; }
+Iso.prototype.p=function(x,y,z){const u=this.u;return [((x-y)*0.866*u),((x+y)*0.5*u - z*u)];};
+Iso.prototype.poly=function(pts,fill,extra){this.parts.push(`<polygon points="${pts.map(q=>q.join(',')).join(' ')}" fill="${fill}" ${extra||''}/>`);};
+Iso.prototype.box=function(x,y,z,w,d,h,c,opt){
+  opt=opt||{}; const P=(a,b,cc)=>this.p(a,b,cc);
+  this.poly([P(x,y+d,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x,y+d,z+h)], shade(c,-0.08));   // left/front
+  this.poly([P(x+w,y,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x+w,y,z+h)], shade(c,-0.28));   // right
+  this.poly([P(x,y,z+h),P(x+w,y,z+h),P(x+w,y+d,z+h),P(x,y+d,z+h)], opt.top||shade(c,0.16)); // top
+  if(opt.edge){ const e=P(x,y+d,z+h), f=P(x+w,y+d,z+h); this.parts.push(`<line x1="${e[0]}" y1="${e[1]}" x2="${f[0]}" y2="${f[1]}" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>`); }
+};
+Iso.prototype.svg=function(w,h,ox,oy,shadow){
+  const sh = shadow===false?'':`<ellipse cx="${w/2}" cy="${h-18}" rx="${w*0.34}" ry="${w*0.07}" fill="rgba(0,0,0,.22)" filter="url(#blur)"/>`;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="overflow:visible"><defs><filter id="blur"><feGaussianBlur stdDeviation="8"/></filter></defs>${sh}<g transform="translate(${ox},${oy})">${this.parts.join('')}</g></svg>`;
+};
+
+/* Exploded objects: layers separated by gaps so they look "floating apart". */
+function brickStack(u){ const s=new Iso(u); const cs=[M.brick,M.brickD,M.brickL];
+  for(let L=0;L<3;L++){ const z=L*1.55; const off=L%2? 0.55:0;
+    for(let i=0;i<2;i++) s.box(i*2.1+off,0,z,2,0.95,0.65,cs[(L+i)%3],{edge:true});
+    for(let i=0;i<2;i++) s.box(i*2.1+off,1.05,z,2,0.95,0.65,cs[(L+i+1)%3],{edge:true}); }
+  return s.svg(u*6,u*6.2,u*2.3,u*3.9); }
+function cementBag(u){ const s=new Iso(u); s.box(0,0,0,1.6,1.1,2.1,M.cem); s.box(0.0,1.1,0.8,1.6,0.02,0.55,M.cemD,{top:M.cemD});
+  return s.svg(u*3.4,u*4.4,u*1.2,u*3.2); }
+function tileStack(u){ const s=new Iso(u); for(let i=0;i<4;i++) s.box(0,0,i*0.75,2.4,2.4,0.16,i%2?M.tileL:M.tile,{edge:true});
+  return s.svg(u*4.6,u*5.4,u*2.2,u*3.6); }
+function rebarBundle(u){ const s=new Iso(u); const cs=[M.steel,M.steelD,M.steel,M.rust];
+  for(let r=0;r<2;r++) for(let i=0;i<3;i++) s.box(0,i*0.42,r*0.5+r*0.35,5,0.3,0.3,cs[(i+r)%4]);
+  return s.svg(u*6.4,u*4.4,u*1.5,u*1.6); }
+function slab(u){ const s=new Iso(u); s.box(0,0,0,4,3,0.5,M.cem);
+  // rebar grid hovering above (exploded)
+  for(let i=1;i<6;i++) s.box(i*0.65,0.1,1.2,0.07,2.8,0.07,M.steel);
+  for(let j=1;j<5;j++) s.box(0.1,j*0.6,1.28,3.8,0.07,0.07,M.steelD);
+  return s.svg(u*6.4,u*5.2,u*2.8,u*2.6); }
+function iBeam(u){ const s=new Iso(u); s.box(0,0,0,5,1,0.18,M.steelD); s.box(0,0.42,0.18,5,0.16,0.8,M.steel); s.box(0,0,0.98,5,1,0.18,M.steelL);
+  return s.svg(u*6.2,u*4,u*1.2,u*2.2); }
+function paintCan(px, c1, c2){ // 2.5D cylinder
+  const w=px, h=px*1.05, rx=w*0.42, ry=w*0.13, cx=w/2;
+  return `<svg width="${w}" height="${h+30}" viewBox="0 0 ${w} ${h+30}" style="overflow:visible"><defs><linearGradient id="cg${c1.slice(1)}" x1="0" x2="1"><stop offset="0" stop-color="${shade(c1,-0.25)}"/><stop offset=".45" stop-color="${shade(c1,0.12)}"/><stop offset="1" stop-color="${shade(c1,-0.35)}"/></linearGradient><filter id="pb"><feGaussianBlur stdDeviation="7"/></filter></defs>
+  <ellipse cx="${cx}" cy="${h+14}" rx="${rx*1.05}" ry="${ry*1.1}" fill="rgba(0,0,0,.22)" filter="url(#pb)"/>
+  <path d="M${cx-rx},${h*0.28} L${cx-rx},${h*0.86} A${rx},${ry} 0 0 0 ${cx+rx},${h*0.86} L${cx+rx},${h*0.28} Z" fill="url(#cg${c1.slice(1)})"/>
+  <path d="M${cx-rx},${h*0.28} L${cx-rx},${h*0.44} Q${cx-rx*0.6},${h*0.52} ${cx-rx*0.35},${h*0.44} Q${cx},${h*0.56} ${cx+rx*0.3},${h*0.45} Q${cx+rx*0.7},${h*0.53} ${cx+rx},${h*0.42} L${cx+rx},${h*0.28} Z" fill="${c2}"/>
+  <ellipse cx="${cx}" cy="${h*0.28}" rx="${rx}" ry="${ry}" fill="${shade(c1,0.25)}"/>
+  <ellipse cx="${cx}" cy="${h*0.28}" rx="${rx*0.82}" ry="${ry*0.7}" fill="${c2}"/>
+  <path d="M${cx-rx*0.95},${h*0.28} Q${cx},${-h*0.12} ${cx+rx*0.95},${h*0.28}" stroke="#8a8f99" stroke-width="${w*0.035}" fill="none"/>
+  <rect x="${cx-rx*0.3}" y="${h*0.44}" width="${w*0.05}" height="${h*0.2}" rx="${w*0.025}" fill="${c2}"/></svg>`; }
+
+function place(html,x,y,extra){ return `<div class="abs" style="left:${x}px;top:${y}px;${extra||''}">${html}</div>`; }
+
+/* ---------- mini graphics used inside screens ---------- */
+function logoMark(size, badge, roof){
+  return `<svg width="${size}" height="${size}" viewBox="14 14 80 80"><rect x="14" y="14" width="80" height="80" rx="22" fill="${badge}"/>
+  <path d="M30,50 L54,28 L78,50" stroke="${roof}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="49" y="37" width="4.5" height="4.5" fill="${M.tile}"/><rect x="54.5" y="37" width="4.5" height="4.5" fill="${M.tileL}"/><rect x="49" y="42.5" width="4.5" height="4.5" fill="${M.tileL}"/><rect x="54.5" y="42.5" width="4.5" height="4.5" fill="${M.tile}"/>
+  <rect x="32" y="48.5" width="44" height="2" fill="#8EA3B6"/><rect x="34" y="50.5" width="40" height="2.5" fill="${M.steel}"/><rect x="32" y="53" width="44" height="2" fill="${M.steelD}"/>
+  <rect x="34" y="57" width="12" height="5.5" fill="${M.brick}"/><rect x="47" y="57" width="13" height="5.5" fill="${M.brickD}"/><rect x="61" y="57" width="13" height="5.5" fill="${M.brickL}"/>
+  <rect x="34" y="63.5" width="6" height="5.5" fill="${M.brickD}"/><rect x="41" y="63.5" width="13" height="5.5" fill="${M.brickL}"/><rect x="55" y="63.5" width="12" height="5.5" fill="${M.brick}"/><rect x="68" y="63.5" width="6" height="5.5" fill="${M.brickD}"/>
+  <rect x="34" y="70" width="12" height="5.5" fill="${M.brickL}"/><rect x="47" y="70" width="13" height="5.5" fill="${M.brick}"/><rect x="61" y="70" width="13" height="5.5" fill="${M.brickD}"/>
+  <path d="M72,25 C72,25 66,32.5 66,36.5 A6,6 0 0,0 78,36.5 C78,32.5 72,25 72,25 Z" fill="${M.paint}"/><path d="M69.6,36.2 A2.6,2.6 0 0,0 72,39" stroke="${M.pink}" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M60,75 L77,66.5 L74.5,81 Z" fill="${M.steelL}"/><path d="M76,67.5 L83,60.5" stroke="${M.wood}" stroke-width="3.4" stroke-linecap="round"/></svg>`;
+}
+const ico = {
+  bricks:`<svg width="64" height="44" viewBox="0 0 64 44"><rect x="2" y="30" width="19" height="10" rx="2" fill="${M.brick}"/><rect x="23" y="30" width="19" height="10" rx="2" fill="${M.brickD}"/><rect x="44" y="30" width="18" height="10" rx="2" fill="${M.brick}"/><rect x="12" y="18" width="19" height="10" rx="2" fill="${M.brickL}"/><rect x="33" y="18" width="19" height="10" rx="2" fill="${M.brick}"/><rect x="22" y="6" width="19" height="10" rx="2" fill="${M.brickD}"/></svg>`,
+  cement:`<svg width="64" height="44" viewBox="0 0 64 44"><path d="M6 2 h24 l3 20 h-30 z" fill="${M.cem}"/><rect x="9" y="8" width="18" height="6" rx="1" fill="${M.cemD}"/><path d="M22 22 L28 36" stroke="${M.cem}" stroke-width="3" stroke-dasharray="4 4" stroke-linecap="round"/><path d="M14 42 Q32 26 52 42 Z" fill="#8C939C"/></svg>`,
+  steel:`<svg width="64" height="44" viewBox="0 0 64 44"><rect x="2" y="8" width="60" height="5" rx="2.5" fill="${M.steel}"/><rect x="2" y="17" width="60" height="5" rx="2.5" fill="${M.steelD}"/><rect x="2" y="26" width="60" height="5" rx="2.5" fill="${M.steel}"/><rect x="2" y="35" width="60" height="5" rx="2.5" fill="${M.rust}"/></svg>`,
+  tiles:`<svg width="64" height="44" viewBox="0 0 64 44"><rect x="4" y="4" width="17" height="17" rx="2" fill="${M.tile}"/><rect x="23" y="4" width="17" height="17" rx="2" fill="${M.tileL}"/><rect x="42" y="4" width="17" height="17" rx="2" fill="${M.tile}"/><rect x="4" y="23" width="17" height="17" rx="2" fill="${M.tileL}"/><rect x="23" y="23" width="17" height="17" rx="2" fill="${M.tile}"/><rect x="42" y="23" width="17" height="17" rx="2" fill="${M.tileL}"/></svg>`,
+  paint:`<svg width="64" height="44" viewBox="0 0 64 44"><path d="M12 10 Q29 -4 46 10" stroke="#888" stroke-width="2" fill="none"/><path d="M14 10 h30 v26 a4 4 0 0 1 -4 4 h-22 a4 4 0 0 1 -4 -4 z" fill="${M.paint}"/><path d="M14 10 h30 v7 q-4 3 -7 0 q-4 4 -8 0 q-4 3 -7 0 q-4 4 -8 0 z" fill="${M.pink}"/><rect x="20" y="16" width="3" height="10" rx="1.5" fill="${M.pink}"/></svg>`,
+  ruler:`<svg width="64" height="44" viewBox="0 0 64 44"><rect x="2" y="14" width="60" height="16" rx="2" fill="#E9C46A"/>${[...Array(15)].map((_,k)=>`<line x1="${4+k*4}" y1="14" x2="${4+k*4}" y2="${k%2?18:21}" stroke="#333" stroke-width=".8"/>`).join('')}<line x1="38" y1="8" x2="38" y2="36" stroke="#FF7A1A" stroke-width="2"/></svg>`
+};
+function wallSvg(w,h,t){ let r=''; const rows=13, ch=h/rows, bw=26;
+  const holes=[[0.13,0.13,0.16,0.87],[0.62,0.2,0.21,0.31]];
+  for(let i=0;i<rows;i++){ const y=h-(i+1)*ch; const off=i%2?-bw/2:0;
+    for(let x=off;x<w;x+=bw){ const bx=Math.max(0,x), bwid=Math.min(x+bw,w)-bx-2;
+      const hit=holes.some(o=>bx<(o[0]+o[2])*w && bx+bwid>o[0]*w && y<(o[1]+o[3])*h && y+ch>o[1]*h);
+      if(!hit&&bwid>3) r+=`<rect x="${bx+1}" y="${y+1}" width="${bwid}" height="${ch-2}" rx="1.5" fill="${[M.brick,M.brickD,M.brickL,'#B9502E'][(i*3+Math.round(x/bw))%4]}"/>`; } }
+  holes.forEach(o=>{ r+=`<rect x="${o[0]*w}" y="${o[1]*h}" width="${o[2]*w}" height="${o[3]*h}" fill="${t.surf}" stroke="${t.accText}" stroke-width="2" stroke-dasharray="6 4" rx="3"/>`; });
+  return `<svg width="${w}" height="${h}"><rect width="${w}" height="${h}" rx="6" fill="${t.surf2}"/>${r}<text x="${(0.13+0.08)*w}" y="${0.6*h}" font-size="10" font-weight="700" fill="${t.accText}" text-anchor="middle">DOOR</text><text x="${(0.62+0.105)*w}" y="${0.37*h}" font-size="10" font-weight="700" fill="${t.accText}" text-anchor="middle">WINDOW</text></svg>`; }
+function herringSvg(w,h){ let r=`<rect width="${w}" height="${h}" fill="#9A9286"/>`; const u=11;
+  for(let j=-12;j<12;j++) for(let k=-4;k<40;k++){ const ox=(k+2*j)*u, oy=(k-2*j)*u; if(ox>w+30||oy>h+30||ox<-50||oy<-50) continue;
+    r+=`<rect x="${ox+0.8}" y="${oy+0.8}" width="${2*u-1.6}" height="${u-1.6}" fill="#E4DED3"/><rect x="${ox+2*u+0.8}" y="${oy-u+0.8}" width="${u-1.6}" height="${2*u-1.6}" fill="#D3CBBE"/>`; }
+  return `<svg width="${w}" height="${h}"><defs><clipPath id="hc"><rect width="${w}" height="${h}" rx="8"/></clipPath></defs><g clip-path="url(#hc)">${r}</g></svg>`; }
+function roomSvg(wall){ return `<svg width="350" height="222" viewBox="0 0 350 222">
+  <polygon points="40,150 175,85 175,8 40,73" fill="${wall}"/><polygon points="175,85 310,150 310,73 175,8" fill="${wall}"/><polygon points="175,85 310,150 310,73 175,8" fill="#000" opacity=".12"/>
+  <polygon points="70,136 100,121 100,64 70,79" fill="#7A5A3C"/><polygon points="220,92 270,116 270,84 220,60" fill="#BFE3F2" stroke="#fff" stroke-width="2"/>
+  <polygon points="40,150 175,85 310,150 175,215" fill="#D9C7A7"/>
+  <g transform="translate(128 70) rotate(-26)"><rect x="-14" y="0" width="28" height="9" rx="4" fill="${wall}" stroke="#2A2A2A" stroke-width="1.2"/><path d="M14 4 h6 v18 h-8 v18" stroke="#2A2A2A" stroke-width="2" fill="none"/><rect x="9" y="38" width="6" height="16" rx="2" fill="#D8A24A"/></g></svg>`; }
+function slabSvg(t,u=17,W=340,Hh=170,ox=150,oy=60){ const s=new Iso(u); s.box(0,0,0,6,4,0.55,'#B7834A'); s.box(0.15,0.15,0.55,5.7,3.7,0.02,M.cem,{top:M.cem});
+  for(let i=1;i<9;i++) s.box(i*0.65,0.3,0.62,0.06,3.4,0.06,M.steel); for(let j=1;j<6;j++) s.box(0.3,j*0.62,0.66,5.4,0.06,0.06,M.steelD);
+  return s.svg(W,Hh,ox,oy,false); }
+
+/* ---------- app screens (390 × 844 logical) ---------- */
+function navBar(t, active){ const items=['Home','Projects','Prices','Settings'];
+  return `<div class="nav" style="background:${t.surf};border:1px solid ${t.line}">${items.map(n=>`<div style="color:${n===active?t.accText:t.mute};font-weight:${n===active?800:500}"><div style="width:46px;height:26px;border-radius:13px;background:${n===active?t.acc:'transparent'}"></div>${n}</div>`).join('')}</div>
+  <div class="abs" style="left:0;right:0;bottom:0;height:0"></div>`; }
+function header(t,title,sub,back=true){
+  return `<div class="row" style="align-items:center;gap:10px;height:48px">${back?`<div style="width:44px;height:44px;border-radius:14px;border:1px solid ${t.line};background:${t.surf};display:grid;place-items:center;color:${t.ink};font-size:20px">‹</div>`:''}
+  <div style="flex:1"><div class="cond" style="font-size:24px;font-weight:800;line-height:1;color:${t.ink}">${title}</div><div style="font-size:11.5px;color:${t.mute};margin-top:3px">${sub}</div></div></div>`; }
+function inp(t,k,v,flex=1){ return `<div class="inp" style="flex:${flex};background:${t.surf};border:1px solid ${t.line}"><div class="k" style="color:${t.mute}">${k}</div><div class="v" style="color:${t.ink}">${v}</div></div>`; }
+function seg(t,opts,on){ return `<div class="seg" style="background:${t.surf2}">${opts.map((o,i)=>`<div style="background:${i===on?t.surf:'transparent'};color:${i===on?t.ink:t.mute}">${o}</div>`).join('')}</div>`; }
+function stat(c,k,v){ return `<div style="flex:1"><div style="font-size:10.5px;opacity:.8">${k}</div><div class="mono" style="font-size:15px;font-weight:700">${v}</div></div>`; }
+function hero(t,cap,big,unit,detail,stats){ return `<div class="card" style="background:${t.acc};color:${t.accInk};border-radius:24px;padding:16px">
+  <div style="font-size:12px;font-weight:700;opacity:.85">${cap}</div><div class="row" style="align-items:baseline"><div class="mono" style="font-size:42px;font-weight:700;letter-spacing:-1px">${big}</div><div style="font-size:15px;font-weight:800">${unit}</div></div>
+  <div style="font-size:11px;opacity:.85">${detail}</div><div style="height:1px;background:currentColor;opacity:.2;margin:11px 0"></div><div class="row">${stats}</div></div>`; }
+function screenWrap(t,inner,nav){ return `<div class="screen" style="background:${t.bg};color:${t.ink}"><div style="padding:58px 20px 0;display:flex;flex-direction:column;gap:12px">${inner}</div>${nav?navBar(t,nav):''}</div>`; }
+
+const SCREENS = {
+ home(t){ return screenWrap(t,`
+  <div class="row" style="align-items:center;gap:10px;height:46px">${logoMark(42,t.surf2,t.acc)}<div style="flex:1"><div class="cond" style="font-size:22px;font-weight:800;color:${t.ink}">Buildbros</div><div style="font-size:11px;color:${t.mute}">Material calculator</div></div></div>
+  <div class="card" style="background:${t.surf};border:1px solid ${t.line};border-radius:24px;padding:14px">
+   <div style="font-size:11px;color:${t.mute};font-weight:700;letter-spacing:1px">NEW PROJECT</div><div class="cond" style="font-size:27px;font-weight:800;line-height:1.05">What are you<br>building today?</div>
+   <div style="height:86px;margin-top:4px;display:flex;justify-content:center">${slabSvg(t,12,300,86,140,12)}</div>
+   <div style="height:44px;border-radius:14px;background:${t.surf2};display:flex;align-items:center;padding:0 14px;color:${t.mute};font-size:13px">⌕&nbsp; Wall, slab, bathroom floor…</div></div>
+  <div style="font-size:13px;font-weight:700">Where are you building?</div>
+  <div class="row" style="overflow:hidden"><div class="chip" style="background:${t.acc};color:${t.accInk}">TX Texas</div><div class="chip" style="background:${t.surf};border:1px solid ${t.line}">CA California</div><div class="chip" style="background:${t.surf};border:1px solid ${t.line}">DE Germany</div><div class="chip" style="background:${t.surf};border:1px solid ${t.line}">GB UK</div></div>
+  <div style="font-size:13px;font-weight:700">Calculators</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+   ${[['bricks','Bricks','Walls · blocks'],['cement','Concrete','Slab · footing'],['steel','Steel','Rebar · mesh'],['tiles','Tiles','Floor · grout'],['paint','Paint','Coats · primer'],['ruler','Converter','Units']].map(c=>`<div class="tile" style="background:${t.surf};border:1px solid ${t.line}">${ico[c[0]]}<div><div style="font-weight:800;font-size:14px">${c[1]}</div><div class="lbl" style="color:${t.mute}">${c[2]}</div></div></div>`).join('')}
+  </div>`,'Home'); },
+
+ brick(t){ return screenWrap(t,`${header(t,'Brick wall','Texas · Modular brick 7⅝×2¼×3⅝ in')}
+  <div class="card" style="background:${t.surf};border:1px solid ${t.line};border-radius:24px;padding:12px">
+   <div style="font-size:10.5px;color:${t.mute};margin-bottom:6px">Running bond · single wythe</div>${wallSvg(326,150,t)}
+   <div style="font-size:10.5px;color:${t.mute};margin-top:6px">Gross 160 sq ft − openings 33 sq ft = net 127 sq ft</div></div>
+  <div class="row">${inp(t,'Wall length',"20′ 0″")}${inp(t,'Wall height',"8′ 0″")}</div>
+  <div class="row">${inp(t,'Door W',"3′")}${inp(t,'H',"7′")}${inp(t,'Qty','1',0.6)}</div>
+  <div class="row">${inp(t,'Mortar joint','3/8 in')}${inp(t,'Wastage','5 %')}</div>
+  ${seg(t,['1:3','1:4','1:5','1:6'],0)}
+  ${hero(t,'You need','914','bricks','6.85 per sq ft + 5% wastage · 1 pallet + 414 loose',stat(0,'Masonry cement','3 bags')+stat(0,'Sand','0.42 ton')+stat(0,'Wall ties','48'))}`); },
+
+ concrete(t){ return screenWrap(t,`${header(t,'Concrete','Slab · Bodenplatte · Germany')}
+  <div class="row" style="overflow:hidden">${['Slab','Footing','Wall','Round column','Steps'].map((s,i)=>`<div class="chip" style="background:${i?t.surf:t.acc};color:${i?t.ink:t.accInk};border:1px solid ${i?t.line:t.acc}">${s}</div>`).join('')}</div>
+  <div class="card" style="background:${t.surf};border:1px solid ${t.line};border-radius:22px;height:170px;position:relative">${slabSvg(t)}<div class="mono abs" style="right:14px;bottom:10px;font-size:20px;font-weight:700">3.60 m³</div></div>
+  <div class="row">${inp(t,'Length','6.00 m')}${inp(t,'Width','4.00 m')}${inp(t,'Thickness','150 mm')}</div>
+  ${seg(t,['C16/20','C20/25','C25/30','C30/37'],2)}
+  <div class="card" style="background:${t.surf};border:1px solid ${t.line}"><div style="font-size:11px;color:${t.mute};font-weight:700">Mix yourself</div><div class="row" style="justify-content:space-between;align-items:baseline"><div class="mono" style="font-size:18px;font-weight:700">49 × 25 kg cement</div><div class="mono" style="font-weight:700">€586</div></div><div style="font-size:10.5px;color:${t.mute}">Sand 2.88 t · gravel 4.32 t · water 665 L</div></div>
+  <div class="card" style="background:${t.acc};color:${t.accInk}"><div class="row" style="justify-content:space-between"><div style="font-size:11px;font-weight:700">Ready-mix truck</div><div style="font-size:10px;font-weight:800;background:${t.ink};color:${t.bg};padding:2px 8px;border-radius:99px">RECOMMENDED</div></div><div class="row" style="justify-content:space-between;align-items:baseline"><div class="mono" style="font-size:18px;font-weight:700">Order 4.00 m³</div><div class="mono" style="font-weight:700">€580</div></div><div style="font-size:10.5px;opacity:.85">1 truck · 3.78 m³ incl. 5% rounded to 0.25 m³</div></div>`); },
+
+ tiles(t){ return screenWrap(t,`${header(t,'Tiles','Herringbone · United Kingdom')}
+  <div class="card" style="background:${t.surf};border:1px solid ${t.line};border-radius:24px;padding:10px">${herringSvg(330,160)}<div style="font-size:10.5px;color:${t.mute};margin-top:6px">Area 15.12 m² · + 17% cuts for herringbone</div></div>
+  <div class="row">${inp(t,'Room length','4.2 m')}${inp(t,'Room width','3.6 m')}</div>
+  <div class="row">${inp(t,'Tile','600 mm')}${inp(t,'Width','300 mm')}${inp(t,'Joint','3 mm')}</div>
+  ${seg(t,['Straight','Offset','Diagonal','Herringbone'],3)}
+  ${hero(t,'You need','13','boxes','100 tiles (97 for the layout + 3% spare) · covers 18.72 m²',stat(0,'Adhesive','5 × 20 kg')+stat(0,'Grout','1 × 5 kg')+stat(0,'Est. cost','£512'))}`); },
+
+ paint(t){ return screenWrap(t,`${header(t,'Paint','Sage · 2 coats · California')}
+  <div class="card" style="background:${t.surf};border:1px solid ${t.line};border-radius:22px;padding:6px">${roomSvg('#8FA58A')}</div>
+  <div class="row">${['#8FA58A','#C9755B','#3E6E8E','#7A4E7E','#EDE8DF','#3B3F45'].map((c,i)=>`<div style="flex:1;height:40px;border-radius:13px;background:${c};border:${i?1:3}px solid ${i?t.line:t.ink}"></div>`).join('')}</div>
+  ${seg(t,['Room','Wall area'],0)}
+  <div class="row">${inp(t,'Length','14′')}${inp(t,'Width','12′')}${inp(t,'Height','8′')}</div>
+  ${hero(t,'Wall paint','2.19','gal needed','Cheapest can mix: 2 × Gallon + 1 × Quart · 0.06 gal spare',stat(0,'Wall area','384 sq ft')+stat(0,'Coats','2')+stat(0,'Est. cost','$108.00'))}`); },
+
+ estimate(t){ const items=[[M.brick,'Modular brick, red','914 pcs × $0.65','$594.10'],[M.cem,'Masonry cement Type S','3 × 70 lb × $16.00','$48.00'],[M.cem,'Ready-mix 3,000 psi','3.25 yd³ × $165.00','$536.25'],[M.steel,'#4 rebar','214 lb × $0.85','$181.90'],[M.tile,'Porcelain tile 12×24 in','182 sq ft × $2.60','$473.20'],[M.paint,'Interior paint','2 gal + 1 qt','$108.00']];
+  return screenWrap(t,`${header(t,'Backyard studio','Austin, TX · 6 items')}
+  <div class="card" style="background:${t.surf};border:1px solid ${t.line};border-radius:24px;padding:14px">
+   <div class="row" style="justify-content:space-between"><div><div style="font-size:11.5px;color:${t.mute};font-weight:700">Total with 8.25% tax</div><div class="mono" style="font-size:33px;font-weight:700;letter-spacing:-1px">$1,984.71</div></div><div style="text-align:right"><div style="font-size:10.5px;color:${t.mute}">Budget</div><div class="mono" style="font-weight:700">$2,500</div><div style="font-size:10.5px;font-weight:800;color:#1E7F4F">$515.29 left</div></div></div>
+   <div class="row" style="height:12px;border-radius:6px;overflow:hidden;gap:2px;margin-top:10px"><div style="flex:32;background:${M.brick}"></div><div style="flex:32;background:${M.cem}"></div><div style="flex:10;background:${M.steel}"></div><div style="flex:26;background:${M.tile}"></div></div></div>
+  <div class="row"><div class="btn" style="flex:1;background:${t.surf};border:1px solid ${t.line};font-size:13px">Share</div><div class="btn" style="flex:1;background:${t.surf};border:1px solid ${t.line};font-size:13px">CSV</div><div class="btn" style="flex:1.2;background:${t.acc};color:${t.accInk};font-size:14px">PDF quote</div></div>
+  <div style="background:${t.surf};border:1px solid ${t.line};border-radius:20px;overflow:hidden">${items.map((it,i)=>`<div class="row" style="align-items:center;gap:10px;height:50px;padding:0 12px;${i?`border-top:1px solid ${t.line}`:''};${i==5?'opacity:.5':''}"><div style="width:24px;height:24px;border-radius:8px;border:1.5px solid ${i==5?t.acc:t.mute};background:${i==5?t.acc:'transparent'}"></div><div style="width:5px;height:28px;border-radius:3px;background:${it[0]}"></div><div style="flex:1"><div style="font-size:12.5px;font-weight:700;${i==5?'text-decoration:line-through':''}">${it[1]}</div><div class="mono" style="font-size:10px;color:${t.mute}">${i==5?'Already on site':it[2]}</div></div><div class="mono" style="font-size:12.5px;font-weight:700">${it[3]}</div></div>`).join('')}</div>`,'Projects'); }
+};
+
+/* ---------- compositions ---------- */
+function phone(t, screenKey, x, y, scale, frame){
+  const w=(390+32)*scale, h=(844+32)*scale;
+  return `<div class="phone" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${frame};padding:${16*scale}px">
+    <div style="transform:scale(${scale});transform-origin:0 0;width:390px;height:844px">${SCREENS[screenKey](t)}</div>
+    <div class="abs" style="left:50%;top:${26*scale}px;width:${90*scale}px;height:${24*scale}px;margin-left:${-45*scale}px;border-radius:${12*scale}px;background:#05060a"></div></div>`;
+}
+function layers(x,y,w,h,col){ // exploded UI planes behind the phone (kept straight-on)
+  return [3,2,1].map(i=>`<div class="layer" style="left:${x+i*34}px;top:${y+i*30}px;width:${w}px;height:${h}px;border:3px solid ${col};opacity:${0.12+0.1*(3-i)};background:${col}${['10','14','1c'][3-i]}"></div>`).join('');
+}
+function bg(t, dark){
+  const base = dark ? `radial-gradient(120% 80% at 50% 0%, ${shade(t.bg,0.12)} 0%, ${t.bg} 55%, ${shade(t.bg,-0.35)} 100%)`
+                    : `radial-gradient(120% 80% at 50% 0%, #ffffff 0%, ${t.bg} 60%, ${shade(t.bg,-0.08)} 100%)`;
+  const g = dark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.05)';
+  // isometric grid (30° lines)
+  return `<div class="abs" style="inset:0;background:${base}"></div>
+  <div class="abs" style="inset:0;opacity:1;background-image:repeating-linear-gradient(30deg, ${g} 0 2px, transparent 2px 56px),repeating-linear-gradient(150deg, ${g} 0 2px, transparent 2px 56px)"></div>`;
+}
+function popCard(x,y,w,html,t,dark){ return `<div class="pop" style="left:${x}px;top:${y}px;width:${w}px;background:${dark?t.surf:'#fff'};border:2px solid ${t.line};padding:22px;color:${t.ink}">${html}</div>`; }
+
+const SHOTS = [
+ {key:'home', theme:'night', dark:true, title:'Every material.<br><b>One calculator.</b>', sub:'Bricks · Concrete · Steel · Tiles · Paint'},
+ {key:'brick', theme:'clay', dark:false, title:'Brick walls,<br><b>counted exactly.</b>', sub:'Doors & windows deducted · mortar · ties'},
+ {key:'concrete', theme:'blue', dark:true, title:'Slab, footing, column:<br><b>bags or truck?</b>', sub:'US psi & EU C-classes · cement, sand, gravel'},
+ {key:'tiles', theme:'vis', dark:false, title:'Herringbone?<br><b>We count the cuts.</b>', sub:'Boxes, adhesive & grout for any pattern'},
+ {key:'paint', theme:'night', dark:true, title:'The cheapest<br><b>paint can mix.</b>', sub:'Coats, primer & ceiling in gallons or litres'},
+ {key:'estimate', theme:'clay', dark:false, title:'Shopping list,<br><b>tax & PDF quote.</b>', sub:'50 US states · 31 European countries'},
+];
+
+function shot(i){
+  const s=SHOTS[i], t=T[s.theme], W=1080, H=1920;
+  const frame = s.dark ? '#0B0C10' : '#1A1A1A';
+  const scale=1.52, pw=(390+32)*scale, px=(W-pw)/2, py=470;
+  let h = bg(t,s.dark);
+  // headline
+  h += `<div class="head" style="top:96px;color:${s.dark?t.ink:t.ink}"><div class="cond" style="font-size:96px;line-height:1.0;font-weight:500;letter-spacing:-.5px">${s.title.replace('<b>',`<b style="font-weight:900;color:${s.theme==='vis'?t.ink:t.accText}">`)}</div>
+        <div style="margin-top:22px;font-size:34px;color:${t.mute};font-weight:600">${s.sub}</div></div>`;
+  if(s.theme==='vis') h += `<div class="abs" style="left:${W/2-150}px;top:384px;width:300px;height:16px;background:repeating-linear-gradient(90deg,#FFD60A 0 26px,#111 26px 52px);border-radius:8px"></div>`;
+  // exploded planes behind phone
+  h += layers(px, py, pw, (844+32)*scale, t.acc);
+  // isometric material objects around
+  const deco = {
+    home:[place(brickStack(30),-40,1180),place(paintCan(170,M.paint,M.pink),890,1240),place(tileStack(30),870,560),place(cementBag(34),-10,620),place(rebarBundle(26),700,1600)],
+    brick:[place(brickStack(40),-80,1240),place(brickStack(26),860,560),place(cementBag(34),860,1380)],
+    concrete:[place(slab(36),-120,1350),place(cementBag(40),850,640),place(rebarBundle(30),720,1560),place(iBeam(26),-60,560)],
+    tiles:[place(tileStack(40),-90,1250),place(tileStack(28),880,600),place(cementBag(30),880,1450)],
+    paint:[place(paintCan(220,M.paint,M.pink),-60,1300),place(paintCan(150,'#3E6E8E','#62D6FF'),890,600),place(paintCan(170,'#8FA58A','#C9E4C5'),880,1420)],
+    estimate:[place(brickStack(28),-60,600),place(paintCan(150,M.paint,M.pink),900,1500),place(tileStack(26),880,640),place(rebarBundle(24),-40,1560)]
+  }[s.key];
+  h += deco.join('');
+  h += phone(t, s.key, px, py, scale, frame);
+  // pop-out / floating UI cards that break out of the screen
+  const P = {
+    home: popCard(30,1556,330,`<div style="font-size:22px;color:${t.mute};font-weight:700">Region</div><div class="cond" style="font-size:44px;font-weight:900">Texas</div><div class="mono" style="font-size:24px;color:${t.accText};font-weight:700">ft · yd³ · 6.25% tax</div>`,t,s.dark)
+        + popCard(720,1040,330,`<div class="row" style="gap:16px;align-items:center">${ico.bricks.replace('width="64" height="44"','width="96" height="66"')}<div><div class="cond" style="font-size:40px;font-weight:900">6 tools</div><div style="font-size:22px;color:${t.mute}">offline, no login</div></div></div>`,t,s.dark),
+    brick: popCard(560,1490,470,`<div style="font-size:24px;font-weight:700;color:${t.mute}">You need</div><div class="row" style="align-items:baseline;gap:14px"><div class="mono" style="font-size:96px;font-weight:700;color:${t.accText};letter-spacing:-3px">914</div><div class="cond" style="font-size:40px;font-weight:900">bricks</div></div><div style="font-size:22px;color:${t.mute}">3 mortar bags · 48 wall ties</div>`,t,s.dark)
+        + popCard(30,700,330,`<div style="font-size:22px;color:${t.mute};font-weight:700">Openings deducted</div><div class="mono" style="font-size:40px;font-weight:700">− 33 sq ft</div>`,t,s.dark),
+    concrete: popCard(30,700,380,`<div style="font-size:22px;color:${t.mute};font-weight:700">Volume</div><div class="mono" style="font-size:64px;font-weight:700;color:${t.accText}">3.60 m³</div><div style="font-size:22px;color:${t.mute}">6 × 4 m · 150 mm</div>`,t,s.dark)
+        + popCard(620,1600,420,`<div class="row" style="justify-content:space-between;align-items:center"><div class="cond" style="font-size:36px;font-weight:900">Ready-mix</div><div style="font-size:18px;font-weight:800;background:${t.acc};color:${t.accInk};padding:6px 14px;border-radius:99px">BEST</div></div><div class="mono" style="font-size:30px;font-weight:700">1 truck · 4.00 m³</div>`,t,s.dark),
+    tiles: popCard(40,880,360,`<div style="padding:4px">${herringSvg(310,150)}</div><div style="font-size:22px;font-weight:700;margin-top:8px">+17% cutting waste</div>`,t,s.dark)
+        + popCard(640,1520,400,`<div style="font-size:24px;color:${t.mute};font-weight:700">Order</div><div class="row" style="align-items:baseline;gap:14px"><div class="mono" style="font-size:90px;font-weight:700;letter-spacing:-3px">13</div><div class="cond" style="font-size:40px;font-weight:900">boxes</div></div>`,t,s.dark),
+    paint: popCard(560,1560,480,`<div style="font-size:22px;color:${t.mute};font-weight:700">Cheapest mix</div><div class="cond" style="font-size:46px;font-weight:900;line-height:1.05">2 × Gallon<br>+ 1 × Quart</div><div class="mono" style="font-size:28px;color:${t.accText};font-weight:700;margin-top:6px">$108 · beats 3 gal ($135)</div>`,t,s.dark)
+        + popCard(30,700,300,`<div class="row" style="gap:12px">${['#8FA58A','#C9755B','#3E6E8E'].map(c=>`<div style="width:70px;height:70px;border-radius:18px;background:${c}"></div>`).join('')}</div><div style="font-size:22px;font-weight:700;margin-top:10px">Preview the colour</div>`,t,s.dark),
+    estimate: popCard(600,1400,440,`<div class="row" style="gap:16px;align-items:center"><div style="width:84px;height:104px;border-radius:12px;background:#fff;border:2px solid #ddd;position:relative;box-shadow:0 8px 18px rgba(0,0,0,.15)"><div style="position:absolute;left:0;right:0;top:0;height:22px;background:#15171C;border-radius:10px 10px 0 0"></div>${[34,48,62,76].map(y=>`<div style="position:absolute;left:10px;right:10px;top:${y}px;height:6px;border-radius:3px;background:#ddd"></div>`).join('')}</div><div><div class="cond" style="font-size:40px;font-weight:900">PDF quote</div><div style="font-size:22px;color:${t.mute}">Letter or A4 · CSV</div></div></div>`,t,s.dark)
+        + popCard(30,1590,420,`<div style="font-size:22px;color:${t.mute};font-weight:700">Total incl. 8.25% tax</div><div class="mono" style="font-size:58px;font-weight:700;color:${t.accText}">$1,984.71</div>`,t,s.dark)
+  }[s.key];
+  h += P;
+  return {W,H,html:h};
+}
+
+function feature(){
+  const t=T.night, W=1024, H=500;
+  let h = bg(t,true);
+  h += `<div class="abs" style="left:58px;top:70px;width:520px">
+    <div class="row" style="align-items:center;gap:18px">${logoMark(96,t.surf2,t.acc)}<div class="cond" style="font-size:78px;font-weight:900;color:${t.ink};letter-spacing:-1px">Build<span style="color:${t.acc}">bros</span></div></div>
+    <div class="cond" style="font-size:46px;font-weight:600;line-height:1.05;color:${t.ink};margin-top:22px">Construction material<br><b style="font-weight:900;color:${t.accText}">calculator</b></div>
+    <div class="row" style="gap:10px;margin-top:22px;flex-wrap:wrap">${['Concrete','Bricks','Rebar','Tiles','Paint'].map((x,i)=>`<div style="padding:9px 16px;border-radius:12px;background:${[M.cem,M.brick,M.steel,M.tile,M.paint][i]};color:#fff;font-weight:800;font-size:19px">${x}</div>`).join('')}</div>
+    <div style="font-size:19px;color:${t.mute};margin-top:16px;font-weight:600">US states &amp; European countries · local units, tax &amp; prices</div></div>`;
+  h += place(slab(26),560,250) + place(brickStack(22),860,30) + place(paintCan(110,M.paint,M.pink),905,330) + place(tileStack(20),560,20);
+  // straight-on phone, cropped at bottom
+  const scale=0.62, pw=(390+32)*scale;
+  h += layers(700,70,pw,(844+32)*scale,t.acc);
+  h += phone(t,'brick',700,70,scale,'#0B0C10');
+  h += `<div class="pop" style="left:600px;top:330px;width:210px;background:${t.surf};border:2px solid ${t.line};padding:14px;color:${t.ink}"><div style="font-size:13px;color:${t.mute};font-weight:700">You need</div><div class="mono" style="font-size:44px;font-weight:700;color:${t.accText};letter-spacing:-1px">914</div><div style="font-size:14px;font-weight:700">bricks · 3 mortar bags</div></div>`;
+  return {W,H,html:h};
+}
+
+function logo(){
+  const W=512,H=512;
+  const h = `<div class="abs" style="inset:0;background:radial-gradient(90% 90% at 30% 20%, #2C313B 0%, #15171C 60%, #0B0C10 100%)"></div>
+  <div class="abs" style="inset:0;background-image:repeating-linear-gradient(30deg, rgba(255,255,255,.045) 0 2px, transparent 2px 40px),repeating-linear-gradient(150deg, rgba(255,255,255,.045) 0 2px, transparent 2px 40px)"></div>
+  <div class="abs" style="left:56px;top:56px;width:400px;height:400px;filter:drop-shadow(0 26px 30px rgba(0,0,0,.45))">${logoMark(400,'transparent','#FF7A1A').replace('<rect x="14" y="14" width="80" height="80" rx="22" fill="transparent"/>','')}</div>`;
+  return {W,H,html:h};
+}
+
+const q = new URLSearchParams(location.search);
+const kind = q.get('kind') || 'shot';
+const out = kind==='feature' ? feature() : kind==='logo' ? logo() : shot(+(q.get('i')||0));
+const st = document.getElementById('stage');
+st.style.width=out.W+'px'; st.style.height=out.H+'px';
+st.innerHTML = out.html;
+document.body.style.width=out.W+'px';
+</script>
+</body>
+</html>

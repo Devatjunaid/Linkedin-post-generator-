@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">BuildMate</string>
-    <!-- Replace with the URL of your hosted privacy policy before publishing (required by AdMob and Google Play). -->
-    <string name="privacy_policy_url">https://example.com/buildmate/privacy</string>
-    <string name="ad_badge">Ad</string>
-</resources>
