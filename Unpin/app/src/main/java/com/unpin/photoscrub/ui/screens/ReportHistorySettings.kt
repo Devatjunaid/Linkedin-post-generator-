@@ -107,8 +107,8 @@ fun ReportScreen(vm: AppViewModel, actions: UnpinActions) {
             ShredderHero(
                 Modifier.padding(horizontal = 16.dp).fillMaxWidth().height(220.dp).clip(RoundedCornerShape(28.dp))
             )
+            val n = session.photoCount
             Column(Modifier.padding(horizontal = 20.dp, vertical = 18.dp)) {
-                val n = session.photoCount
                 Text(
                     when {
                         n == 0 -> "Nothing was cleaned."
