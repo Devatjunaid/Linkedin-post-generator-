@@ -10,11 +10,11 @@
 
 # --- kotlinx.serialization (project data + navigation routes) ---
 -keepattributes *Annotation*, InnerClasses, Signature
--keepclassmembers @kotlinx.serialization.Serializable class com.verba.subtitles.** {
+-keepclassmembers @kotlinx.serialization.Serializable class com.superdevlabs.autosubtitles.** {
     *** Companion;
     *** INSTANCE;
     kotlinx.serialization.KSerializer serializer(...);
 }
--keepclasseswithmembers class com.verba.subtitles.** {
+-keepclasseswithmembers class com.superdevlabs.autosubtitles.** {
     kotlinx.serialization.KSerializer serializer(...);
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Verba</string>
+    <string name="app_name">Auto Subtitles</string>
     <!-- Replace with your real privacy policy URL before publishing (Play requires one for apps with ads). -->
-    <string name="privacy_policy_url" translatable="false">https://YOUR-DOMAIN.com/verba/privacy-policy</string>
+    <string name="privacy_policy_url" translatable="false">https://YOUR-DOMAIN.com/auto-subtitles/privacy-policy</string>
     <string name="ad_badge">Ad</string>
 </resources>

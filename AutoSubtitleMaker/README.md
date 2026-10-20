@@ -1,6 +1,6 @@
-# Verba — Auto Subtitle Maker (Android, Kotlin)
+# Auto Subtitles & Captions — Android app (Kotlin)
 
-Pick a video → Verba listens to the speech in it → timed subtitles appear on the video → style them → export.
+Pick a video → the app listens to the speech in it → timed subtitles appear on the video → style them → export.
 Everything runs **on the phone**. There is **no paid API, no API key and no credit limit**.
 
 ## Open & run
@@ -51,7 +51,7 @@ Toolchain (pinned in `gradle/libs.versions.toml`):
 - Text colour, highlight the spoken word (colour or box), outline, per-line/block background, drop shadow or glow, letter spacing, case.
 - Motion: Pop, Bounce, Slide up, Fade, Typewriter, Karaoke, Still. Animations are timed per word.
 - Words per caption 1–6, re-grouping keeps your text edits.
-- Export: burned-in MP4 (720p / 1080p / original), subtitle file, or both. Keep/remove audio. Saved to `Movies/Verba`, share sheet.
+- Export: burned-in MP4 (720p / 1080p / original), subtitle file, or both. Keep/remove audio. Saved to `Movies/AutoSubtitles`, share sheet.
 - Animated splash, animated multi-part logo, animated exit popup on Back.
 
 ## Ads (AdMob)
@@ -86,13 +86,12 @@ You still need to do in Play Console / AdMob:
 - [ ] Target audience: 13+ / not designed for children (otherwise Families ad rules apply).
 - [ ] In AdMob, create and publish the GDPR + US state privacy messages (UMP shows nothing until you do).
 - [ ] Add your `app-ads.txt` to your developer website.
-- [ ] Check that "Verba" isn't someone else's trademark before you publish; rename via `app_name` if needed.
 
 ## Project layout
 
 ```
-app/src/main/java/com/verba/subtitles/
-  VerbaApp.kt, MainActivity.kt          app start, manual DI container
+app/src/main/java/com/superdevlabs/autosubtitles/
+  SubtitleApp.kt, MainActivity.kt          app start, manual DI container
   ads/                                  consent, banner retry policy, interstitial cap, native card
   core/model, core/captions             data model, segmenter, editing, SRT/VTT/ASS, presets (unit tested)
   core/render                           caption renderer + font registry

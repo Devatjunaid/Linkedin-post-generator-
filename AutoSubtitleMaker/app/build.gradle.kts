@@ -18,13 +18,13 @@ val testInterstitialId = "ca-app-pub-3940256099942544/1033173712"
 val testNativeId = "ca-app-pub-3940256099942544/2247696110"
 
 android {
-    namespace = "com.verba.subtitles"
+    namespace = "com.superdevlabs.autosubtitles"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.verba.subtitles"
+        applicationId = "com.superdevlabs.autosubtitles"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
