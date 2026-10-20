@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -105,9 +104,11 @@ fun MainFrame(
 ) {
     Column(Modifier.fillMaxSize().background(Palette.Ink).navigationBarsPadding()) {
         Box(Modifier.weight(1f).fillMaxWidth()) { content() }
-        Dock(current, onTab, onAdd)
-        Spacer(Modifier.height(10.dp))
+        // Banner sits above the dock, with a gap so it is never mistaken for a menu button.
         BannerAd()
+        Spacer(Modifier.height(10.dp))
+        Dock(current, onTab, onAdd)
+        Spacer(Modifier.height(8.dp))
     }
 }
 
@@ -162,17 +163,16 @@ private fun AddButton(onAdd: () -> Unit) {
     val glow by loop.animateFloat(0.25f, 0.55f, infiniteRepeatable(tween(1400), androidx.compose.animation.core.RepeatMode.Reverse), label = "glow")
     Box(
         Modifier
-            .offset(y = (-14).dp)
-            .size(62.dp)
+            .size(56.dp)
             .scale(scale)
-            .background(Palette.Mint.copy(alpha = glow * 0.35f), RoundedCornerShape(22.dp))
+            .background(Palette.Mint.copy(alpha = glow * 0.35f), RoundedCornerShape(19.dp))
             .padding(3.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(Palette.Mint)
             .clickable(interactionSource = source, indication = null, role = Role.Button, onClickLabel = "Add a cash entry", onClick = onAdd),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(Icons.Rounded.Add, contentDescription = "Add a cash entry", tint = Palette.Ink, modifier = Modifier.size(30.dp))
+        Icon(Icons.Rounded.Add, contentDescription = "Add a cash entry", tint = Palette.Ink, modifier = Modifier.size(28.dp))
     }
 }
 
