@@ -3,9 +3,6 @@ package com.dailycash.tracker.ui.brand
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -21,180 +18,169 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dailycash.tracker.ui.theme.Palette
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+private val Ink = Color(0xFF0B0F0E)
+private val Mint = Color(0xFF6EF0B9)
+private val MintLight = Color(0xFFD6FFEE)
+private val MintDeep = Color(0xFF2E9E70)
+private val Guilloche = Color(0xFF2F7A62)
+private val SunTop = Color(0xFFFFD98A)
+private val SunBottom = Color(0xFFF29A2E)
+private val SunInk = Color(0xFF8A5212)
+private val Amber = Color(0xFFFFB547)
+private val Sky = Color(0xFF9DBDF0)
+
 /**
- * The Daily Cash mark, drawn live:
- * a turning guilloche rosette (the security print on banknotes), two fanned notes,
- * an orbit ring with a travelling coin (money across countries), a front coin that drops
- * in with a bounce, and a location pulse.
+ * The Daily Cash mark, drawn live in a 512-unit space:
+ * a banknote folded into a paper plane flies a dashed travel route over a coin-sun
+ * rising from a guilloche horizon. On entry the sun rises and the plane glides in;
+ * after that the plane floats, the sun's rays turn and the route keeps moving.
  */
 @Composable
 fun DailyCashLogo(modifier: Modifier = Modifier, size: Dp = 168.dp, playEntrance: Boolean = true) {
-    val enter = remember { Animatable(if (playEntrance) 0f else 1f) }
-    val coinDrop = remember { Animatable(if (playEntrance) -1f else 0f) }
+    val rise = remember { Animatable(if (playEntrance) 1f else 0f) }
+    val glide = remember { Animatable(if (playEntrance) 1f else 0f) }
     LaunchedEffect(Unit) {
         if (playEntrance) {
-            launch { enter.animateTo(1f, tween(1300, easing = FastOutSlowInEasing)) }
-            delay(450)
-            coinDrop.animateTo(0f, spring(dampingRatio = 0.38f, stiffness = Spring.StiffnessLow))
+            launch { rise.animateTo(0f, tween(1100, easing = FastOutSlowInEasing)) }
+            delay(350)
+            glide.animateTo(0f, spring(dampingRatio = 0.62f, stiffness = 140f))
         }
     }
     val loop = rememberInfiniteTransition(label = "logo")
-    val spin by loop.animateFloat(0f, 360f, infiniteRepeatable(tween(24_000, easing = LinearEasing)), label = "spin")
-    val orbit by loop.animateFloat(0f, 360f, infiniteRepeatable(tween(4_200, easing = LinearEasing)), label = "orbit")
-    val pulse by loop.animateFloat(0f, 1f, infiniteRepeatable(tween(1_700, easing = LinearOutSlowInEasing)), label = "pulse")
-    val sway by loop.animateFloat(
-        -1f, 1f,
-        infiniteRepeatable(tween(2_600, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "sway",
-    )
-    val measurer = rememberTextMeasurer()
+    val t by loop.animateFloat(0f, 1f, infiniteRepeatable(tween(3_200, easing = LinearEasing)), label = "t")
 
     Canvas(modifier.size(size).semantics { contentDescription = "Daily Cash logo" }) {
-        val c = center
-        val r = this.size.minDimension / 2f
-        val p = enter.value
-
-        drawCircle(Palette.Surface2, r * 0.98f * (0.6f + 0.4f * p), c)
-        drawCircle(Palette.Line.copy(alpha = p), r * 0.98f, c, style = Stroke(1.dp.toPx()))
-
-        // Guilloche rosette, each petal traced in turn.
-        rotate(spin, c) {
-            val petals = 9
-            for (i in 0 until petals) {
-                val sweep = (p * petals - i).coerceIn(0f, 1f)
-                if (sweep <= 0f) continue
-                rotate(i * (180f / petals), c) {
-                    drawArc(
-                        color = Palette.Mint.copy(alpha = 0.22f),
-                        startAngle = 0f,
-                        sweepAngle = 360f * sweep,
-                        useCenter = false,
-                        topLeft = Offset(c.x - r * 0.86f, c.y - r * 0.28f),
-                        size = Size(r * 1.72f, r * 0.56f),
-                        style = Stroke(1.1.dp.toPx()),
-                    )
-                }
-            }
+        scale(this.size.minDimension / 512f, Offset.Zero) {
+            drawMark(t, rise.value, glide.value)
         }
-
-        drawNote(-24f * p + sway * 1.5f, -r * 0.10f, -r * 0.20f, Palette.notes[2], r, c, p)
-        drawNote(12f * p - sway * 1.5f, r * 0.06f, -r * 0.10f, Palette.notes[1], r, c, p)
-
-        // Orbit ring with a travelling coin.
-        rotate(-18f, c) {
-            val oc = Offset(c.x, c.y + r * 0.08f)
-            drawOval(
-                color = Palette.Text.copy(alpha = 0.35f * p),
-                topLeft = Offset(oc.x - r * 0.92f, oc.y - r * 0.30f),
-                size = Size(r * 1.84f, r * 0.60f),
-                style = Stroke(1.4.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 6f))),
-            )
-            val a = Math.toRadians(orbit.toDouble())
-            val pos = Offset(oc.x + r * 0.92f * cos(a).toFloat(), oc.y + r * 0.30f * sin(a).toFloat())
-            drawCircle(Palette.Amber, r * 0.075f * p, pos)
-            drawCircle(Palette.Ink.copy(alpha = 0.45f), r * 0.045f * p, pos, style = Stroke(1.dp.toPx()))
-        }
-
-        // Front coin.
-        val cr = r * 0.36f
-        val coin = Offset(c.x, c.y + r * 0.14f + coinDrop.value * r * 1.1f)
-        drawCircle(Color.Black.copy(alpha = 0.35f), cr, coin + Offset(0f, cr * 0.12f))
-        drawCircle(Palette.Mint, cr, coin)
-        for (i in 0 until 36) {
-            val ang = Math.toRadians(i * 10.0 + spin * 0.5)
-            val dir = Offset(cos(ang).toFloat(), sin(ang).toFloat())
-            drawLine(
-                Palette.Ink.copy(alpha = 0.35f),
-                coin + dir * (cr * 0.86f),
-                coin + dir * (cr * 0.96f),
-                strokeWidth = 1.dp.toPx(),
-            )
-        }
-        drawCircle(Palette.Ink, cr * 0.76f, coin, style = Stroke(1.4.dp.toPx()))
-        val glyph = measurer.measure(
-            "D",
-            TextStyle(color = Palette.Ink, fontSize = (cr * 0.95f).toDp().toSp(), fontWeight = FontWeight.Black),
-        )
-        drawText(glyph, topLeft = coin - Offset(glyph.size.width / 2f, glyph.size.height / 2f))
-        drawLine(
-            Palette.Ink,
-            coin + Offset(-cr * 0.46f, 0f),
-            coin + Offset(-cr * 0.16f, 0f),
-            strokeWidth = cr * 0.11f,
-            cap = StrokeCap.Round,
-        )
-
-        // Location pulse.
-        val pc = Offset(c.x + r * 0.62f, c.y - r * 0.62f)
-        drawCircle(
-            Palette.Mint.copy(alpha = (1f - pulse) * 0.6f * p),
-            r * 0.06f + r * 0.14f * pulse,
-            pc,
-            style = Stroke(1.5.dp.toPx()),
-        )
-        drawCircle(Palette.Mint.copy(alpha = p), r * 0.055f, pc)
     }
 }
 
-private fun DrawScope.drawNote(
-    angle: Float,
-    dx: Float,
-    dy: Float,
-    colors: Palette.NoteColors,
-    r: Float,
-    c: Offset,
-    alpha: Float,
-) {
-    val w = r * 1.12f
-    val h = r * 0.62f
-    rotate(angle, c) {
-        translate(dx, dy) {
-            val tl = Offset(c.x - w / 2f, c.y - h / 2f)
-            drawRoundRect(colors.bg.copy(alpha = alpha), tl, Size(w, h), CornerRadius(r * 0.07f))
-            drawRoundRect(
-                colors.line.copy(alpha = alpha),
-                tl + Offset(r * 0.05f, r * 0.05f),
-                Size(w - r * 0.1f, h - r * 0.1f),
-                CornerRadius(r * 0.04f),
-                style = Stroke(1.dp.toPx()),
-            )
-            val wave = Path().apply {
-                var x = tl.x + r * 0.1f
-                val step = r * 0.12f
-                var up = true
-                moveTo(x, c.y)
-                while (x < tl.x + w * 0.62f) {
-                    quadraticTo(x + step / 2f, c.y + if (up) -h * 0.22f else h * 0.22f, x + step, c.y)
-                    x += step
-                    up = !up
+private fun DrawScope.drawMark(t: Float, rise: Float, glide: Float) {
+    val wave = sin(2 * PI * t).toFloat()
+    val bob = wave * 7f
+    val rays = t * 30f
+
+    drawRoundRect(
+        Brush.radialGradient(listOf(Color(0xFF16302A), Color(0xFF0D1513), Color(0xFF080B0A)), Offset(256f, 318f), 384f),
+        size = Size(512f, 512f),
+        cornerRadius = CornerRadius(112f),
+    )
+
+    // Coin-sun rising behind the horizon.
+    clipRect(0f, 0f, 512f, 352f) {
+        translate(0f, rise * 150f) {
+            val c = Offset(256f, 352f)
+            for (i in 0 until 12) {
+                val a = Math.toRadians((i * 30 + rays).toDouble())
+                val d = Offset(cos(a).toFloat(), sin(a).toFloat())
+                drawLine(Amber.copy(alpha = 0.55f), c + d * 128f, c + d * 150f, strokeWidth = 9f, cap = StrokeCap.Round)
+            }
+            drawCircle(Brush.verticalGradient(listOf(SunTop, SunBottom), 240f, 464f), 112f, c)
+            for (i in 0 until 36) {
+                rotate(i * 10f - 180f + rays, c) {
+                    drawLine(SunInk.copy(alpha = 0.45f), Offset(256f, 248f), Offset(256f, 258f), strokeWidth = 3f)
                 }
             }
-            drawPath(wave, colors.ink.copy(alpha = 0.7f * alpha), style = Stroke(1.dp.toPx()))
-            val seal = Offset(tl.x + w * 0.78f, c.y)
-            drawCircle(colors.line.copy(alpha = alpha), h * 0.26f, seal, style = Stroke(1.dp.toPx()))
-            drawCircle(colors.ink.copy(alpha = 0.5f * alpha), h * 0.12f, seal)
+            drawCircle(SunInk.copy(alpha = 0.5f), 84f, c, style = Stroke(3f))
         }
     }
+
+    drawRoundRect(Mint.copy(alpha = 0.9f), Offset(40f, 350f), Size(432f, 5f), CornerRadius(2.5f))
+    for ((y, phase) in listOf(392f to 0, 422f to 1, 452f to 0)) {
+        val p = Path().apply {
+            moveTo(40f, y)
+            var x = 40f
+            var k = phase
+            while (x < 472f) {
+                quadraticTo(x + 18f, y + if (k % 2 == 1) -12f else 12f, x + 36f, y)
+                x += 36f
+                k++
+            }
+        }
+        drawPath(p, Guilloche.copy(alpha = 0.9f), style = Stroke(3f))
+    }
+
+    // Travel route with country stops.
+    val routeAlpha = 1f - glide
+    translate(0f, bob * 0.4f) {
+        val route = Path().apply {
+            moveTo(58f, 300f)
+            cubicTo(96f, 236f, 132f, 300f, 176f, 232f)
+        }
+        drawPath(
+            route,
+            Color(0xFFEEF3EF).copy(alpha = 0.7f * routeAlpha),
+            style = Stroke(6f, cap = StrokeCap.Round, pathEffect = PathEffect.dashPathEffect(floatArrayOf(2f, 16f), t * 44f)),
+        )
+    }
+    val pulse = { k: Int -> 0.75f + 0.25f * sin(2 * PI * (t + k / 3f)).toFloat() }
+    drawCircle(Sky.copy(alpha = routeAlpha), 11f * pulse(0), Offset(62f, 294f))
+    drawCircle(Amber.copy(alpha = routeAlpha), 11f * pulse(1), Offset(114f, 262f))
+
+    // Banknote paper plane.
+    withTransform({
+        translate(-glide * 330f, bob + glide * 90f)
+        rotate(wave * 1.6f - glide * 18f, Offset(280f, 220f))
+        scale(1.16f, 1.16f, Offset(290f, 215f))
+    }) {
+        val nose = Offset(410f, 140f)
+        val tip = Offset(148f, 206f)
+        val fold = Offset(252f, 232f)
+        val keel = Offset(270f, 266f)
+        val tail = Offset(230f, 300f)
+        drawPath(tri(nose, fold, keel), Brush.linearGradient(listOf(Mint, Color(0xFF3FC48D)), fold, nose))
+        drawPath(tri(fold, tail, keel), MintDeep)
+        val wing = tri(nose, tip, fold)
+        drawPath(wing, Brush.linearGradient(listOf(MintLight, Color(0xFF8FF5C9)), tip, nose))
+        clipPath(wing) {
+            drawLine(
+                Guilloche,
+                Offset(178f, 214f),
+                Offset(392f, 152f),
+                strokeWidth = 3f,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f)),
+            )
+            drawCircle(Guilloche, 17f, Offset(232f, 208f), style = Stroke(3f))
+            drawCircle(Guilloche, 7f, Offset(232f, 208f))
+            val squiggle = Path().apply {
+                moveTo(268f, 196f)
+                relativeQuadraticTo(12f, -12f, 24f, -6f)
+                relativeQuadraticTo(12f, 6f, 24f, -6f)
+                relativeQuadraticTo(12f, -12f, 24f, -6f)
+            }
+            drawPath(squiggle, Guilloche, style = Stroke(3f))
+        }
+        drawLine(Ink.copy(alpha = 0.25f), nose, fold, strokeWidth = 3f)
+    }
+}
+
+private fun tri(a: Offset, b: Offset, c: Offset) = Path().apply {
+    moveTo(a.x, a.y)
+    lineTo(b.x, b.y)
+    lineTo(c.x, c.y)
+    close()
 }
