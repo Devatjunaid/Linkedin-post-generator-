@@ -1,0 +1,14 @@
+<resources>
+    <style name="Theme.Drip" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/paper</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+    <!-- System splash (Android 12+ always shows one). It hands over to our animated splash. -->
+    <style name="Theme.Drip.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/paper</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Drip</item>
+    </style>
+</resources>
