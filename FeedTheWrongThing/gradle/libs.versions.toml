@@ -1,0 +1,9 @@
+[versions]
+agp = "9.4.0"
+playServicesAds = "24.4.0"
+
+[libraries]
+play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
