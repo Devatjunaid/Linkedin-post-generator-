@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sky">#CDEBFF</color>
+    <color name="ink">#24215A</color>
+    <color name="yellow">#FFC83D</color>
+    <color name="coral">#FF7A59</color>
+    <color name="purple">#6C5CE7</color>
+    <color name="white">#FFFFFF</color>
+</resources>

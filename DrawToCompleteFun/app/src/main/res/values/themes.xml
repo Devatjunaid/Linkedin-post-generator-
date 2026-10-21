@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.DrawToComplete" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/sky</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- System splash (Android 12+ and the compat version below it): the logo on sky blue.
+         The animated splash in Compose follows right after. -->
+    <style name="Theme.DrawToComplete.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/sky</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.DrawToComplete</item>
+    </style>
+</resources>

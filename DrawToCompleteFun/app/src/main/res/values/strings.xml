@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Draw to Complete Fun</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-1948347222012540~4877598094</string>
+    <!-- Host PRIVACY_POLICY.md (for example with GitHub Pages) and put its address here. -->
+    <string name="privacy_policy_url" translatable="false">https://devatjunaid.github.io/Linkedin-post-generator-/DrawToCompleteFun/privacy-policy.html</string>
+</resources>
