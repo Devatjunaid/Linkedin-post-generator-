@@ -60,7 +60,7 @@ These are built in already:
 - All art, icons and sounds were created for this project (vector drawings and synthesized audio).
 
 You still need to do these in Play Console / AdMob:
-1. **Host the privacy policy.** `privacy-policy.html` is ready: add your support email in it, enable GitHub Pages (or any host),
+1. **Host the privacy policy.** `privacy-policy.html` is ready (publisher Super Dev Labs). Enable GitHub Pages (or any host),
    then put its URL in `res/values/strings.xml` (`privacy_policy_url`) and in Play Console.
 2. **Play Console > App content:**
    - Target audience: choose the children's age groups.
@@ -70,7 +70,7 @@ You still need to do these in Play Console / AdMob:
    In Blocking controls, set the max ad content rating to G.
 4. Sign the release build (Build > Generate Signed App Bundle) and upload the `.aab`.
 
-Store graphics are in `store-assets/`: a 512x512 icon and a 1024x500 feature graphic.
+Store graphics are in `store-assets/`: a 512x512 icon, a 1024x500 feature graphic and six 1080x1920 phone screenshots.
 
 ## Project map
 
