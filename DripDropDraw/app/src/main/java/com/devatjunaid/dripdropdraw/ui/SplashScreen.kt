@@ -16,11 +16,13 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +35,7 @@ import com.devatjunaid.dripdropdraw.engine.Pt
 import com.devatjunaid.dripdropdraw.engine.WallDef
 import com.devatjunaid.dripdropdraw.engine.World
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** A tiny real level that plays itself behind the title. */
@@ -62,6 +65,7 @@ private fun splashLevel(): LevelDef {
 @Composable
 fun SplashScreen(onDone: () -> Unit) {
     val sfx = LocalSfx.current
+    val windowInfo = LocalWindowInfo.current
     val session = remember { GameSession(splashLevel()) }
     val textMeasurer = rememberTextMeasurer()
     val renderer = remember(textMeasurer) { GameRenderer(textMeasurer) }
@@ -99,6 +103,8 @@ fun SplashScreen(onDone: () -> Unit) {
     }
 
     LaunchedEffect(Unit) {
+        // Wait until the player can see the screen (not behind the lock screen).
+        snapshotFlow { windowInfo.isWindowFocused }.first { it }
         sfx?.play(Sound.WHOOSH, 0.6f)
         launch { titleTop.animateTo(1f, spring(dampingRatio = 0.45f, stiffness = 300f)) }
         delay(250)

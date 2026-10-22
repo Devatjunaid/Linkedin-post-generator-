@@ -1,5 +1,6 @@
 package com.devatjunaid.dripdropdraw
 
+import android.app.KeyguardManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -39,19 +40,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        app.sfx.onForeground()
+    private var resumed = false
+
+    override fun onResume() {
+        super.onResume()
+        resumed = true
+        updateAudio()
     }
 
-    override fun onStop() {
-        app.sfx.onBackground()
-        super.onStop()
+    override fun onPause() {
+        resumed = false
+        updateAudio()
+        super.onPause()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) hideSystemBars()
+        updateAudio()
+    }
+
+    /**
+     * Sound only plays while the player can actually see and use the game. Android can start
+     * the activity behind the lock screen (for example right after an install); it is then
+     * resumed but has no window focus, so it must stay silent until the phone is unlocked.
+     */
+    private fun updateAudio() {
+        val locked = getSystemService(KeyguardManager::class.java)?.isKeyguardLocked == true
+        if (resumed && hasWindowFocus() && !locked) app.sfx.onForeground() else app.sfx.onBackground()
     }
 
     private fun hideSystemBars() {

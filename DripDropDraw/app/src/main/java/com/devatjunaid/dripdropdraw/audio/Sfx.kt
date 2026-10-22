@@ -53,7 +53,7 @@ class Sfx(context: Context) {
      * land in a cup at the same time).
      */
     fun play(sound: Sound, volume: Float = 1f, rate: Float = 1f, minGapMs: Long = 0) {
-        if (!soundOn) return
+        if (!soundOn || !inForeground) return
         val now = SystemClock.uptimeMillis()
         if (now - lastPlayed[sound.ordinal] < minGapMs) return
         lastPlayed[sound.ordinal] = now
