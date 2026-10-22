@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -130,9 +131,12 @@ fun ParentalGate(onPass: () -> Unit, onCancel: () -> Unit) {
     }
 }
 
+const val PRIVACY_POLICY_URL = "https://superdevlabs.blogspot.com/p/privacy-policy-drip-drop-draw-water.html"
+
 /** Information for parents, behind the parental gate. */
 @Composable
 fun ParentsInfo(onClose: () -> Unit) {
+    val uriHandler = LocalUriHandler.current
     Overlay(onDismiss = onClose) {
         DialogTitle("For parents")
         DialogText(
@@ -142,6 +146,14 @@ fun ParentsInfo(onClose: () -> Unit) {
                 "open a bonus chest. The game keeps progress only on this device and has no chat, " +
                 "accounts or in-app purchases.",
         )
+        CartoonButton(
+            onClick = {
+                // No browser installed: nothing to open, so ignore the tap.
+                runCatching { uriHandler.openUri(PRIVACY_POLICY_URL) }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            color = Palette.WaterLight,
+        ) { ButtonLabel("Privacy policy") }
         CartoonButton(onClose, Modifier.fillMaxWidth(), color = Palette.Green) { ButtonLabel("OK") }
     }
 }
