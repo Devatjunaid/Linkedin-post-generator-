@@ -1,4 +1,4 @@
-# Google Mobile Ads and UMP ship their own consumer rules; nothing extra is needed.
+# Google Mobile Ads and UMP ship their own consumer rules; WorkManager needs the extra rules below.
 # Keep line numbers for readable crash reports in Play Console.
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
