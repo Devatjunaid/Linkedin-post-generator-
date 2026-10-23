@@ -15,12 +15,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // The system launch screen hands straight over to the animated splash in Compose.
         installSplashScreen()
-        // Light, transparent bars on every device: the app draws behind them and pads with insets.
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
-        )
         super.onCreate(savedInstanceState)
+        // Transparent system bars: the app draws behind them and pads content with window insets.
+        // WalkiesRoot switches the icon colour between the dark splash and the light app.
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+        )
 
         val container = (application as WalkiesApp).container
         container.ads.gatherConsent(this)

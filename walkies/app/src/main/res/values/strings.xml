@@ -83,6 +83,7 @@
     <string name="log_today">Today</string>
     <string name="log_day_empty">Nothing logged on this day.</string>
     <string name="log_add_entry">Add entry</string>
+    <string name="entry_deleted">Entry deleted</string>
     <string name="log_delete_title">Delete this entry?</string>
     <string name="log_delete_walk_title">Delete this walk?</string>
     <string name="log_delete_walk_body">The pee and poo logged during the walk will be deleted too.</string>
@@ -94,6 +95,14 @@
     <string name="entry_time">Time</string>
     <string name="consistency">Consistency</string>
     <string name="report_chooser">Share vet report</string>
+    <string name="report_header">Walkies report for %1$s</string>
+    <string name="report_period">%1$s – %2$s (%3$d days)</string>
+    <string name="report_averages">Daily average: %1$s pee · %2$s poo · %3$s walks</string>
+    <string name="report_walk_time">Average walk: %1$s</string>
+    <string name="report_consistency">Poo consistency: firm %1$d · soft %2$d · runny %3$d · not noted %4$d</string>
+    <string name="report_by_day">Day by day</string>
+    <string name="report_day_line">%1$s: pee %2$d, poo %3$d, walks %4$d</string>
+    <string name="report_footer">Logged with Walkies. Counts are what was recorded in the app.</string>
     <string name="report_subject">%1$s – potty &amp; walk report</string>
 
     <!-- Reminders -->

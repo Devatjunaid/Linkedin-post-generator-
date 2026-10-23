@@ -85,7 +85,7 @@ private fun NativeAdView.bind(ad: NativeAd) {
     mediaView = media
 
     headline.text = ad.headline
-    ad.mediaContent?.let { media.mediaContent = it }
+    ad.mediaContent?.let { media.setMediaContent(it) }
     media.visibility = if (ad.mediaContent != null) View.VISIBLE else View.GONE
 
     body.text = ad.body

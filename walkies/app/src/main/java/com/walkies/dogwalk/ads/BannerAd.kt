@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,7 +62,9 @@ fun AnchoredBanner(adsManager: AdsManager, modifier: Modifier = Modifier) {
                 .height(adSize.height.dp)
                 .background(Color.Transparent),
         ) {
-            AndroidView(factory = { controller.adView }, modifier = Modifier.fillMaxWidth())
+            key(controller) {
+                AndroidView(factory = { controller.adView }, modifier = Modifier.fillMaxWidth())
+            }
         }
     }
 }
