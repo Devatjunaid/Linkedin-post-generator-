@@ -5,7 +5,10 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.ui.unit.dp
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -29,6 +32,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.driveready.testprep.AppViewModel
+import com.driveready.testprep.BuildConfig
+import com.driveready.testprep.ui.components.openUrl
+import com.driveready.testprep.ui.progress.AboutScreen
 import com.driveready.testprep.ads.AdsManager
 import com.driveready.testprep.ads.BannerAd
 import com.driveready.testprep.ads.InterstitialAdManager
@@ -82,6 +88,7 @@ object Routes {
     const val TEST_DAY = "test_day"
     const val PROGRESS = "progress"
     const val SETTINGS = "settings"
+    const val ABOUT = "about"
 
     fun country(change: Boolean) = "country?change=$change"
     fun region(countryId: String, change: Boolean) = "region/$countryId?change=$change"
@@ -99,7 +106,8 @@ private val tabs = listOf(
     Tab(Routes.PRACTICAL, "Practical", AppIcons.Wheel)
 )
 
-private val noBannerRoutes = setOf(Routes.SPLASH, Routes.GUIDE, Routes.GET_STARTED, Routes.HAZARD_PLAY)
+// No banner where it would sit right under answer/navigation buttons, or on intro screens.
+private val noBannerRoutes = setOf(Routes.SPLASH, Routes.GUIDE, Routes.GET_STARTED, Routes.HAZARD_PLAY, Routes.QUIZ)
 
 @Composable
 fun DriveReadyNavHost(viewModel: AppViewModel) {
@@ -124,7 +132,11 @@ fun DriveReadyNavHost(viewModel: AppViewModel) {
         containerColor = Brand.Surface,
         bottomBar = {
             Column(if (!isTab) Modifier.navigationBarsPadding() else Modifier) {
-                if (showBanner) BannerAd()
+                if (showBanner) {
+                    // Visual separation keeps the banner clear of on-screen buttons.
+                    HorizontalDivider(color = Brand.Line)
+                    BannerAd(Modifier.padding(top = 6.dp, bottom = if (isTab) 2.dp else 0.dp))
+                }
                 if (isTab) {
                     NavigationBar(containerColor = Brand.Card) {
                         tabs.forEach { tab ->
@@ -266,11 +278,11 @@ fun DriveReadyNavHost(viewModel: AppViewModel) {
                         country = country,
                         contentPadding = padding,
                         onExit = { nav.popBackStack() },
-                        onFinish = { result ->
+                        onFinish = { result, userInitiated ->
                             viewModel.finishQuiz(country, result)
-                            withInterstitial {
-                                nav.navigate(Routes.RESULT) { popUpTo(Routes.QUIZ) { inclusive = true } }
-                            }
+                            val toResult = { nav.navigate(Routes.RESULT) { popUpTo(Routes.QUIZ) { inclusive = true } } }
+                            // Interstitials only follow a user action, never the timer running out.
+                            if (userInitiated) withInterstitial(toResult) else toResult()
                         }
                     )
                 }
@@ -364,7 +376,7 @@ fun DriveReadyNavHost(viewModel: AppViewModel) {
                         country = country,
                         confident = s.maneuversConfident,
                         contentPadding = padding,
-                        onOpenManeuver = { id -> withInterstitial { nav.navigate(Routes.maneuver(id)) } },
+                        onOpenManeuver = { id -> nav.navigate(Routes.maneuver(id)) },
                         onTestDay = { nav.navigate(Routes.TEST_DAY) }
                     )
                 }
@@ -417,6 +429,8 @@ fun DriveReadyNavHost(viewModel: AppViewModel) {
                         onChangeCountry = { nav.navigate(Routes.country(true)) },
                         onPrivacy = { activity?.let { AdsManager.showPrivacyOptions(it) } },
                         onRate = { openPlayStore(context) },
+                        onPrivacyPolicy = { openUrl(context, BuildConfig.PRIVACY_POLICY_URL) },
+                        onAbout = { nav.navigate(Routes.ABOUT) },
                         onShare = {
                             val send = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
@@ -426,6 +440,13 @@ fun DriveReadyNavHost(viewModel: AppViewModel) {
                         }
                     )
                 }
+            }
+            composable(Routes.ABOUT) {
+                AboutScreen(
+                    contentPadding = padding,
+                    onBack = { nav.popBackStack() },
+                    onPrivacyPolicy = { openUrl(context, BuildConfig.PRIVACY_POLICY_URL) }
+                )
             }
         }
     }

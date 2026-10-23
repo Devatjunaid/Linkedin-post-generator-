@@ -14,6 +14,9 @@ val testBannerId = "ca-app-pub-3940256099942544/9214589741"
 val testInterstitialId = "ca-app-pub-3940256099942544/1033173712"
 val testNativeId = "ca-app-pub-3940256099942544/2247696110"
 
+// >>> PUT YOUR PRIVACY POLICY URL HERE (same URL you enter in Play Console → App content → Privacy policy).
+val privacyPolicyUrl = "https://YOUR-DOMAIN.com/driveready/privacy-policy"
+
 android {
     namespace = "com.driveready.testprep"
     compileSdk = 37
@@ -26,6 +29,7 @@ android {
         versionName = "1.0.0"
 
         manifestPlaceholders["admobAppId"] = admobAppId
+        buildConfigField("String", "PRIVACY_POLICY_URL", "\"$privacyPolicyUrl\"")
     }
 
     buildTypes {

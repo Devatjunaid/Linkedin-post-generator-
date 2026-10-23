@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.ump.ConsentInformation
 import com.google.android.ump.ConsentRequestParameters
 import com.google.android.ump.UserMessagingPlatform
@@ -76,6 +77,12 @@ object AdsManager {
 
     private fun initializeSdk(context: Context) {
         if (initCalled.getAndSet(true)) return
+        // Learner drivers can be teenagers: keep ads suitable for teens.
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder()
+                .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_T)
+                .build()
+        )
         scope.launch {
             withContext(Dispatchers.IO) { MobileAds.initialize(context) {} }
             _ready.value = true

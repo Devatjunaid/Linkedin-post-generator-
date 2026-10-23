@@ -293,7 +293,8 @@ fun Disclaimer(modifier: Modifier = Modifier) {
     ) {
         Icon(AppIcons.Shield, contentDescription = null, tint = Brand.Muted, modifier = Modifier.size(18.dp))
         Text(
-            "Test formats are summarised from public sources and change often. Always confirm with your official licensing authority.",
+            "Not a government app. DriveReady is an independent study aid, not affiliated with any licensing authority. " +
+                "Test formats are summarised from public sources and change often — always confirm with your official authority.",
             style = MaterialTheme.typography.bodySmall,
             color = Brand.Muted
         )

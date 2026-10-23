@@ -80,8 +80,22 @@ app/src/main/java/com/driveready/testprep/
 app/src/main/res/ adaptive launcher icon (vector, with monochrome layer), splash theme, strings
 ```
 
-## Before publishing
+## Before publishing (Google Play policy checklist)
 
-- Add a privacy policy URL and an `app-ads.txt` file on your developer website (required for AdMob).
-- Configure release signing with your upload key.
-- Review each country's numbers against the official authority (each syllabus screen shows the official source).
+1. **Privacy policy URL** — host `PRIVACY_POLICY_TEMPLATE.md` (edited) on a public web page, then:
+   - put the URL in `app/build.gradle.kts` → `val privacyPolicyUrl = "…"` (used by Settings → Privacy policy,
+     About & sources, and the Get started screen), and
+   - paste the same URL in **Play Console → Policy and programs → App content → Privacy policy**.
+2. **Data safety form** (Play Console → App content → Data safety): declare *Device or other IDs*,
+   *App interactions* and *Diagnostics*, collected and shared by the Google Mobile Ads SDK for advertising;
+   data is encrypted in transit; users can't request deletion (none stored by you). Also answer
+   **Advertising ID: Yes** (App content → Advertising ID).
+3. **Target audience:** select 13+ age groups only (never under 13). AdMob ads are capped at content rating **T** in code.
+4. **Store listing:** include this disclaimer and source list in the full description:
+   > DriveReady is an independent study app and is not affiliated with, endorsed by or representing any
+   > government agency, DMV, DVSA, RTO, RTA or other licensing authority. Test information is summarised from
+   > official public sources such as gov.uk/driving-test, usa.gov/motor-vehicle-services, parivahan.gov.in,
+   > rta.ae and the other authorities listed in the app under Settings → About & sources.
+   Avoid guarantees such as "pass guaranteed".
+5. Add an `app-ads.txt` file on your developer website (AdMob).
+6. Configure release signing with your upload key.

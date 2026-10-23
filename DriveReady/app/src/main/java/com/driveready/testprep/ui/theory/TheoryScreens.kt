@@ -172,7 +172,8 @@ fun QuizScreen(
     country: Country,
     contentPadding: PaddingValues,
     onExit: () -> Unit,
-    onFinish: (QuizResult) -> Unit
+    /** [userInitiated] is false when the time limit ended the quiz (no interstitial then). */
+    onFinish: (result: QuizResult, userInitiated: Boolean) -> Unit
 ) {
     val seed = rememberSaveable { System.nanoTime() }
     val items: List<ShuffledQuestion> = remember(config) { config.questions.mapIndexed { i, q -> shuffleOptions(q, seed + i) } }
@@ -182,7 +183,7 @@ fun QuizScreen(
     var confirmExit by remember { mutableStateOf(false) }
     val flagged = remember(config) { mutableStateListOf<Int>() }
 
-    fun finish() = onFinish(QuizResult(config, items, answers.toList(), elapsed))
+    fun finish(userInitiated: Boolean) = onFinish(QuizResult(config, items, answers.toList(), elapsed), userInitiated)
 
     LaunchedEffect(config) {
         while (true) {
@@ -190,7 +191,7 @@ fun QuizScreen(
             elapsed++
             val limit = config.timeLimitSec
             if (limit != null && elapsed >= limit) {
-                finish(); break
+                finish(userInitiated = false); break
             }
         }
     }
@@ -306,7 +307,7 @@ fun QuizScreen(
         Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             SecondaryButton("Previous", { if (index > 0) index-- }, Modifier.weight(1f))
             val last = index == items.lastIndex
-            PrimaryButton(if (last) "Finish" else "Next", { if (last) finish() else index++ }, Modifier.weight(1.5f))
+            PrimaryButton(if (last) "Finish" else "Next", { if (last) finish(userInitiated = true) else index++ }, Modifier.weight(1.5f))
         }
     }
 

@@ -9,5 +9,8 @@
     <string name="exit_cancel">Cancel</string>
     <string name="exit_rate">Rate us</string>
     <string name="ad_label">Ad</string>
-    <string name="disclaimer">Test formats are summarised from public sources and can change. Always confirm with your official licensing authority before booking.</string>
+    <string name="disclaimer">DriveReady is an independent study app. It is not affiliated with, endorsed by or representing any government, DMV, DVSA, RTO, RTA or other licensing authority. Test information is summarised from the public sources listed in About &amp; sources and can change — always confirm with your official licensing authority.</string>
+    <string name="not_government">Not a government app. Independent study aid — not affiliated with any licensing authority.</string>
+    <string name="ogl_attribution">Contains public sector information licensed under the Open Government Licence v3.0 (UK DVSA \"show me, tell me\" questions and Highway Code guidance).</string>
+    <string name="privacy_policy">Privacy policy</string>
 </resources>

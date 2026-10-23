@@ -27,6 +27,9 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.driveready.testprep.BuildConfig
+import com.driveready.testprep.R
+import com.driveready.testprep.data.content.Countries
+import androidx.compose.ui.res.stringResource
 import com.driveready.testprep.Readiness
 import com.driveready.testprep.data.local.TestAttempt
 import com.driveready.testprep.data.local.UserSettings
@@ -153,6 +156,8 @@ fun SettingsScreen(
     onChangeCountry: () -> Unit,
     onPrivacy: () -> Unit,
     onRate: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
+    onAbout: () -> Unit,
     onShare: () -> Unit
 ) {
     Column(
@@ -176,7 +181,9 @@ fun SettingsScreen(
             }
             SettingRow("Rate DriveReady", AppIcons.Star, onRate)
             SettingRow("Share with a friend", AppIcons.Globe, onShare)
+            SettingRow("Privacy policy", AppIcons.Doc, onPrivacyPolicy)
             if (showPrivacyOptions) SettingRow("Privacy & ad choices", AppIcons.Shield, onPrivacy)
+            SettingRow("About & sources", AppIcons.Book, onAbout)
             Disclaimer()
             Text("Version ${BuildConfig.VERSION_NAME}", style = MaterialTheme.typography.bodySmall, color = Brand.Muted, modifier = Modifier.padding(4.dp))
         }
@@ -191,6 +198,48 @@ private fun SettingRow(title: String, icon: androidx.compose.ui.graphics.vector.
             Spacer(Modifier.width(14.dp))
             Text(title, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
             Icon(AppIcons.ChevronRight, contentDescription = null)
+        }
+    }
+}
+
+/** Independence disclaimer, per-country official sources and licence attributions. */
+@Composable
+fun AboutScreen(contentPadding: PaddingValues, onBack: () -> Unit, onPrivacyPolicy: () -> Unit) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(contentPadding)
+            .verticalScroll(rememberScrollState())
+    ) {
+        ScreenHeader("About & sources", onBack = onBack)
+        Column(Modifier.padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            AppCard(color = Brand.Navy, border = false) {
+                Text(stringResource(R.string.not_government), color = Brand.Amber, style = MaterialTheme.typography.titleSmall)
+                Spacer(Modifier.height(6.dp))
+                Text(stringResource(R.string.disclaimer), color = androidx.compose.ui.graphics.Color.White, style = MaterialTheme.typography.bodySmall)
+            }
+            Text("Official sources", style = MaterialTheme.typography.titleMedium)
+            Text("Verify any rule or test format with the authority for your country:", style = MaterialTheme.typography.bodySmall, color = Brand.Muted)
+            Countries.forEach { c ->
+                AppCard(contentPadding = PaddingValues(14.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        FlagBadge(c, 32.dp)
+                        Spacer(Modifier.width(12.dp))
+                        Column {
+                            Text(c.name, style = MaterialTheme.typography.titleSmall)
+                            Text(c.authority, style = MaterialTheme.typography.bodySmall, color = Brand.Muted)
+                            Text(c.officialSite, style = MaterialTheme.typography.bodySmall, color = Brand.Blue)
+                        }
+                    }
+                }
+            }
+            AppCard {
+                Text("Attributions", style = MaterialTheme.typography.titleSmall)
+                Spacer(Modifier.height(6.dp))
+                Text(stringResource(R.string.ogl_attribution), style = MaterialTheme.typography.bodySmall)
+            }
+            SettingRow("Privacy policy", AppIcons.Doc, onPrivacyPolicy)
+            Spacer(Modifier.height(12.dp))
         }
     }
 }

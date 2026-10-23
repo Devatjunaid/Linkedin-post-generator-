@@ -85,7 +85,7 @@ fun HazardHubScreen(
         Column(Modifier.padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Surface(shape = RoundedCornerShape(24.dp), color = Brand.Navy, onClick = onStartTest) {
                 Column(Modifier.padding(20.dp)) {
-                    Pill(if (hazard?.isOfficialPart == true) "OFFICIAL TEST PART" else "PRACTICE", Brand.Amber)
+                    Pill(if (hazard?.isOfficialPart == true) "PART OF THE REAL TEST" else "PRACTICE", Brand.Amber)
                     Spacer(Modifier.height(10.dp))
                     Text("Full test · ${HazardClips.size} clips", color = Color.White, style = MaterialTheme.typography.titleLarge)
                     Text(

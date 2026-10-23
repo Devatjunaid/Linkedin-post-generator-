@@ -26,8 +26,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import com.driveready.testprep.R
-import com.driveready.testprep.ads.NativeAdCard
-import com.driveready.testprep.ads.NativeAdStyle
 import com.driveready.testprep.ui.theme.Brand
 
 /** Shown when Back is pressed on the home screen: Exit, Cancel and Rate us. */
@@ -58,8 +56,6 @@ fun ExitDialog(onExit: () -> Unit, onCancel: () -> Unit, onRate: () -> Unit) {
                     textAlign = TextAlign.Center
                 )
                 Spacer(Modifier.height(14.dp))
-                NativeAdCard(style = NativeAdStyle.MEDIA)
-                Spacer(Modifier.height(14.dp))
                 AmberButton(
                     text = stringResource(R.string.exit_rate),
                     onClick = onRate,
@@ -73,6 +69,15 @@ fun ExitDialog(onExit: () -> Unit, onCancel: () -> Unit, onRate: () -> Unit) {
                 }
             }
         }
+    }
+}
+
+/** Opens a web page in the user's browser. */
+fun openUrl(context: Context, url: String) {
+    try {
+        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    } catch (_: ActivityNotFoundException) {
+        // No browser installed; nothing else to do.
     }
 }
 

@@ -35,7 +35,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.driveready.testprep.BuildConfig
 import com.driveready.testprep.R
+import com.driveready.testprep.ui.components.openUrl
+import androidx.compose.ui.platform.LocalContext
 import com.driveready.testprep.data.model.SignStyle
 import com.driveready.testprep.data.model.SignType
 import com.driveready.testprep.ui.components.AmberButton
@@ -59,7 +62,7 @@ fun GuideScreen(onDone: () -> Unit) {
     val pages = listOf(
         GuidePage(
             "Your country's real test format",
-            "Pick your country — and your state, province or emirate — and DriveReady matches the question count, pass mark and test stages to your licensing authority.",
+            "Pick your country — and your state or province — and DriveReady follows the question count, pass mark and test stages published by your licensing authority. Independent app, not affiliated with any authority.",
             Brand.Blue
         ) { GuideArt(listOf(AppIcons.Globe, AppIcons.Doc, AppIcons.Check)) },
         GuidePage(
@@ -182,7 +185,7 @@ fun GetStartedScreen(onGetStarted: () -> Unit) {
         Spacer(Modifier.weight(1f))
         BrandLogo(size = 112.dp)
         Spacer(Modifier.height(28.dp))
-        Text("Pass your driving test,\nfirst time.", style = MaterialTheme.typography.displaySmall, color = Color.White, textAlign = TextAlign.Center)
+        Text("Prepare to pass,\nfirst time.", style = MaterialTheme.typography.displaySmall, color = Color.White, textAlign = TextAlign.Center)
         Spacer(Modifier.height(14.dp))
         Text(
             "One app for every part of the test: theory, road signs, hazard perception, the oral questions and the practical drive.",
@@ -206,6 +209,10 @@ fun GetStartedScreen(onGetStarted: () -> Unit) {
             color = Color(0xFF9EA2AA),
             textAlign = TextAlign.Center
         )
+        val context = LocalContext.current
+        TextButton(onClick = { openUrl(context, BuildConfig.PRIVACY_POLICY_URL) }) {
+            Text(stringResource(R.string.privacy_policy), color = Brand.Amber)
+        }
     }
 }
 
