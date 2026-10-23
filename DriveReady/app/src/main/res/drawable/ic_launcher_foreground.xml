@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DriveReady mark, drawn inside the 66dp adaptive-icon safe zone (centre 54,54).
+  Globe = every country · Road = the driving journey · Warning sign = theory & signs ·
+  Traffic light = rules of the road · Steering wheel = practical test · Check = pass.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Globe -->
+    <path
+        android:pathData="M54,23a31,31 0,1 1,0 62a31,31 0,1 1,0 -62z"
+        android:strokeWidth="1.6"
+        android:strokeColor="#3DFFFFFF"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M54,23a14,31 0,1 1,0 62a14,31 0,1 1,0 -62z"
+        android:strokeWidth="1.2"
+        android:strokeColor="#2EFFFFFF"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M23,54H85M27,39H81M27,69H81"
+        android:strokeWidth="1.2"
+        android:strokeColor="#2EFFFFFF" />
+
+    <!-- Road -->
+    <path
+        android:pathData="M39,88L69,88L57.5,49L50.5,49Z"
+        android:fillColor="#2A3650" />
+    <path
+        android:pathData="M39,88L50.5,49M69,88L57.5,49"
+        android:strokeWidth="1.6"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M54,52V56M54,61V66.5M54,72V80"
+        android:strokeWidth="2"
+        android:strokeColor="#F5B700"
+        android:strokeLineCap="round" />
+
+    <!-- Warning sign -->
+    <path
+        android:pathData="M34,40.5L44.5,58.5L23.5,58.5Z"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="2.6"
+        android:strokeColor="#E53935"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M34,47V52.5M34,55.2V55.6"
+        android:strokeWidth="2"
+        android:strokeColor="#0F1B2D"
+        android:strokeLineCap="round" />
+
+    <!-- Traffic light -->
+    <path
+        android:pathData="M72.5,35h7a2.5,2.5 0,0 1,2.5 2.5v21a2.5,2.5 0,0 1,-2.5 2.5h-7a2.5,2.5 0,0 1,-2.5 -2.5v-21a2.5,2.5 0,0 1,2.5 -2.5z"
+        android:fillColor="#121C2E"
+        android:strokeWidth="1.2"
+        android:strokeColor="#FFFFFF" />
+    <path
+        android:pathData="M76,38.4a2.6,2.6 0,1 1,0 5.2a2.6,2.6 0,1 1,0 -5.2z"
+        android:fillColor="#FF5252" />
+    <path
+        android:pathData="M76,45.4a2.6,2.6 0,1 1,0 5.2a2.6,2.6 0,1 1,0 -5.2z"
+        android:fillColor="#F5B700" />
+    <path
+        android:pathData="M76,52.4a2.6,2.6 0,1 1,0 5.2a2.6,2.6 0,1 1,0 -5.2z"
+        android:fillColor="#2ED47A" />
+
+    <!-- Steering wheel -->
+    <path
+        android:pathData="M69,63a9.5,9.5 0,1 1,0 19a9.5,9.5 0,1 1,0 -19z"
+        android:fillColor="#0F1B2D"
+        android:strokeWidth="2.4"
+        android:strokeColor="#FFFFFF" />
+    <path
+        android:pathData="M59.8,71.6H66.4M71.6,71.6H78.2M69,75V82"
+        android:strokeWidth="2.2"
+        android:strokeColor="#FFFFFF" />
+    <path
+        android:pathData="M69,69.4a2.6,2.6 0,1 1,0 5.2a2.6,2.6 0,1 1,0 -5.2z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Pass check badge -->
+    <path
+        android:pathData="M54,23.5a8.5,8.5 0,1 1,0 17a8.5,8.5 0,1 1,0 -17z"
+        android:fillColor="#F5B700"
+        android:strokeWidth="1.6"
+        android:strokeColor="#0F1B2D" />
+    <path
+        android:pathData="M50.2,32.2L53,35L58.2,29.6"
+        android:strokeWidth="2.4"
+        android:strokeColor="#0F1B2D"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

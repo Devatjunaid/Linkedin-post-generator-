@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_navy">#0F1B2D</color>
+    <color name="brand_navy_light">#1B3358</color>
+    <color name="brand_amber">#F5B700</color>
+    <color name="surface_light">#F6F5F1</color>
+</resources>
