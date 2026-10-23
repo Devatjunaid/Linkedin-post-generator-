@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base window theme; all UI is Compose. System bars are handled with enableEdgeToEdge(). -->
+    <style name="Theme.ExamClock" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+
+    <!-- AndroidX SplashScreen. Android 8–11 show this static icon; values-v31 swaps in the animated one. -->
+    <style name="Theme.ExamClock.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/brand_ink</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.ExamClock</item>
+    </style>
+</resources>

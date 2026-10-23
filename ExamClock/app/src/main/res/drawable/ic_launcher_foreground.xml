@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Exam Clock mark: stopwatch ring (3/4 filled = countdown running) with a tick (ready). 108dp grid, inside the 72dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Crown and stem -->
+    <path android:fillColor="#7E9BFF" android:pathData="M49,23h10a2,2 0,0 1,2 2v4h-14v-4a2,2 0,0 1,2 -2z" />
+    <path android:fillColor="#7E9BFF" android:pathData="M52,28h4v6h-4z" />
+    <!-- Track -->
+    <path
+        android:pathData="M54,36a22,22 0,1 1,0 44a22,22 0,1 1,0 -44"
+        android:strokeWidth="6"
+        android:strokeColor="#2C2F38" />
+    <!-- Progress arc: from 12 o'clock clockwise to 9 o'clock -->
+    <path
+        android:pathData="M54,36A22,22 0,1 1,32 58"
+        android:strokeWidth="6"
+        android:strokeColor="#7E9BFF"
+        android:strokeLineCap="round" />
+    <!-- "Now" marker -->
+    <path android:fillColor="#F2A86B" android:pathData="M32,58m-3.6,0a3.6,3.6 0,1 1,7.2 0a3.6,3.6 0,1 1,-7.2 0" />
+    <!-- Tick -->
+    <path
+        android:pathData="M44,58.5L51,65.5L65,50.5"
+        android:strokeWidth="5.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

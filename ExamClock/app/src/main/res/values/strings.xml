@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Exam Clock</string>
+    <string name="tagline">Count down. Plan smart. Walk in ready.</string>
+
+    <!-- Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_exams">Exams</string>
+    <string name="tab_planner">Planner</string>
+    <string name="tab_focus">Focus</string>
+    <string name="tab_progress">Progress</string>
+
+    <!-- Common actions -->
+    <string name="action_add">Add</string>
+    <string name="action_add_exam">Add exam</string>
+    <string name="action_edit_exam">Edit exam</string>
+    <string name="action_delete_exam">Delete exam</string>
+    <string name="action_save_exam">Save exam</string>
+    <string name="action_add_session">Add study session</string>
+    <string name="action_add_topics">Add topics</string>
+    <string name="action_auto_plan">Auto-plan</string>
+    <string name="action_build_plan">Build my plan</string>
+    <string name="action_view_plan">View plan</string>
+    <string name="action_browse_catalog">Browse exams by country</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_clear_date">Clear date</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_exit">Exit</string>
+    <string name="action_focus_now">Focus now</string>
+    <string name="action_get_started">Get started</string>
+    <string name="action_next">Next</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_ok">OK</string>
+    <string name="action_open_planner">Planner</string>
+    <string name="action_pick_date">Pick date</string>
+    <string name="action_plan_revision">Plan revision</string>
+    <string name="action_previous_week">Previous week</string>
+    <string name="action_next_week">Next week</string>
+    <string name="action_rate_us">Rate us</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_save">Save</string>
+    <string name="action_set_date">Set date</string>
+    <string name="action_today">Today</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_back">Back</string>
+    <string name="cd_more">More options</string>
+    <string name="cd_selected">Selected</string>
+    <string name="cd_choose_papers">Choose papers</string>
+    <string name="cd_collapse">Hide papers</string>
+    <string name="cd_color_option">Colour %1$d</string>
+    <string name="cd_confidence">Confidence %1$d of 5</string>
+    <string name="cd_topic_options">Options for %1$s</string>
+    <string name="cd_start_focus">Start focus timer for this session</string>
+    <string name="cd_delete_session">Delete session</string>
+    <string name="cd_less_time">Less time for %1$s</string>
+    <string name="cd_more_time">More time for %1$s</string>
+    <string name="cd_decrease">Decrease</string>
+    <string name="cd_increase">Increase</string>
+    <string name="cd_timer_remaining">%1$d minutes %2$d seconds remaining</string>
+    <string name="cd_warning">Warning</string>
+    <plurals name="cd_countdown">
+        <item quantity="one">%1$s in %2$d day, %3$d hours and %4$d minutes</item>
+        <item quantity="other">%1$s in %2$d days, %3$d hours and %4$d minutes</item>
+    </plurals>
+
+    <!-- Units and durations -->
+    <string name="unit_days">days</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_minutes">min</string>
+    <string name="unit_seconds">sec</string>
+    <plurals name="unit_days_plural">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
+    <plurals name="days_short">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <string name="duration_m">%1$d min</string>
+    <string name="duration_h">%1$d h</string>
+    <string name="duration_hm">%1$d h %2$d min</string>
+    <string name="countdown_hms">%1$d h %2$d m %3$02d s</string>
+
+    <!-- Splash & guide -->
+    <string name="guide_1_title">Every exam, counted down</string>
+    <string name="guide_1_body">Add your papers once and see exactly how many days, hours and minutes are left, plus how much of the syllabus you have covered.</string>
+    <string name="guide_2_title">A plan that builds itself</string>
+    <string name="guide_2_body">Tell us how much time you have. Exam Clock spreads your chapters over the days left, weakest topics first, with spaced revision and past papers before each exam.</string>
+    <string name="guide_3_title">Focus in timed blocks</string>
+    <string name="guide_3_body">Start a focus block from any planned session. Breaks are timed for you and every minute counts towards your daily goal.</string>
+    <string name="guide_4_title">Know if you are on track</string>
+    <string name="guide_4_body">See study time per day, your streak, readiness for each exam and an early warning when a subject falls behind.</string>
+    <string name="guide_position">Page %1$d of %2$d</string>
+
+    <!-- Setup -->
+    <string name="setup_step">Step %1$d of %2$d</string>
+    <string name="setup_country_title">Where are you studying?</string>
+    <string name="setup_country_body">We load the exam boards, entrance tests and weekend days used in your country.</string>
+    <string name="setup_search_country">Search country or exam</string>
+    <string name="setup_detected">Detected from your device</string>
+    <string name="setup_all_countries">All countries</string>
+    <string name="setup_other_country_hint">International exams, or add your own</string>
+    <string name="setup_continue_with">Continue with %1$s</string>
+    <string name="setup_exams_title">Which exams are you taking?</string>
+    <string name="setup_exams_body">Pick an exam to add all of its papers, or open it to choose single papers.</string>
+    <string name="setup_exams_dates_note">Boards publish dates every year, so you add each paper\'s date from your official date sheet. You can also add any exam by hand later.</string>
+    <string name="setup_skip_exams">Skip, I\'ll add exams later</string>
+    <string name="setup_continue_count">Continue with %1$d papers</string>
+    <string name="setup_profile_title">Your study goal</string>
+    <string name="setup_profile_body">Used for your daily progress and as the starting point for your revision plan.</string>
+    <string name="setup_name_label">Your name (optional)</string>
+    <string name="setup_goal_label">Daily study goal</string>
+    <string name="setup_goal_hint">Most students aim for 2 to 4 hours on school days. You can change this any time.</string>
+    <string name="setup_reminders_label">Study reminders</string>
+    <string name="setup_reminders_hint">One daily reminder with today\'s plan, and a heads-up 30, 14, 7, 3 and 1 day before each exam.</string>
+    <string name="setup_finish">Start studying</string>
+    <string name="template_subtitle">%1$s · %2$d papers</string>
+    <string name="category_all">All</string>
+    <string name="category_school">School boards</string>
+    <string name="category_entrance">Entry tests</string>
+    <string name="category_international">International</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_named">%1$s, %2$s</string>
+    <string name="next_exam">Next exam</string>
+    <string name="syllabus_covered">Syllabus covered</string>
+    <string name="home_empty_title">No exams yet</string>
+    <string name="home_empty_body">Add your first exam to start the countdown, or pick papers from your country\'s exam list.</string>
+    <string name="home_dates_needed_title">Dates needed</string>
+    <string name="home_dates_needed_body">Add the date from your official date sheet to start the countdown and include these papers in your plan.</string>
+    <string name="home_daily_goal">Today\'s study</string>
+    <string name="home_goal_progress">%1$s of %2$s</string>
+    <string name="home_goal_reached">Daily goal reached. Great work!</string>
+    <string name="home_today_plan">Today\'s plan</string>
+    <string name="home_nothing_today_title">Nothing planned today</string>
+    <string name="home_nothing_today_body">Let Exam Clock build a timetable from your exam dates and the time you have.</string>
+    <plurals name="streak_days">
+        <item quantity="one">%d day streak</item>
+        <item quantity="other">%d day streak</item>
+    </plurals>
+    <plurals name="more_exams">
+        <item quantity="one">and %d more paper</item>
+        <item quantity="other">and %d more papers</item>
+    </plurals>
+
+    <!-- Sessions -->
+    <string name="session_learn">Learn · %1$s</string>
+    <string name="session_study">Study · %1$s</string>
+    <string name="session_revise">Revise · %1$s</string>
+    <string name="session_past_paper">Past paper · %1$s</string>
+    <string name="type_study">Study</string>
+    <string name="type_revision">Revision</string>
+    <string name="type_past_paper">Past paper</string>
+    <string name="type_other">Other</string>
+
+    <!-- Exams -->
+    <string name="exams_upcoming">Upcoming</string>
+    <string name="exams_undated">Date not set</string>
+    <string name="exams_past">Finished</string>
+    <string name="exams_empty_body">Add exams by hand or pick them from the list for your country.</string>
+    <string name="exam_date">Date</string>
+    <string name="exam_time">Time</string>
+    <string name="exam_duration">Duration</string>
+    <string name="exam_location">Location</string>
+    <string name="exam_notes">Notes</string>
+    <string name="exam_syllabus">Syllabus</string>
+    <string name="exam_date_not_set">Date not set</string>
+    <string name="exam_set_date_hint">Add the date and start time from your official date sheet to start the countdown.</string>
+    <string name="exam_finished">This exam has finished. Good luck with the results!</string>
+    <string name="delete_exam_title">Delete exam?</string>
+    <string name="delete_exam_body">%1$s, its topics and its planned sessions will be deleted. Study time you already logged stays in your progress.</string>
+    <string name="topics_empty_title">Add the chapters or topics for this paper</string>
+    <string name="topics_empty_body">Topics let you track the syllabus and let the planner schedule each one, with revision.</string>
+    <string name="topics_progress">%1$d of %2$d done · %3$d%% ready</string>
+    <string name="topics_pace">To finish on time: %1$s new topics a day</string>
+    <string name="topics_tap_hint">Tap a status to move it forward. Stars show how confident you feel; weak topics are revised first.</string>
+    <string name="topic_confidence">Confidence</string>
+    <string name="add_topics_hint">One topic per line. You can paste a list straight from your syllabus.</string>
+    <string name="add_topics_placeholder">Electrostatics\nCurrent electricity\nMagnetism</string>
+    <string name="status_not_started">Not started</string>
+    <string name="status_learning">Learning</string>
+    <string name="status_revising">Revising</string>
+    <string name="status_done">Done</string>
+
+    <!-- Edit exam -->
+    <string name="field_exam_title">Paper or subject</string>
+    <string name="field_exam_title_hint">e.g. Physics Paper 1</string>
+    <string name="field_exam_group">Exam or board (optional)</string>
+    <string name="field_exam_group_hint">e.g. A Level, FSc Part II, NEET</string>
+    <string name="field_exam_when">When</string>
+    <string name="field_date_note">Use the date and time printed on your admit card or official date sheet.</string>
+    <string name="field_duration_minutes">Length (min)</string>
+    <string name="field_location">Exam centre</string>
+    <string name="field_color">Colour</string>
+    <string name="field_notes">Notes</string>
+    <string name="field_notes_hint">Roll number, what to bring, allowed calculator…</string>
+    <string name="error_title_required">Enter the paper or subject name</string>
+
+    <!-- Catalog -->
+    <string name="catalog_title">Exams by country</string>
+    <string name="catalog_body">Exams used in %1$s plus international exams. Change your country in Settings.</string>
+    <string name="catalog_add_count">Add %1$d papers</string>
+
+    <!-- Planner -->
+    <string name="planner_day_summary">%1$s · %2$s planned</string>
+    <string name="planner_done">%1$s done</string>
+    <string name="planner_empty_title">Free day</string>
+    <string name="planner_empty_body">Nothing is planned for this day. Add a session with + or let Exam Clock build your plan.</string>
+    <string name="add_session_title">New session · %1$s</string>
+    <string name="add_session_exam">Exam</string>
+    <string name="add_session_type">Type</string>
+    <string name="add_session_what">What will you study?</string>
+    <string name="add_session_what_hint">e.g. Chapter 4 exercises</string>
+    <string name="add_session_starts">Starts at %1$s</string>
+    <string name="add_session_length">Length</string>
+
+    <!-- Auto plan -->
+    <string name="autoplan_title">Build my plan</string>
+    <string name="autoplan_body">Your remaining topics are spread over the days left, weakest first, with spaced revision and past papers before each exam. Sessions you added yourself are kept.</string>
+    <string name="autoplan_no_dates">Add a date to at least one exam first. The plan is built backwards from your exam dates.</string>
+    <plurals name="autoplan_undated">
+        <item quantity="one">%d paper has no date yet and will not be planned.</item>
+        <item quantity="other">%d papers have no date yet and will not be planned.</item>
+    </plurals>
+    <string name="autoplan_weekday">School days</string>
+    <string name="autoplan_weekend">Weekend</string>
+    <string name="autoplan_weekend_note">Weekend in your country: %1$s</string>
+    <string name="autoplan_rest_days">Rest days</string>
+    <string name="autoplan_session_length">Session length</string>
+    <string name="autoplan_break">Break between sessions</string>
+    <string name="autoplan_window">Study window</string>
+    <string name="autoplan_from">From %1$s</string>
+    <string name="autoplan_until">Until %1$s</string>
+    <string name="autoplan_papers">Past-paper days</string>
+    <string name="autoplan_papers_hint">Days before each exam used for past papers and quick revision only</string>
+    <string name="autoplan_generate">Generate plan</string>
+    <string name="autoplan_keeps_manual">Generating again replaces only the automatic, unfinished sessions.</string>
+    <string name="autoplan_done_title">Your plan is ready</string>
+    <plurals name="autoplan_done_body">
+        <item quantity="one">%1$d session planned · %2$s in total.</item>
+        <item quantity="other">%1$d sessions planned · %2$s in total.</item>
+    </plurals>
+    <plurals name="autoplan_uncovered">
+        <item quantity="one">%1$d topic of %2$s does not fit before the exam. Add study time or remove a rest day.</item>
+        <item quantity="other">%1$d topics of %2$s do not fit before the exam. Add study time or remove a rest day.</item>
+    </plurals>
+
+    <!-- Focus -->
+    <string name="focus_phase_focus">Focus</string>
+    <string name="focus_phase_break">Break</string>
+    <string name="focus_free_study">Free study</string>
+    <string name="focus_remaining">remaining</string>
+    <string name="focus_paused">paused</string>
+    <string name="focus_start">Start focus</string>
+    <string name="focus_start_break">Start break</string>
+    <string name="focus_pause">Pause</string>
+    <string name="focus_resume">Resume</string>
+    <string name="focus_finish">Finish session</string>
+    <string name="focus_end_block">End this block now</string>
+    <string name="focus_skip_break">Skip break</string>
+    <string name="focus_what">What are you studying?</string>
+    <string name="focus_settings_summary">%1$s focus · %2$s short break · %3$s long break</string>
+    <string name="focus_settings_hint">Change lengths in Settings. Time is saved even if you leave the app.</string>
+    <string name="focus_block_done_title">Block complete</string>
+    <string name="focus_block_done_body">%1$s added to today\'s study. Take a %2$s break before the next block.</string>
+    <plurals name="focus_blocks_done">
+        <item quantity="one">%d block done</item>
+        <item quantity="other">%d blocks done</item>
+    </plurals>
+
+    <!-- Progress -->
+    <string name="range_week">This week</string>
+    <string name="range_month">30 days</string>
+    <string name="stat_studied">Time studied</string>
+    <string name="stat_goal">Goal %1$s</string>
+    <string name="stat_goal_line">Dashed line: daily goal (%1$s)</string>
+    <string name="stat_streak">Streak</string>
+    <string name="stat_best_streak">Best streak</string>
+    <string name="stat_sessions">Sessions done</string>
+    <string name="stat_readiness">Exam readiness</string>
+    <string name="stat_exam_in">%1$s · %2$s</string>
+    <string name="stat_no_topics">No topics</string>
+    <string name="stat_pace_warning">%1$s is behind: you need %2$s new topics a day to finish. Rebuild your plan with more time for it.</string>
+    <string name="stat_time_per_exam">Time per exam</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_profile">Profile</string>
+    <string name="settings_country">Country</string>
+    <string name="settings_not_set">Not set</string>
+    <string name="settings_reminders">Reminders</string>
+    <string name="settings_reminder_time">Reminder time</string>
+    <string name="settings_focus">Focus timer</string>
+    <string name="settings_focus_length">Focus block</string>
+    <string name="settings_short_break">Short break</string>
+    <string name="settings_long_break">Long break (every 4 blocks)</string>
+    <string name="settings_keep_screen_on">Keep screen on</string>
+    <string name="settings_keep_screen_on_hint">While a focus block is running</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_ad_privacy">Ad privacy choices</string>
+    <string name="settings_ad_privacy_hint">Change consent</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_about">About</string>
+    <string name="settings_rate_hint">On Google Play</string>
+    <string name="settings_share">Share the app</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_data">Data</string>
+    <string name="settings_reset">Delete all data</string>
+    <string name="settings_reset_hint">Exams, plan and history</string>
+    <string name="settings_reset_confirm">This permanently deletes every exam, topic, planned session and study log on this device and restarts setup.</string>
+    <string name="share_text">I plan my exam revision with Exam Clock: %1$s</string>
+
+    <!-- Native ad label (AdMob policy: ads must be clearly marked) -->
+    <string name="ad_attribution">Ad</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">Leaving already?</string>
+    <string name="exit_body">If Exam Clock helps your revision, a rating on Google Play helps other students find it.</string>
+
+    <!-- Notifications -->
+    <string name="channel_reminders">Study reminders</string>
+    <string name="channel_reminders_desc">Daily plan reminder and exam countdown alerts</string>
+    <string name="channel_focus">Focus timer</string>
+    <string name="channel_focus_desc">Tells you when a focus block or break ends</string>
+    <string name="notif_daily_title">Today\'s revision</string>
+    <string name="notif_nothing_planned">Nothing planned yet today. %1$s</string>
+    <string name="notif_exam_today">%1$s is today. Good luck!</string>
+    <plurals name="notif_exam_in_days">
+        <item quantity="one">%1$s in %2$d day</item>
+        <item quantity="other">%1$s in %2$d days</item>
+    </plurals>
+    <plurals name="notif_sessions_today">
+        <item quantity="one">%1$d session planned today at %2$s</item>
+        <item quantity="other">%1$d sessions planned today, first at %2$s</item>
+    </plurals>
+    <plurals name="notif_milestone_title">
+        <item quantity="one">%1$s is tomorrow</item>
+        <item quantity="other">%2$d days until %1$s</item>
+    </plurals>
+    <string name="notif_milestone_text">Open Exam Clock to check your readiness and adjust your plan.</string>
+    <string name="notif_focus_done_title">Focus block complete</string>
+    <string name="notif_focus_done_text">Nice work. Time for a break.</string>
+    <string name="notif_break_over_title">Break is over</string>
+    <string name="notif_break_over_text">Ready for the next focus block?</string>
+
+    <!-- Privacy policy (keep in sync with PRIVACY_POLICY.md) -->
+    <string name="privacy_intro">Exam Clock is built to keep your study data on your phone. This policy explains what the app stores, what the advertising partner receives, and the choices you have.</string>
+    <string name="privacy_s1_title">Data stored on your device</string>
+    <string name="privacy_s1_body">Your exams, topics, study plan, focus history, name (optional) and settings are stored only in the app\'s private storage on your device. We do not run servers and we never receive this data. It may be included in your own Android device backup if backup is turned on.</string>
+    <string name="privacy_s2_title">Advertising</string>
+    <string name="privacy_s2_body">The free version shows ads from Google AdMob. To show and measure ads, Google may collect device identifiers such as the advertising ID, IP address, approximate location derived from it, and ad interaction data. In the EEA, UK and Switzerland you are asked for consent first and can change it at any time from Settings › Ad privacy choices. Google\'s policy: https://policies.google.com/privacy</string>
+    <string name="privacy_s3_title">Permissions</string>
+    <string name="privacy_s3_body">Internet: to load ads. Notifications: for study reminders and the focus timer, only if you allow them. No access to contacts, camera, microphone, files or precise location is requested.</string>
+    <string name="privacy_s4_title">Children</string>
+    <string name="privacy_s4_body">Exam Clock is meant for students aged 13 and over. Ads are limited to content rated suitable for teens.</string>
+    <string name="privacy_s5_title">Deleting your data</string>
+    <string name="privacy_s5_body">Use Settings › Delete all data, or uninstall the app, to remove everything stored by Exam Clock.</string>
+    <string name="privacy_s6_title">Contact</string>
+    <string name="privacy_s6_body">Questions about this policy: use the developer contact email shown on the app\'s Google Play listing.</string>
+</resources>

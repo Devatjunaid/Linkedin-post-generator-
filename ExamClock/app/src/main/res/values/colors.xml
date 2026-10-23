@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_ink">#FF15171C</color>
+    <color name="brand_ink_raised">#FF23262E</color>
+    <color name="brand_blue">#FF2346D8</color>
+    <color name="brand_blue_light">#FF7E9BFF</color>
+    <color name="brand_orange_light">#FFF2A86B</color>
+    <color name="window_background">#FFF5F4EF</color>
+
+    <!-- Native ad card -->
+    <color name="ad_surface">#FFFFFFFF</color>
+    <color name="ad_outline">#FFE3E1D9</color>
+    <color name="ad_text">#FF15171C</color>
+    <color name="ad_text_muted">#FF545A68</color>
+    <color name="ad_badge_bg">#FFFCEBDD</color>
+    <color name="ad_badge_text">#FF6B2610</color>
+    <color name="ad_cta_bg">#FF2346D8</color>
+    <color name="ad_cta_text">#FFFFFFFF</color>
+</resources>

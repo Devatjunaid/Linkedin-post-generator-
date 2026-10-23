@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- System splash (Android 12+): the ring sweeps in, then the tick draws itself. -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="108dp"
+            android:height="108dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+            <group
+                android:name="mark"
+                android:pivotX="54"
+                android:pivotY="54"
+                android:scaleX="0.8"
+                android:scaleY="0.8">
+                <path android:fillColor="#7E9BFF" android:pathData="M49,23h10a2,2 0,0 1,2 2v4h-14v-4a2,2 0,0 1,2 -2z" />
+                <path android:fillColor="#7E9BFF" android:pathData="M52,28h4v6h-4z" />
+                <path
+                    android:pathData="M54,36a22,22 0,1 1,0 44a22,22 0,1 1,0 -44"
+                    android:strokeWidth="6"
+                    android:strokeColor="#2C2F38" />
+                <path
+                    android:name="arc"
+                    android:pathData="M54,36A22,22 0,1 1,32 58"
+                    android:strokeWidth="6"
+                    android:strokeColor="#7E9BFF"
+                    android:strokeLineCap="round"
+                    android:trimPathEnd="0" />
+                <path
+                    android:name="tick"
+                    android:pathData="M44,58.5L51,65.5L65,50.5"
+                    android:strokeWidth="5.5"
+                    android:strokeColor="#FFFFFF"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"
+                    android:trimPathEnd="0" />
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="mark">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="500"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="scaleX"
+                    android:valueFrom="0.8"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="500"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="scaleY"
+                    android:valueFrom="0.8"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="arc">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="650"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="trimPathEnd"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+    <target android:name="tick">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="350"
+                android:startOffset="600"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="trimPathEnd"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+</animated-vector>
