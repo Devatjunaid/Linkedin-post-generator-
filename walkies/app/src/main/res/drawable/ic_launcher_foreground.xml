@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Walkies logo: a person walking their dog on a leash. Drawn in a 100-unit box and
+     scaled into the adaptive-icon safe zone (66dp circle inside 108dp). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.55"
+        android:scaleY="0.55"
+        android:translateX="22.6"
+        android:translateY="26.5">
+        <!-- leash -->
+        <path
+            android:pathData="M51,45 C60,58 70,63 84,63"
+            android:strokeColor="#FF8A4C"
+            android:strokeWidth="2.6"
+            android:strokeLineCap="round" />
+        <!-- person: head -->
+        <path
+            android:fillColor="#FFF6EA"
+            android:pathData="M36,15m-7.5,0a7.5,7.5 0,1 1,15 0a7.5,7.5 0,1 1,-15 0" />
+        <!-- person: back arm, back leg -->
+        <path
+            android:pathData="M35,31 L29,42 L25,51 M32,53 L26,70 L19,87"
+            android:strokeColor="#FFF6EA"
+            android:strokeWidth="8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <!-- person: torso, front leg, leash arm -->
+        <path
+            android:pathData="M35,28 L32,53 M32,53 L40,70 L45,87 M35,31 L43,40 L51,45"
+            android:strokeColor="#FFF6EA"
+            android:strokeWidth="9.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <!-- feet -->
+        <path
+            android:pathData="M19,88 L14,88 M45,88 L51,88"
+            android:strokeColor="#FFF6EA"
+            android:strokeWidth="5"
+            android:strokeLineCap="round" />
+        <!-- dog: tail, legs -->
+        <path
+            android:pathData="M62,67 Q55,63 55,55 M66,74 L61,90 M70,75 L71,90 M82,75 L79,90 M86,74 L89,90"
+            android:strokeColor="#FFF6EA"
+            android:strokeWidth="5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <!-- dog: body -->
+        <path
+            android:fillColor="#FFF6EA"
+            android:pathData="M68,64 L82,64 C87,64 90,67 90,71.5 C90,76 87,79 82,79 L68,79 C63,79 60,76 60,71.5 C60,67 63,64 68,64 Z" />
+        <!-- dog: neck + head + snout + ear -->
+        <path
+            android:fillColor="#FFF6EA"
+            android:pathData="M81,66 L84,57 C85,53 88,51.5 91,52 C93,52.5 94.5,54 95,56 L99,58.5 C100.5,59.5 100,62 98,62.5 L93,63 C92,66 91,69 89,71 Z" />
+        <path
+            android:fillColor="#FFF6EA"
+            android:pathData="M86,55 L87.5,46.5 L92.5,53 Z" />
+        <!-- collar -->
+        <path
+            android:pathData="M83.5,61.5 L90.5,64"
+            android:strokeColor="#FF8A4C"
+            android:strokeWidth="2.4"
+            android:strokeLineCap="round" />
+    </group>
+</vector>

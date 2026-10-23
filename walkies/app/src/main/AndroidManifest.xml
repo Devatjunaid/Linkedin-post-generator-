@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Reminder notifications (asked for in context, from the Reminders screen). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Re-arm reminders after a reboot. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Step counter during a walk (optional; asked for when a walk starts). -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.stepcounter"
+        android:required="false" />
+
+    <application
+        android:name=".WalkiesApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Walkies">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
+            android:value="true" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Walkies.Splash"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".reminders.ReminderReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".reminders.RescheduleReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="walkies_forest">#FF18392B</color>
+    <color name="walkies_ground">#FFEEF2EC</color>
+    <color name="walkies_ink">#FF1D2621</color>
+    <color name="walkies_muted">#FF4E5B53</color>
+    <color name="walkies_card">#FFFFFFFF</color>
+    <color name="walkies_amber">#FFF5B700</color>
+    <color name="walkies_tangerine">#FFFF7A3D</color>
+    <color name="ic_launcher_background">#FF18392B</color>
+</resources>

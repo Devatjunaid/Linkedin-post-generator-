@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Walkies</string>
+    <string name="splash_tagline">Walks &amp; potty log for your dog</string>
+
+    <!-- Replace with your hosted privacy policy before publishing (required by Google Play and AdMob). -->
+    <string name="privacy_policy_url" translatable="false">https://example.com/walkies/privacy</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_walk">Walk</string>
+    <string name="nav_log">Log</string>
+    <string name="nav_reminders">Reminders</string>
+    <string name="back">Back</string>
+    <string name="settings">Settings</string>
+
+    <!-- Home -->
+    <string name="home_greeting_morning">Good morning</string>
+    <string name="home_greeting_afternoon">Good afternoon</string>
+    <string name="home_greeting_evening">Good evening</string>
+    <string name="home_title">%1$s\'s day</string>
+    <string name="home_next_walk">Next walk</string>
+    <string name="home_next_walk_in">in %1$s</string>
+    <string name="home_next_walk_none">No walk reminders on</string>
+    <string name="home_walk_running">Walk in progress</string>
+    <string name="home_resume_walk">Resume walk</string>
+    <string name="home_last_pee">Last pee %1$s ago</string>
+    <string name="home_no_pee_yet">No pee logged yet</string>
+    <string name="home_add_photo">Add %1$s\'s photo</string>
+    <string name="home_quick_log">Quick log</string>
+    <string name="home_quick_log_hint">Tap to log it now</string>
+    <string name="home_today">Today</string>
+    <string name="home_today_empty">Nothing logged yet today. Use the buttons above after each potty break.</string>
+    <string name="home_today_summary">%1$d walks · %2$d pee · %3$d poo</string>
+    <string name="logged_at">%1$s logged at %2$s</string>
+    <string name="undo">Undo</string>
+
+    <!-- Event names -->
+    <string name="event_pee">Pee</string>
+    <string name="event_poo">Poo</string>
+    <string name="event_meal">Meal</string>
+    <string name="event_walk">Walk</string>
+    <string name="start_walk">Start walk</string>
+    <string name="consistency_firm">Firm</string>
+    <string name="consistency_soft">Soft</string>
+    <string name="consistency_runny">Runny</string>
+    <string name="on_walk">On a walk</string>
+    <string name="walk_summary">%1$s · %2$s pee, %3$s poo</string>
+
+    <!-- Walk -->
+    <string name="walk_ready_title">Ready for a walk?</string>
+    <string name="walk_ready_body">Start the timer, then tap Pee or Poo whenever %1$s goes. Everything lands in the log.</string>
+    <string name="walk_recent">Recent walks</string>
+    <string name="walk_recent_empty">Your finished walks will show up here.</string>
+    <string name="walk_in_progress">Walk with %1$s</string>
+    <string name="walk_goal">Goal %1$d min</string>
+    <string name="walk_steps">%1$s steps</string>
+    <string name="walk_distance">~%1$s km</string>
+    <string name="walk_steps_off">Allow physical activity access to count steps</string>
+    <string name="walk_steps_unavailable">This phone has no step counter</string>
+    <string name="walk_pee_here">Pee here</string>
+    <string name="walk_poo_here">Poo here</string>
+    <string name="walk_count_so_far">%1$d so far</string>
+    <string name="walk_end">End &amp; save walk</string>
+    <string name="walk_cancel">Discard</string>
+    <string name="walk_cancel_title">Discard this walk?</string>
+    <string name="walk_cancel_body">The timer and the pee/poo taps from this walk will be deleted.</string>
+    <string name="walk_events">On this walk</string>
+    <string name="walk_events_empty">Tap Pee here or Poo here when it happens.</string>
+    <string name="discard">Discard</string>
+    <string name="keep_walking">Keep walking</string>
+
+    <!-- Log -->
+    <string name="log_title">Potty log</string>
+    <string name="log_subtitle">%1$s · last 7 days</string>
+    <string name="log_vet_report">Vet report</string>
+    <string name="log_week_avg">avg %1$s pee · %2$s poo a day</string>
+    <string name="filter_all">All</string>
+    <string name="filter_pee">Pee</string>
+    <string name="filter_poo">Poo</string>
+    <string name="filter_meals">Meals</string>
+    <string name="filter_walks">Walks</string>
+    <string name="log_today">Today</string>
+    <string name="log_day_empty">Nothing logged on this day.</string>
+    <string name="log_add_entry">Add entry</string>
+    <string name="log_delete_title">Delete this entry?</string>
+    <string name="log_delete_walk_title">Delete this walk?</string>
+    <string name="log_delete_walk_body">The pee and poo logged during the walk will be deleted too.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="entry_type">What happened?</string>
+    <string name="entry_time">Time</string>
+    <string name="consistency">Consistency</string>
+    <string name="report_chooser">Share vet report</string>
+    <string name="report_subject">%1$s – potty &amp; walk report</string>
+
+    <!-- Reminders -->
+    <string name="reminders_title">Reminders</string>
+    <string name="reminders_subtitle">%1$d of %2$d on</string>
+    <string name="reminders_schedule">Walks &amp; potty breaks</string>
+    <string name="reminders_add">Add reminder</string>
+    <string name="reminders_edit">Edit reminder</string>
+    <string name="reminders_permission_title">Turn on notifications</string>
+    <string name="reminders_permission_body">Walkies needs permission to send notifications so your reminders can reach you.</string>
+    <string name="reminders_permission_button">Allow</string>
+    <string name="reminders_permission_settings">Open settings</string>
+    <string name="reminders_no_pee">No pee logged</string>
+    <string name="reminders_no_pee_sub">Alert me after %1$d hours</string>
+    <string name="reminders_no_pee_hours">Alert after</string>
+    <string name="hours_short">%1$dh</string>
+    <string name="nudge_label">Smart nudge</string>
+    <string name="nudge_body">%1$s usually pees about every %2$s. Want a nudge if it\'s been longer than %3$d hours?</string>
+    <string name="nudge_accept">Turn it on</string>
+    <string name="nudge_dismiss">Not now</string>
+    <string name="reminder_kind_walk">Walk</string>
+    <string name="reminder_kind_potty">Potty break</string>
+    <string name="reminder_name">Name</string>
+    <string name="reminder_days">Days</string>
+    <string name="reminder_every_day">Every day</string>
+    <string name="reminder_weekdays">Weekdays</string>
+    <string name="reminder_weekends">Weekends</string>
+    <string name="reminder_duration">%1$d min</string>
+    <string name="reminder_delete">Delete reminder</string>
+    <string name="default_morning_walk">Morning walk</string>
+    <string name="default_midday_walk">Midday stroll</string>
+    <string name="default_evening_walk">Evening walk</string>
+    <string name="default_last_pee">Last pee break</string>
+    <string name="day_mon">M</string>
+    <string name="day_tue">T</string>
+    <string name="day_wed">W</string>
+    <string name="day_thu">T</string>
+    <string name="day_fri">F</string>
+    <string name="day_sat">S</string>
+    <string name="day_sun">S</string>
+
+    <!-- Notifications -->
+    <string name="channel_reminders">Walk &amp; potty reminders</string>
+    <string name="channel_reminders_desc">Scheduled walks, potty breaks and no-pee alerts</string>
+    <string name="notif_walk_title">Time for %1$s\'s %2$s</string>
+    <string name="notif_walk_body">Grab the leash. Tap to start the walk timer.</string>
+    <string name="notif_potty_title">%1$s: %2$s</string>
+    <string name="notif_potty_body">Time to let %1$s out.</string>
+    <string name="notif_no_pee_title">No pee logged for %1$d hours</string>
+    <string name="notif_no_pee_body">%1$s might need to go out.</string>
+
+    <!-- Settings -->
+    <string name="settings_dog">Your dog</string>
+    <string name="settings_dog_name">Dog\'s name</string>
+    <string name="settings_photo">Photo</string>
+    <string name="settings_change_photo">Choose photo</string>
+    <string name="settings_remove_photo">Remove</string>
+    <string name="settings_walk_goal">Daily walk goal per walk</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_privacy_options">Ad privacy choices</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_rate">Rate Walkies</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_ads_note">Walkies is free and supported by ads.</string>
+    <string name="default_dog_name">Buddy</string>
+
+    <!-- Exit dialog -->
+    <string name="exit_title">Heading out already?</string>
+    <string name="exit_body">%1$s will be waiting for the next walk. Enjoying Walkies? A quick rating helps a lot.</string>
+    <string name="exit_rate">Rate us</string>
+    <string name="exit_exit">Exit</string>
+
+    <!-- Ads -->
+    <string name="ad_badge">Ad</string>
+    <string name="ad_loading">Sponsored</string>
+
+    <!-- Time -->
+    <string name="duration_h_m">%1$dh %2$dm</string>
+    <string name="duration_m">%1$d min</string>
+    <string name="duration_less_min">less than a minute</string>
+</resources>

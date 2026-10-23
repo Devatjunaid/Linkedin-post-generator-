@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- System bars are drawn edge-to-edge from MainActivity via enableEdgeToEdge(). -->
+    <style name="Theme.Walkies" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/walkies_ground</item>
+    </style>
+
+    <!-- Launch screen shown by the system (Android 12+) and by core-splashscreen below it.
+         It hands over to the animated splash drawn in Compose. -->
+    <style name="Theme.Walkies.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/walkies_forest</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Walkies</item>
+    </style>
+</resources>
