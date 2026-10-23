@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_background">#10141F</color>
+    <color name="ad_surface">#1B2133</color>
+    <color name="ad_outline">#2C3550</color>
+    <color name="ad_text_primary">#EEF1F8</color>
+    <color name="ad_text_secondary">#B5BDD0</color>
+    <color name="ad_cta_bg">#FF8A50</color>
+    <color name="ad_cta_text">#1C2541</color>
+</resources>

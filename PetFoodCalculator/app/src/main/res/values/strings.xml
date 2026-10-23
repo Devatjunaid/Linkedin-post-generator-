@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pet Food Calculator</string>
+    <string name="ad_badge">Ad</string>
+    <string name="reminder_channel_name">Feeding reminders</string>
+    <string name="reminder_channel_description">Reminders at your pet\'s meal times</string>
+</resources>
