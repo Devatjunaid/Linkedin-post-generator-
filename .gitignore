@@ -73,3 +73,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Packaged DriveReady deliverable (regenerate with git archive)
+DriveReady.zip
