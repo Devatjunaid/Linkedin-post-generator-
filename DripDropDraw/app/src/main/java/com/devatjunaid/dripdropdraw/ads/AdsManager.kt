@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -249,10 +250,17 @@ private class BannerController(context: Context, size: AdSize, unitId: String) {
     }
 }
 
-/** Anchored adaptive banner. Its space is reserved up front so the game never jumps. */
+/**
+ * Anchored adaptive banner. Its space is reserved up front so the game never jumps, and a gap
+ * keeps it away from the play area so children don't tap it by accident while drawing.
+ */
 @Composable
 fun BannerAd(modifier: Modifier = Modifier) {
-    BoxWithConstraints(modifier.fillMaxWidth()) {
+    BoxWithConstraints(
+        modifier
+            .fillMaxWidth()
+            .padding(top = 14.dp),
+    ) {
         val context = LocalContext.current
         val widthDp = maxWidth.value.toInt().coerceAtLeast(320)
         val size = remember(widthDp) {
