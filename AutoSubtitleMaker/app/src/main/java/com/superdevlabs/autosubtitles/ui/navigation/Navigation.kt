@@ -134,7 +134,7 @@ fun AppNavHost(container: AppContainer, showSplash: Boolean) {
             }
         }
         composable<ProjectsRoute> {
-            TopLevelScaffold(TopTab.PROJECTS, nav, container, showBanner = false) { padding ->
+            TopLevelScaffold(TopTab.PROJECTS, nav, container, showBanner = true) { padding ->
                 ProjectsScreen(
                     container = container,
                     contentPadding = padding,
@@ -143,12 +143,12 @@ fun AppNavHost(container: AppContainer, showSplash: Boolean) {
             }
         }
         composable<LanguagesRoute> {
-            TopLevelScaffold(TopTab.LANGUAGES, nav, container, showBanner = false) { padding ->
+            TopLevelScaffold(TopTab.LANGUAGES, nav, container, showBanner = true) { padding ->
                 LanguagesScreen(container = container, contentPadding = padding)
             }
         }
         composable<SettingsRoute> {
-            TopLevelScaffold(TopTab.SETTINGS, nav, container, showBanner = false) { padding ->
+            TopLevelScaffold(TopTab.SETTINGS, nav, container, showBanner = true) { padding ->
                 SettingsScreen(container = container, contentPadding = padding, onOpenLanguages = { nav.navigateTab(TopTab.LANGUAGES) })
             }
         }
@@ -202,7 +202,7 @@ private fun NavHostController.navigateTab(tab: TopTab) {
 
 /**
  * Top-level screens, stacked so nothing ever sits behind anything else:
- * screen content → banner ad (Home only) → navigation dock → system navigation bar.
+ * screen content → banner ad → navigation dock → system navigation bar.
  * Ads must never be covered by app UI (AdMob policy), so the dock is not a floating overlay.
  */
 @Composable
