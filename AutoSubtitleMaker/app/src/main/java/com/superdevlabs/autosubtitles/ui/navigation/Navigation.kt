@@ -200,7 +200,11 @@ private fun NavHostController.navigateTab(tab: TopTab) {
     }
 }
 
-/** Top-level screens: content + floating dock (+ banner on Home, below the dock). */
+/**
+ * Top-level screens, stacked so nothing ever sits behind anything else:
+ * screen content → banner ad (Home only) → navigation dock → system navigation bar.
+ * Ads must never be covered by app UI (AdMob policy), so the dock is not a floating overlay.
+ */
 @Composable
 private fun TopLevelScaffold(
     tab: TopTab,
@@ -211,19 +215,19 @@ private fun TopLevelScaffold(
 ) {
     Column(Modifier.fillMaxSize().background(AppColors.Ink)) {
         Box(Modifier.weight(1f).fillMaxWidth()) {
-            content(PaddingValues(bottom = 96.dp))
-            Dock(
-                current = tab,
-                onSelect = { if (it != tab) nav.navigateTab(it) },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .then(if (showBanner) Modifier else Modifier.navigationBarsPadding())
-                    .padding(bottom = 16.dp),
-            )
+            content(PaddingValues(bottom = 8.dp))
         }
         if (showBanner) {
-            BannerAd(container.ads, Modifier.navigationBarsPadding())
+            BannerAd(container.ads, Modifier.padding(top = 4.dp, bottom = 8.dp))
         }
+        Dock(
+            current = tab,
+            onSelect = { if (it != tab) nav.navigateTab(it) },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .navigationBarsPadding()
+                .padding(top = 4.dp, bottom = 12.dp),
+        )
     }
 }
 
