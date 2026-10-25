@@ -14,6 +14,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.horizontalScroll
@@ -57,21 +58,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
@@ -96,6 +98,7 @@ import com.superdevlabs.autosubtitles.ui.components.SectionLabel
 import com.superdevlabs.autosubtitles.ui.components.pressable
 import com.superdevlabs.autosubtitles.ui.theme.AppColors
 import java.util.Locale
+import kotlin.math.roundToInt
 
 enum class EditorTab(val label: String) { CAPTIONS("Captions"), STYLE("Style"), FONT("Font"), COLOR("Color"), MOTION("Motion"), LAYOUT("Layout") }
 
@@ -427,8 +430,11 @@ private fun EditorTabs(current: EditorTab, onSelect: (EditorTab) -> Unit) {
 }
 
 /**
- * Scrubbable timeline: the playhead is fixed in the centre and the strip of caption blocks
- * scrolls under it. Dragging the strip scrubs the video; playing scrolls it automatically.
+ * Scrubbable timeline: the playhead is fixed in the centre and the caption blocks slide under it.
+ * Drag the strip to scrub; during playback it follows the video.
+ *
+ * Only the part of the timeline that is on screen is drawn. (Drawing the whole video as one strip
+ * crashed long videos: Compose can't lay out anything wider than 262,143 px.)
  */
 @Composable
 private fun Timeline(
@@ -442,74 +448,83 @@ private fun Timeline(
     val positionMs = positionProvider()
     val density = LocalDensity.current
     val pxPerMs = with(density) { 90.dp.toPx() } / 1_000f
-    val scroll = rememberScrollState()
-    val dragged by scroll.interactionSource.collectIsDraggedAsState()
-    var userScrubbing by remember { mutableStateOf(false) }
+    val minChipPx = with(density) { 14.dp.toPx() }
     val latestOnScrub by rememberUpdatedState(onScrub)
+    val latestPosition by rememberUpdatedState(positionProvider)
+    // Time under the playhead while the user drags; null = follow playback.
+    var dragMs by remember { mutableStateOf<Float?>(null) }
+    val centerMs = dragMs ?: positionMs.toFloat()
 
-    // A finger on the strip starts scrubbing; it ends when the fling settles.
-    LaunchedEffect(dragged) { if (dragged) userScrubbing = true }
-    LaunchedEffect(scroll) {
-        snapshotFlow { scroll.isScrollInProgress }.collect { moving -> if (!moving && !dragged) userScrubbing = false }
-    }
-    LaunchedEffect(scroll) {
-        snapshotFlow { scroll.value }.collect { value -> if (userScrubbing) latestOnScrub((value / pxPerMs).toLong()) }
-    }
-    // Otherwise follow playback and taps on captions.
-    LaunchedEffect(positionMs, userScrubbing) {
-        if (!userScrubbing) {
-            val target = (positionMs * pxPerMs).toInt()
-            if (kotlin.math.abs(scroll.value - target) > 1) scroll.scrollTo(target)
-        }
-    }
+    BoxWithConstraints(
+        Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .clipToBounds()
+            .pointerInput(durationMs, pxPerMs) {
+                detectHorizontalDragGestures(
+                    onDragStart = { dragMs = latestPosition().toFloat() },
+                    onDragEnd = { dragMs = null },
+                    onDragCancel = { dragMs = null },
+                ) { change, dragAmount ->
+                    change.consume()
+                    val next = ((dragMs ?: latestPosition().toFloat()) - dragAmount / pxPerMs)
+                        .coerceIn(0f, durationMs.coerceAtLeast(0L).toFloat())
+                    dragMs = next
+                    latestOnScrub(next.toLong())
+                }
+            },
+    ) {
+        val viewportPx = constraints.maxWidth.toFloat()
+        val halfPx = viewportPx / 2f
+        val windowStartMs = centerMs - halfPx / pxPerMs
+        val windowEndMs = centerMs + halfPx / pxPerMs
 
-    BoxWithConstraints(Modifier.fillMaxWidth().height(64.dp)) {
-        val half = maxWidth / 2
-        val contentWidth = with(density) { (durationMs * pxPerMs).toDp() }
-        Row(Modifier.fillMaxSize().horizontalScroll(scroll)) {
-            Spacer(Modifier.width(half))
-            Box(Modifier.width(contentWidth).fillMaxHeight()) {
-                // Second ticks (one canvas, cheap even for long videos).
-                Canvas(Modifier.fillMaxSize()) {
-                    val seconds = (durationMs / 1_000).toInt()
-                    for (sec in 0..seconds) {
-                        val x = sec * 1_000 * pxPerMs
-                        val tick = if (sec % 5 == 0) 12.dp.toPx() else 6.dp.toPx()
-                        drawLine(
-                            AppColors.SurfaceTop,
-                            androidx.compose.ui.geometry.Offset(x, size.height - tick),
-                            androidx.compose.ui.geometry.Offset(x, size.height),
-                            strokeWidth = 1.dp.toPx(),
-                        )
-                    }
-                }
-                captions.forEach { caption ->
-                    val x = with(density) { (caption.startMs * pxPerMs).toDp() }
-                    val w = with(density) { ((caption.endMs - caption.startMs) * pxPerMs).toDp() }.coerceAtLeast(14.dp)
-                    val active = positionMs in caption.startMs until caption.endMs
-                    val selected = caption.id == selectedId
-                    Text(
-                        caption.text,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = if (active) AppColors.Ink else AppColors.Soft,
-                        maxLines = 1,
-                        overflow = TextOverflow.Clip,
-                        modifier = Modifier
-                            .offset(x = x, y = 8.dp)
-                            .width(w - 2.dp)
-                            .height(34.dp)
-                            .clip(RoundedCornerShape(9.dp))
-                            .background(if (active) AppColors.Lime else AppColors.SurfaceHigh)
-                            .border(1.5.dp, if (selected) AppColors.Coral else AppColors.Line, RoundedCornerShape(9.dp))
-                            .pressable(onClick = { onSelect(caption) }, pressedScale = 0.96f)
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
-                    )
-                }
+        // Second ticks for the visible window only.
+        Canvas(Modifier.fillMaxSize()) {
+            val first = kotlin.math.floor(windowStartMs / 1_000f).toInt().coerceAtLeast(0)
+            val last = kotlin.math.ceil(windowEndMs / 1_000f).toInt().coerceAtMost((durationMs / 1_000).toInt())
+            for (sec in first..last) {
+                val x = halfPx + (sec * 1_000f - centerMs) * pxPerMs
+                val tick = if (sec % 5 == 0) 12.dp.toPx() else 6.dp.toPx()
+                drawLine(
+                    AppColors.SurfaceTop,
+                    androidx.compose.ui.geometry.Offset(x, size.height - tick),
+                    androidx.compose.ui.geometry.Offset(x, size.height),
+                    strokeWidth = 1.dp.toPx(),
+                )
             }
-            Spacer(Modifier.width(half))
         }
+
+        // Caption blocks that overlap the visible window (plus a little margin).
+        val marginMs = 1_000f
+        captions.forEach { caption ->
+            if (caption.endMs < windowStartMs - marginMs || caption.startMs > windowEndMs + marginMs) return@forEach
+            key(caption.id) {
+                val xPx = halfPx + (caption.startMs - centerMs) * pxPerMs
+                val widthPx = ((caption.endMs - caption.startMs) * pxPerMs).coerceIn(minChipPx, viewportPx * 2f)
+                val active = positionMs in caption.startMs until caption.endMs
+                val selected = caption.id == selectedId
+                Text(
+                    caption.text,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (active) AppColors.Ink else AppColors.Soft,
+                    maxLines = 1,
+                    overflow = TextOverflow.Clip,
+                    modifier = Modifier
+                        .offset { IntOffset(xPx.roundToInt(), 8.dp.roundToPx()) }
+                        .width(with(density) { widthPx.toDp() } - 2.dp)
+                        .height(34.dp)
+                        .clip(RoundedCornerShape(9.dp))
+                        .background(if (active) AppColors.Lime else AppColors.SurfaceHigh)
+                        .border(1.5.dp, if (selected) AppColors.Coral else AppColors.Line, RoundedCornerShape(9.dp))
+                        .pressable(onClick = { onSelect(caption) }, pressedScale = 0.96f)
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                )
+            }
+        }
+
         // Fixed playhead.
-        val headX = half - 1.dp
+        val headX = maxWidth / 2 - 1.dp
         Box(Modifier.offset(x = headX).width(2.dp).fillMaxHeight().background(AppColors.Lime))
         Box(Modifier.offset(x = headX - 5.dp).size(12.dp).clip(CircleShape).background(AppColors.Lime))
     }
