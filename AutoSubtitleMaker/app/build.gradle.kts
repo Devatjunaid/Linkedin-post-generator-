@@ -55,6 +55,12 @@ android {
             buildConfigField("String", "BANNER_AD_UNIT", "\"$releaseBannerId\"")
             buildConfigField("String", "INTERSTITIAL_AD_UNIT", "\"$releaseInterstitialId\"")
             buildConfigField("String", "NATIVE_AD_UNIT", "\"$releaseNativeId\"")
+
+            // Puts native debug symbols (speech engine .so files) into the app bundle so Play
+            // Console can read native crashes. Clears the "no debug symbols" warning.
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
         }
     }
 
