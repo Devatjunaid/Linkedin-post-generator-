@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import com.drawtocompletefun.kids.ui.screens.AdBreakNotice
 import com.drawtocompletefun.kids.ui.screens.ExitDialog
 import com.drawtocompletefun.kids.ui.screens.GameScreen
 import com.drawtocompletefun.kids.ui.screens.HomeScreen
@@ -59,6 +60,7 @@ fun AppRoot(state: AppState) {
                 Overlay.Settings -> SettingsDialog(state)
                 is Overlay.Treasure -> TreasureDialog(state, shown.level)
                 is Overlay.ParentGate -> ParentGateDialog(state, shown.action)
+                is Overlay.AdBreak -> AdBreakNotice(state, shown)
             }
         }
     }

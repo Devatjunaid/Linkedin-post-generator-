@@ -16,6 +16,9 @@ interface GamePlatform {
 
     fun setMusicEnabled(enabled: Boolean)
 
+    /** True when an interstitial is loaded and the 30 second cap allows one now. */
+    fun canShowInterstitial(): Boolean
+
     /** Shows an interstitial if one is ready and the frequency cap allows it, then calls [onDone]. */
     fun showInterstitial(onDone: () -> Unit)
 

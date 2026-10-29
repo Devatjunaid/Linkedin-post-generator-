@@ -160,7 +160,7 @@ fun HomeScreen(state: AppState) {
                 Box(Modifier.weight(1f)) {
                     HomeTile(Ico.Gift, "Daily gift", Modifier.fillMaxWidth()) {
                         sfx.play(Sfx.Tap)
-                        state.openStickers(withAd = false)
+                        state.openStickers()
                     }
                     if (progress.canClaimGift()) {
                         Box(
@@ -175,7 +175,8 @@ fun HomeScreen(state: AppState) {
                     }
                 }
             }
-            Spacer(Modifier.height(16.dp))
+            // Keep the ad well away from the buttons kids tap.
+            Spacer(Modifier.height(40.dp))
             sfx.Banner(Modifier.fillMaxWidth())
             Spacer(Modifier.height(6.dp))
         }

@@ -23,6 +23,8 @@ class AndroidPlatform(
 
     override fun setMusicEnabled(enabled: Boolean) = sounds.setMusic(enabled)
 
+    override fun canShowInterstitial(): Boolean = ads.canShowInterstitial()
+
     override fun showInterstitial(onDone: () -> Unit) = ads.showInterstitial(onDone)
 
     override fun showRewarded(onResult: (RewardResult) -> Unit) = ads.showRewarded(onResult)

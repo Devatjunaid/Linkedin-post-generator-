@@ -136,6 +136,10 @@ class AdsManager(private val activity: Activity) {
         )
     }
 
+    fun canShowInterstitial(): Boolean =
+        interstitial != null && !activity.isFinishing && !destroyed &&
+            SystemClock.elapsedRealtime() - lastFullScreenAt >= INTERSTITIAL_GAP_MS
+
     /** Shows an interstitial when allowed (30 second cap), then always runs [onDone] once. */
     fun showInterstitial(onDone: () -> Unit) {
         val ad = interstitial

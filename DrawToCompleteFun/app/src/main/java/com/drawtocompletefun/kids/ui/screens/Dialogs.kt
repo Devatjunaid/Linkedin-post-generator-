@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +44,7 @@ import com.drawtocompletefun.kids.ui.components.Ico
 import com.drawtocompletefun.kids.ui.components.KText
 import com.drawtocompletefun.kids.ui.components.Pip
 import com.drawtocompletefun.kids.ui.theme.Palette
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 /** Dimmed backdrop with a centred card. Tapping outside does nothing, so kids don't close it by accident. */
@@ -196,7 +198,18 @@ private fun ToggleRow(ico: Ico, label: String, on: Boolean, onToggle: () -> Unit
     }
 }
 
-// ---------------------------------------------------------------- Treasure level (reward video)
+/** Small grey "Ad" tag so children and parents can always see what is an advertisement. */
+@Composable
+fun AdTag(modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(Color(0xFF5F6368))
+            .padding(horizontal = 7.dp, vertical = 2.dp),
+    ) { KText("Ad", size = 12.sp, color = Color.White, weight = FontWeight.Bold) }
+}
+
+// ---------------------------------------------------------------- Bonus level (rewarded ad)
 
 @Composable
 fun TreasureDialog(state: AppState, level: Int) {
@@ -204,25 +217,19 @@ fun TreasureDialog(state: AppState, level: Int) {
     var loading by remember(level) { mutableStateOf(false) }
     var note by remember(level) { mutableStateOf<String?>(null) }
     DialogFrame {
-        Box(
-            Modifier
-                .size(84.dp)
-                .clip(RoundedCornerShape(24.dp))
-                .background(Palette.Coral),
-            contentAlignment = Alignment.Center,
-        ) { GameIcon(Ico.Gift, Palette.Ink, 50.dp) }
-        KText("Treasure level $level!", size = 25.sp, weight = FontWeight.Black, align = TextAlign.Center)
+        AdTag()
+        KText("Level $level opens after an ad", size = 24.sp, weight = FontWeight.Black, align = TextAlign.Center)
         KText(
-            note ?: "Watch a short video to open this treasure level.",
+            note ?: "This is an advertisement, not part of the game. After the ad ends, level $level opens.",
             size = 15.sp,
             color = Palette.InkSoft,
             align = TextAlign.Center,
         )
         WideButton(
-            if (loading) "Getting video..." else "Watch video",
+            if (loading) "Loading ad..." else "Watch ad",
             Ico.Video,
-            Palette.Yellow,
-            Palette.YellowShadow,
+            Color(0xFFE8EAED),
+            Color(0xFFBDC1C6),
         ) {
             if (loading) return@WideButton
             loading = true
@@ -234,8 +241,8 @@ fun TreasureDialog(state: AppState, level: Int) {
                         platform.play(Sfx.Unlock)
                         state.treasureOpened(level)
                     }
-                    RewardResult.Closed -> note = "Watch the whole video to open the treasure."
-                    // No video available right now: never block a child, open it as a gift.
+                    RewardResult.Closed -> note = "The ad was closed early. Watch the whole ad to open level $level."
+                    // No ad available right now: never block a child, just open the level.
                     RewardResult.Unavailable -> {
                         platform.play(Sfx.Unlock)
                         state.treasureOpened(level)
@@ -247,6 +254,31 @@ fun TreasureDialog(state: AppState, level: Int) {
             platform.play(Sfx.Tap)
             state.overlay = null
         }
+    }
+}
+
+// ---------------------------------------------------------------- Ad break notice
+
+/** Tells the player an ad is coming, so it is never mistaken for the next game screen. */
+@Composable
+fun AdBreakNotice(state: AppState, adBreak: Overlay.AdBreak) {
+    var secondsLeft by remember(adBreak) { mutableIntStateOf(2) }
+    LaunchedEffect(adBreak) {
+        while (secondsLeft > 0) {
+            delay(1000)
+            secondsLeft--
+        }
+        state.runAdBreak(adBreak)
+    }
+    DialogFrame {
+        AdTag()
+        KText("Ad break", size = 26.sp, weight = FontWeight.Black)
+        KText(
+            "An advertisement will show in $secondsLeft. The game comes back right after it.",
+            size = 15.sp,
+            color = Palette.InkSoft,
+            align = TextAlign.Center,
+        )
     }
 }
 

@@ -385,12 +385,12 @@ private fun LevelNode(state: AppState, level: Int, size: Dp, onMessage: (String)
                     Modifier
                         .align(Alignment.TopEnd)
                         .offset(x = 8.dp, y = (-6).dp)
-                        .size(28.dp)
-                        .clip(CircleShape)
-                        .background(Palette.Coral)
-                        .border(3.dp, Color.White, CircleShape),
-                    contentAlignment = Alignment.Center,
-                ) { GameIcon(Ico.Gift, Palette.Ink, 16.dp) }
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFF5F6368))
+                        .border(2.dp, Color.White, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 6.dp, vertical = 1.dp)
+                        .semantics { contentDescription = "Opens after an ad" },
+                ) { KText("Ad", size = 12.sp, color = Color.White, weight = FontWeight.Bold) }
             }
         }
         Spacer(Modifier.height(8.dp))

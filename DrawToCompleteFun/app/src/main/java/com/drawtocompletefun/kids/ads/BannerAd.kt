@@ -3,19 +3,27 @@ package com.drawtocompletefun.kids.ads
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.drawtocompletefun.kids.ui.components.KText
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -100,11 +108,36 @@ fun BannerAd(ads: AdsManager, modifier: Modifier = Modifier) {
                 banner.destroy()
             }
         }
-        AndroidView(
-            factory = { banner.view },
-            modifier = Modifier
+        // Grey strip with a divider and an "Advertisement" label, so the banner is never
+        // mistaken for part of the game (Families ad format requirements).
+        Column(
+            Modifier
                 .fillMaxWidth()
-                .height(banner.size.height.dp),
-        )
+                .background(AD_STRIP),
+        ) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(AD_DIVIDER),
+            )
+            KText(
+                "Advertisement",
+                size = 11.sp,
+                color = AD_LABEL,
+                weight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 8.dp, top = 2.dp, bottom = 2.dp),
+            )
+            AndroidView(
+                factory = { banner.view },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(banner.size.height.dp),
+            )
+        }
     }
 }
+
+private val AD_STRIP = Color(0xFFF1F3F4)
+private val AD_DIVIDER = Color(0xFFDADCE0)
+private val AD_LABEL = Color(0xFF5F6368)

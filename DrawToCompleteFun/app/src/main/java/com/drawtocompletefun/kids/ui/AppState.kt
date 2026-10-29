@@ -21,9 +21,15 @@ sealed interface Overlay {
     data object Settings : Overlay
     data class Treasure(val level: Int) : Overlay
     data class ParentGate(val action: GateAction) : Overlay
+
+    /** Short "Ad break" notice shown before every full screen ad. */
+    data class AdBreak(val then: () -> Unit) : Overlay
 }
 
-/** Navigation and app wide actions. Ads are only shown at the few "big" moments below. */
+/**
+ * Navigation and app wide actions. Full screen ads only appear after a finished level
+ * (Next, Replay, Map on the results screen), always after an "Ad break" notice.
+ */
 class AppState(val progress: Progress, val platform: GamePlatform) {
 
     var screen by mutableStateOf<Screen>(Screen.Splash)
@@ -48,8 +54,19 @@ class AppState(val progress: Progress, val platform: GamePlatform) {
         screen = Screen.Map(world)
     }
 
-    fun openStickers(withAd: Boolean = true) {
-        if (withAd) platform.showInterstitial { screen = Screen.Stickers } else screen = Screen.Stickers
+    fun openStickers() {
+        screen = Screen.Stickers
+    }
+
+    /** Runs [then] after an announced ad, or straight away when no ad can show. */
+    private fun afterAdBreak(then: () -> Unit) {
+        if (platform.canShowInterstitial()) overlay = Overlay.AdBreak(then) else then()
+    }
+
+    /** Called by the "Ad break" notice when its countdown ends. */
+    fun runAdBreak(adBreak: Overlay.AdBreak) {
+        overlay = null
+        platform.showInterstitial(adBreak.then)
     }
 
     /** Opens a level, asking for the treasure video first on every 5th level. */
@@ -68,9 +85,9 @@ class AppState(val progress: Progress, val platform: GamePlatform) {
         screen = Screen.Game(level, ++runCounter)
     }
 
-    /** Player quits a level half way: back to the map, an interstitial may show. */
+    /** Player quits a level half way: back to the map, no ad. */
     fun quitLevel(level: Int) {
-        platform.showInterstitial { screen = Screen.Map(Levels.worldOf(level).index) }
+        screen = Screen.Map(Levels.worldOf(level).index)
     }
 
     /** Restart button inside a level: no ad, kids just want to try again. */
@@ -79,12 +96,12 @@ class AppState(val progress: Progress, val platform: GamePlatform) {
     }
 
     fun replay(level: Int) {
-        platform.showInterstitial { screen = Screen.Game(level, ++runCounter) }
+        afterAdBreak { screen = Screen.Game(level, ++runCounter) }
     }
 
     fun next(level: Int) {
         if (level >= Levels.COUNT) {
-            platform.showInterstitial { screen = Screen.Map(Levels.worldOf(level).index) }
+            afterAdBreak { screen = Screen.Map(Levels.worldOf(level).index) }
             return
         }
         val n = level + 1
@@ -93,12 +110,12 @@ class AppState(val progress: Progress, val platform: GamePlatform) {
             screen = Screen.Map(Levels.worldOf(n).index)
             overlay = Overlay.Treasure(n)
         } else {
-            platform.showInterstitial { screen = Screen.Game(n, ++runCounter) }
+            afterAdBreak { screen = Screen.Game(n, ++runCounter) }
         }
     }
 
     fun backToMapFromResult(level: Int) {
-        platform.showInterstitial { screen = Screen.Map(Levels.worldOf(level).index) }
+        afterAdBreak { screen = Screen.Map(Levels.worldOf(level).index) }
     }
 
     fun gatePassed(action: GateAction) {

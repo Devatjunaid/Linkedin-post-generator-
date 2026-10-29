@@ -40,9 +40,9 @@ All ad code is in `app/src/main/java/com/drawtocompletefun/kids/ads/`.
 
 | Format | Where | Rule |
 |---|---|---|
-| Banner | Home, Level map and Rewards screens (never while drawing) | If the first 2 requests fail, every later request waits 15 seconds (`BannerController`) |
-| Interstitial | Next level, Replay, Map, quitting a level, opening the sticker book | At most 1 per 30 seconds, and none in the first 30 seconds after launch (`AdsManager.INTERSTITIAL_GAP_MS`) |
-| Rewarded | Treasure levels: after every 4 levels, the 5th opens after a video | Always started by the player tapping "Watch video". If no video can load, the level opens for free so a child is never stuck. |
+| Banner | Home, Level map and Rewards screens (never while drawing) | Grey strip labelled "Advertisement". If the first 2 requests fail, every later request waits 15 seconds (`BannerController`) |
+| Interstitial | Only after a finished level: Next level, Replay or Map on the results screen | Always announced first by an "Ad break" notice. At most 1 per 30 seconds, and none in the first 30 seconds after launch (`AdsManager.INTERSTITIAL_GAP_MS`) |
+| Rewarded | Every 5th level (marked "Ad" on the map) | The player taps "Watch ad" on a screen labelled as an advertisement. If no ad can load, the level opens anyway so a child is never stuck. |
 
 Your IDs are set in `AdsManager.Ids` (ad units) and `res/values/strings.xml` (`admob_app_id`).
 
@@ -53,7 +53,8 @@ These are built in already:
 - The `AD_ID` permission is removed in the manifest (apps for kids must not collect the advertising ID).
 - No analytics, accounts, chat or data collection. Progress stays on the device.
 - UMP consent flow runs at start (tagged under age of consent).
-- Interstitials only appear at natural breaks, never during drawing, never at launch and never on exit.
+- Every ad is labelled: banners say "Advertisement", full-screen ads follow an "Ad break" notice, and the rewarded offer says "Watch ad".
+- Interstitials only appear after a finished level, never during drawing, never at launch and never on exit.
 - Rewarded ads are opt-in. They are never forced, and the game continues if no ad loads.
 - Leaving the app (Rate us, Privacy policy) sits behind a grown-up check (a simple sum).
 - "Rate us" opens the store page (Google's in-app review sheet must not be behind a button).
