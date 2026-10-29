@@ -6,7 +6,9 @@ import android.content.pm.ApplicationInfo
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +18,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -120,6 +126,13 @@ object AdsManager {
                 main.postDelayed({ loadInterstitial() }, FULLSCREEN_RETRY_DELAY_MS)
             }
         })
+    }
+
+    /** True when an interstitial is loaded and the 30 second cap allows one now. */
+    fun interstitialReady(): Boolean {
+        if (interstitial == null) loadInterstitial()
+        return interstitial != null && !showingFullScreen &&
+            SystemClock.elapsedRealtime() - lastInterstitialAt >= INTERSTITIAL_GAP_MS
     }
 
     /**
@@ -251,16 +264,38 @@ private class BannerController(context: Context, size: AdSize, unitId: String) {
 }
 
 /**
- * Anchored adaptive banner. Its space is reserved up front so the game never jumps, and a gap
- * keeps it away from the play area so children don't tap it by accident while drawing.
+ * Anchored adaptive banner. Its space is reserved up front so the game never jumps. A gap, a
+ * separator line and an "Advertisement" label keep it clearly apart from the game, so children
+ * neither mistake it for game content nor tap it by accident while drawing.
  */
 @Composable
 fun BannerAd(modifier: Modifier = Modifier) {
-    BoxWithConstraints(
+    Column(
         modifier
             .fillMaxWidth()
-            .padding(top = 14.dp),
+            .padding(top = 10.dp)
+            .background(Color(0xFFEDEFF2)),
     ) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(2.dp)
+                .background(Color(0xFF5A6172)),
+        )
+        Text(
+            "Advertisement",
+            color = Color(0xFF4A5060),
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(start = 8.dp, top = 2.dp, bottom = 2.dp),
+        )
+        BannerSlot()
+    }
+}
+
+@Composable
+private fun BannerSlot() {
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
         val context = LocalContext.current
         val widthDp = maxWidth.value.toInt().coerceAtLeast(320)
         val size = remember(widthDp) {

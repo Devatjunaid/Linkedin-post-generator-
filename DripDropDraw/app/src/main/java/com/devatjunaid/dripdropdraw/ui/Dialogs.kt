@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
@@ -36,9 +37,13 @@ import com.devatjunaid.dripdropdraw.audio.Sound
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
-/** Dark backdrop with a bouncy card in the middle. Back closes it when [onDismiss] is set. */
+/**
+ * Dark backdrop with a bouncy card in the middle. Back closes it when [onDismiss] is set.
+ * With [ad] the card uses a plain grey "advertisement" look with an Ad label, so it can never
+ * be mistaken for part of the game (Google Play Families ad format rules).
+ */
 @Composable
-fun Overlay(onDismiss: (() -> Unit)?, content: @Composable ColumnScope.() -> Unit) {
+fun Overlay(onDismiss: (() -> Unit)?, ad: Boolean = false, content: @Composable ColumnScope.() -> Unit) {
     BackHandler(enabled = true) { onDismiss?.invoke() }
     val appear = remember { Animatable(0.6f) }
     LaunchedEffect(Unit) { appear.animateTo(1f, spring(dampingRatio = 0.55f, stiffness = 400f)) }
@@ -59,13 +64,33 @@ fun Overlay(onDismiss: (() -> Unit)?, content: @Composable ColumnScope.() -> Uni
                     scaleX = appear.value
                     scaleY = appear.value
                 }
-                .background(Palette.Paper, RoundedCornerShape(28.dp))
-                .border(3.dp, Palette.Ink, RoundedCornerShape(28.dp))
+                .background(if (ad) AdCardColor else Palette.Paper, RoundedCornerShape(if (ad) 12.dp else 28.dp))
+                .border(if (ad) 2.dp else 3.dp, if (ad) AdBorderColor else Palette.Ink, RoundedCornerShape(if (ad) 12.dp else 28.dp))
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            content = content,
+        ) {
+            if (ad) AdLabel()
+            content()
+        }
+    }
+}
+
+private val AdCardColor = Color(0xFFEDEFF2)
+private val AdBorderColor = Color(0xFF5A6172)
+
+/** The "Ad" badge used on everything that is an advertisement or leads to one. */
+@Composable
+fun AdLabel() {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            "AD",
+            style = textStyle(14.sp, FontWeight.Bold, Color.White),
+            modifier = Modifier
+                .background(Color(0xFF1F2430), RoundedCornerShape(4.dp))
+                .padding(horizontal = 8.dp, vertical = 2.dp),
         )
+        Text("Advertisement", style = textStyle(15.sp, FontWeight.SemiBold, Palette.Muted))
     }
 }
 
@@ -142,8 +167,9 @@ fun ParentsInfo(onClose: () -> Unit) {
         DialogText(
             "Drip Drop Draw is a drawing and physics puzzle for kids. It shows ads from Google AdMob. " +
                 "All ad requests are marked as made for children, so ads are not personalised and are " +
-                "limited to family-friendly content. Videos are only shown when your child chooses to " +
-                "open a bonus chest. The game keeps progress only on this device and has no chat, " +
+                "limited to family-friendly content. Ads are marked \"Ad\". Full-screen ads only appear " +
+                "between levels, after an \"Ad break\" notice, never during play. Rewarded ads are " +
+                "optional. The game keeps progress only on this device and has no chat, " +
                 "accounts or in-app purchases.",
         )
         CartoonButton(
@@ -158,18 +184,39 @@ fun ParentsInfo(onClose: () -> Unit) {
     }
 }
 
-/** The opt-in rewarded video offered after every 5 finished levels. */
+/** The opt-in rewarded ad offered after every 5 finished levels. Clearly marked as an ad. */
 @Composable
 fun BonusChestDialog(coins: Int, onWatch: () -> Unit, onSkip: () -> Unit) {
-    Overlay(onDismiss = onSkip) {
-        GameIcon(IconKind.GIFT, Modifier.size(90.dp), fill = Palette.Star)
-        DialogTitle("Bonus chest!")
-        DialogText("Watch a short video to open it and get $coins coins.")
-        CartoonButton(onWatch, Modifier.fillMaxWidth(), color = Palette.Green) {
-            GameIcon(IconKind.PLAY, Modifier.size(22.dp))
-            ButtonLabel("Watch video")
-        }
-        CartoonButton(onSkip, Modifier.fillMaxWidth()) { ButtonLabel("No thanks") }
+    Overlay(onDismiss = onSkip, ad = true) {
+        DialogTitle("Watch an ad?")
+        DialogText("You can watch a short advertisement to get $coins bonus coins. It is optional.")
+        AdButton("Watch Ad", onWatch)
+        AdButton("No thanks", onSkip)
+    }
+}
+
+/** Shown for a moment before a full-screen ad, so children know an ad is coming. */
+@Composable
+fun AdBreakNotice() {
+    Overlay(onDismiss = null, ad = true) {
+        DialogTitle("Ad break")
+        DialogText("An advertisement will play now. The game continues after it.")
+    }
+}
+
+/** Plain grey button for ad choices, deliberately unlike the game's cartoon buttons. */
+@Composable
+private fun AdButton(text: String, onClick: () -> Unit) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .border(2.dp, AdBorderColor, RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(text, style = textStyle(18.sp, FontWeight.SemiBold))
     }
 }
 

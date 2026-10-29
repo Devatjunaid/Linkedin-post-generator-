@@ -81,9 +81,22 @@ fun GameScreen(levelNumber: Int, progress: Progress, onLevels: () -> Unit, onNex
     var chest by remember { mutableStateOf(false) }
     var allDone by remember { mutableStateOf(false) }
 
-    /** A break between levels: maybe an interstitial (not in the first few levels). */
+    /** Set while the "Ad break" notice is on screen; holds what to do after the ad. */
+    var adNotice by remember { mutableStateOf<(() -> Unit)?>(null) }
+
+    /**
+     * A break between levels: maybe an interstitial (not in the first few levels). When one will
+     * play, an "Ad break" notice shows first so children know an ad is coming.
+     */
     fun adBreak(then: () -> Unit) {
-        if (levelNumber <= FREE_HINT_LEVELS) then() else AdsManager.maybeShowInterstitial(activity, then)
+        if (levelNumber <= FREE_HINT_LEVELS || !AdsManager.interstitialReady()) then() else adNotice = then
+    }
+
+    LaunchedEffect(adNotice) {
+        val then = adNotice ?: return@LaunchedEffect
+        delay(1500)
+        adNotice = null
+        AdsManager.maybeShowInterstitial(activity, then)
     }
 
     fun restart() {
@@ -226,7 +239,7 @@ fun GameScreen(levelNumber: Int, progress: Progress, onLevels: () -> Unit, onNex
                     level = levelNumber,
                     stars = w.stars,
                     coins = w.coins,
-                    onReplay = { adBreak { restart() } },
+                    onReplay = { restart() },
                     onNext = {
                         if (levelNumber >= Levels.COUNT) allDone = true else adBreak(onNext)
                     },
@@ -250,7 +263,7 @@ fun GameScreen(levelNumber: Int, progress: Progress, onLevels: () -> Unit, onNex
                 }
             }
             failed -> FailPanel(
-                onRetry = { adBreak { restart() } },
+                onRetry = { restart() },
                 onHint = {
                     if (levelNumber <= FREE_HINT_LEVELS) {
                         showHint = true
@@ -263,6 +276,7 @@ fun GameScreen(levelNumber: Int, progress: Progress, onLevels: () -> Unit, onNex
                 hintShown = showHint,
             )
         }
+        if (adNotice != null) AdBreakNotice()
         if (hintDialog) {
             HintDialog(
                 cost = HINT_COST,
