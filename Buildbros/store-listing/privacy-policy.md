@@ -1,8 +1,8 @@
 # Privacy Policy – Buildbros: Material Calculator
 
-Last updated: [DATE]
+Last updated: November 6, 2026
 
-This privacy policy explains how the Buildbros Android app ("the app", "we", "us") handles information. The app is published by [DEVELOPER / COMPANY NAME]. Questions: [CONTACT EMAIL].
+This privacy policy explains how the Buildbros Android app ("the app", "we", "us") handles information. The app is published by Super Dev Labs. Questions: elonopo@gmail.com.
 
 ## 1. Summary
 - You do not need an account to use the app.
@@ -44,12 +44,12 @@ The app is intended for adults and is not directed at children under 13 (or the 
 Data stored on your device is protected by Android's app sandbox. We keep no copy of your data. Google retains ad-related data according to its own policies.
 
 ## 8. Your rights
-Depending on where you live (for example under the GDPR, UK GDPR or CCPA/CPRA), you may have rights to access, correct, delete or restrict the processing of personal data. Because we don't hold your data, the quickest way to delete app data is to uninstall the app. For data processed by Google, use the links above or contact Google. For any other request, email [CONTACT EMAIL].
+Depending on where you live (for example under the GDPR, UK GDPR or CCPA/CPRA), you may have rights to access, correct, delete or restrict the processing of personal data. Because we don't hold your data, the quickest way to delete app data is to uninstall the app. For data processed by Google, use the links above or contact Google. For any other request, email elonopo@gmail.com.
 
 ## 9. Changes
 We may update this policy when the app changes. The new version will be posted at this address, with the updated date above.
 
 ## 10. Contact
-[DEVELOPER / COMPANY NAME]
-[CONTACT EMAIL]
+Super Dev Labs
+elonopo@gmail.com
 [POSTAL ADDRESS (required for EU users)]
