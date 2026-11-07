@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.text.TextPaint
+import com.superdevlabs.autosubtitles.core.captions.Emphasis
 import com.superdevlabs.autosubtitles.core.captions.SubtitleFormatter
 import com.superdevlabs.autosubtitles.core.model.BackgroundMode
 import com.superdevlabs.autosubtitles.core.model.Caption
@@ -36,6 +37,9 @@ class CaptionRenderer(private val fonts: FontRegistry) {
     private val box = Paint(Paint.ANTI_ALIAS_FLAG)
     private val rect = RectF()
     private val metrics = Paint.FontMetrics()
+    private val measure = TextPaint(Paint.ANTI_ALIAS_FLAG)
+    // System font so colour emoji render on every device (custom caption fonts have no emoji).
+    private val emojiPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
 
     /** The caption visible at [timeMs], or null. [captions] must be sorted by start time. */
     fun activeCaption(captions: List<Caption>, timeMs: Long): Caption? {
@@ -99,15 +103,28 @@ class CaptionRenderer(private val fonts: FontRegistry) {
         lineWidths += lineWidth
 
         fill.getFontMetrics(metrics)
-        val glyphHeight = metrics.descent - metrics.ascent
+        val ascent = metrics.ascent
+        val descent = metrics.descent
+        val glyphHeight = descent - ascent
         val lineHeight = glyphHeight * 1.06f
-        val blockHeight = lineHeight * lines.size
+
+        // Optional translation: a smaller second block under the caption.
+        val translationSize = size * TRANSLATION_SCALE
+        val translationLines = caption.translation?.takeIf { it.isNotBlank() }?.let {
+            wrap(SubtitleFormatter.applyCase(it.trim(), style.textCase), typeface, translationSize, style.letterSpacing, maxLineWidth)
+        }.orEmpty()
+        val translationLineHeight = translationSize * 1.3f
+        val translationGap = if (translationLines.isEmpty()) 0f else size * 0.18f
+        val translationHeight = translationLines.size * translationLineHeight
+
+        val captionHeight = lineHeight * lines.size
+        val blockHeight = captionHeight + translationGap + translationHeight
         val margin = h * 0.04f
         val minCenter = margin + blockHeight / 2f
         val maxCenter = h - margin - blockHeight / 2f
         val centerY = if (minCenter < maxCenter) (style.positionY * h).coerceIn(minCenter, maxCenter) else h / 2f
         val top = centerY - blockHeight / 2f
-        val widest = lineWidths.maxOrNull() ?: 0f
+        val widest = maxOf(lineWidths.maxOrNull() ?: 0f, translationLines.maxOfOrNull { it.second } ?: 0f)
         val fitScale = if (widest > maxLineWidth) maxLineWidth / widest else 1f
 
         // Whole-caption entrance animation.
@@ -146,11 +163,11 @@ class CaptionRenderer(private val fonts: FontRegistry) {
 
         lines.forEachIndexed { lineIndex, range ->
             val lineW = lineWidths[lineIndex]
-            val baseline = top + lineIndex * lineHeight + (lineHeight - glyphHeight) / 2f - metrics.ascent
+            val baseline = top + lineIndex * lineHeight + (lineHeight - glyphHeight) / 2f - ascent
             var x = (w - lineW) / 2f
 
             if (style.backgroundMode == BackgroundMode.LINE_BOX) {
-                rect.set(x - padX, baseline + metrics.ascent - padY, x + lineW + padX, baseline + metrics.descent + padY)
+                rect.set(x - padX, baseline + ascent - padY, x + lineW + padX, baseline + descent + padY)
                 box.color = withAlpha(style.backgroundColor, style.backgroundOpacity * alpha)
                 canvas.drawRoundRect(rect, size * 0.22f, size * 0.22f, box)
             }
@@ -179,11 +196,11 @@ class CaptionRenderer(private val fonts: FontRegistry) {
 
                 if (wordAlpha > 0.01f) {
                     val isActive = i == activeIndex && style.highlightMode != HighlightMode.NONE
-                    var color = style.textColor
+                    var color = if (style.keywordHighlight && Emphasis.isKeyword(word.text)) style.keywordColor else style.textColor
                     if (isActive && style.highlightMode == HighlightMode.BOX) {
                         rect.set(
-                            x - size * 0.12f, baseline + metrics.ascent - size * 0.02f,
-                            x + wordWidth + size * 0.08f, baseline + metrics.descent + size * 0.02f,
+                            x - size * 0.12f, baseline + ascent - size * 0.02f,
+                            x + wordWidth + size * 0.08f, baseline + descent + size * 0.02f,
                         )
                         rect.offset(0f, wordDy)
                         box.color = withAlpha(style.highlightColor, wordAlpha)
@@ -197,7 +214,62 @@ class CaptionRenderer(private val fonts: FontRegistry) {
                 x += wordWidth + space
             }
         }
+
+        if (translationLines.isNotEmpty()) {
+            for (paint in arrayOf(fill, stroke)) paint.textSize = translationSize
+            stroke.strokeWidth = translationSize * style.outlineWidth
+            fill.getFontMetrics(metrics)
+            val tTop = top + captionHeight + translationGap
+            translationLines.forEachIndexed { index, (text, lineW) ->
+                val baseline = tTop + index * translationLineHeight + (translationLineHeight - (metrics.descent - metrics.ascent)) / 2f - metrics.ascent
+                val x = (w - lineW) / 2f
+                if (style.backgroundMode == BackgroundMode.LINE_BOX) {
+                    rect.set(x - padX * 0.8f, baseline + metrics.ascent - padY, x + lineW + padX * 0.8f, baseline + metrics.descent + padY)
+                    box.color = withAlpha(style.backgroundColor, style.backgroundOpacity * alpha)
+                    canvas.drawRoundRect(rect, size * 0.18f, size * 0.18f, box)
+                }
+                drawWord(canvas, text, x, baseline, 0f, 1f, lineW, translationSize, style.textColor, alpha * 0.92f, style, false)
+            }
+            for (paint in arrayOf(fill, stroke)) paint.textSize = size
+            stroke.strokeWidth = size * style.outlineWidth
+        }
+
+        if (style.autoEmoji) {
+            Emphasis.emojiFor(caption)?.let { emoji ->
+                val emojiSize = size * 1.15f
+                emojiPaint.textSize = emojiSize
+                val pop = easeOutBack((elapsed / 300f).coerceIn(0f, 1f))
+                val roomAbove = top - padY - emojiSize * 1.05f
+                // Above the caption, or below it when the caption sits at the very top.
+                val emojiBaseline = if (roomAbove > margin) top - padY - emojiSize * 0.2f else top + blockHeight + padY + emojiSize * 0.95f
+                canvas.save()
+                canvas.scale(pop, pop, w / 2f, emojiBaseline - emojiSize * 0.4f)
+                emojiPaint.alpha = (255 * alpha).roundToInt().coerceIn(0, 255)
+                canvas.drawText(emoji, w / 2f - emojiPaint.measureText(emoji) / 2f, emojiBaseline, emojiPaint)
+                canvas.restore()
+            }
+        }
         canvas.restore()
+    }
+
+    /** Word-wraps [text] into lines no wider than [maxWidth]; returns (line, width) pairs. */
+    private fun wrap(text: String, typeface: android.graphics.Typeface, textSize: Float, spacing: Float, maxWidth: Float): List<Pair<String, Float>> {
+        measure.typeface = typeface
+        measure.textSize = textSize
+        measure.letterSpacing = spacing
+        val out = mutableListOf<Pair<String, Float>>()
+        var line = StringBuilder()
+        for (token in text.split(' ').filter { it.isNotEmpty() }) {
+            val candidate = if (line.isEmpty()) token else "$line $token"
+            if (line.isNotEmpty() && measure.measureText(candidate) > maxWidth) {
+                out += line.toString() to measure.measureText(line.toString())
+                line = StringBuilder(token)
+            } else {
+                line = StringBuilder(candidate)
+            }
+        }
+        if (line.isNotEmpty()) out += line.toString() to measure.measureText(line.toString())
+        return out.take(MAX_TRANSLATION_LINES)
     }
 
     private fun drawWord(
@@ -244,6 +316,11 @@ class CaptionRenderer(private val fonts: FontRegistry) {
     private fun contrastOn(color: Int): Int {
         val luminance = (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255.0
         return if (luminance > 0.55) 0xFF0E0E12.toInt() else Color.WHITE
+    }
+
+    private companion object {
+        const val TRANSLATION_SCALE = 0.62f
+        const val MAX_TRANSLATION_LINES = 3
     }
 
     private fun easeOutCubic(t: Float): Float = 1f - (1f - t).pow(3)

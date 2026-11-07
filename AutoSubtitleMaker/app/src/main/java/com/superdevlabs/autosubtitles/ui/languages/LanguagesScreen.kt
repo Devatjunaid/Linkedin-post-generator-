@@ -2,6 +2,7 @@ package com.superdevlabs.autosubtitles.ui.languages
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import android.app.ActivityManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,8 +50,11 @@ import com.superdevlabs.autosubtitles.AppContainer
 import com.superdevlabs.autosubtitles.data.AppSettings
 import com.superdevlabs.autosubtitles.speech.ModelCatalog
 import com.superdevlabs.autosubtitles.speech.ModelState
-import com.superdevlabs.autosubtitles.speech.SpeechModel
+import com.superdevlabs.autosubtitles.speech.SpeechEngine
+import com.superdevlabs.autosubtitles.speech.SpokenLanguage
+import com.superdevlabs.autosubtitles.speech.WhisperCatalog
 import com.superdevlabs.autosubtitles.ui.components.SectionLabel
+import com.superdevlabs.autosubtitles.ui.components.Segmented
 import com.superdevlabs.autosubtitles.ui.components.pressable
 import com.superdevlabs.autosubtitles.ui.theme.AppColors
 import kotlinx.coroutines.flow.SharingStarted
@@ -61,16 +67,30 @@ class LanguagesViewModel(private val container: AppContainer) : ViewModel() {
     val settings: StateFlow<AppSettings> = container.settings.settings
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppSettings())
 
+    fun setEngine(engine: SpeechEngine) {
+        viewModelScope.launch { container.settings.setEngine(engine) }
+        container.telemetry.event("engine_selected", "engine" to engine.id)
+    }
+
     fun select(id: String) {
         viewModelScope.launch { container.settings.setLanguage(id) }
         if (!container.models.isInstalled(id)) container.models.startInstall(id)
+    }
+
+    fun selectWhisperModel(id: String) {
+        viewModelScope.launch { container.settings.setWhisperModel(id) }
+        if (!container.models.isInstalled(id)) container.models.startInstall(id)
+    }
+
+    fun selectWhisperLanguage(code: String) {
+        viewModelScope.launch { container.settings.setWhisperLanguage(code) }
     }
 
     fun download(id: String) = container.models.startInstall(id)
 
     fun delete(id: String) {
         viewModelScope.launch {
-            container.transcriber.release()
+            if (WhisperCatalog.isWhisper(id)) container.whisper.release() else container.transcriber.release()
             container.models.delete(id)
         }
     }
@@ -81,6 +101,14 @@ fun LanguagesScreen(container: AppContainer, contentPadding: PaddingValues) {
     val vm: LanguagesViewModel = viewModel(factory = viewModelFactory { initializer { LanguagesViewModel(container) } })
     val states by vm.states.collectAsStateWithLifecycle()
     val settings by vm.settings.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val ramGb = remember {
+        val info = ActivityManager.MemoryInfo()
+        context.getSystemService(ActivityManager::class.java)?.getMemoryInfo(info)
+        // totalMem is slightly below the marketing size (e.g. 7.4 GB on an "8 GB" phone).
+        (info.totalMem / 1_000_000_000.0 + 0.6).toInt()
+    }
+    val accurate = settings.engine == SpeechEngine.ACCURATE
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().statusBarsPadding(),
@@ -88,32 +116,103 @@ fun LanguagesScreen(container: AppContainer, contentPadding: PaddingValues) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item {
-            Column(Modifier.padding(bottom = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("Spoken language", style = MaterialTheme.typography.headlineMedium)
+            Column(Modifier.padding(bottom = 4.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("Speech engine", style = MaterialTheme.typography.headlineMedium)
                 Text(
-                    "Pick the language people speak in your videos. Each model downloads once, then subtitles " +
-                        "are generated fully offline on your phone — free, private, no limits.",
+                    "Everything runs offline on your phone — free, private, no limits. Models download once.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = AppColors.Muted,
                 )
             }
         }
-        items(ModelCatalog.models, key = { it.id }) { model ->
-            ModelRow(
-                model = model,
-                state = states[model.id] ?: ModelState.NotInstalled,
-                selected = settings.languageId == model.id,
-                onSelect = { vm.select(model.id) },
-                onDownload = { vm.download(model.id) },
-                onDelete = { vm.delete(model.id) },
+        item {
+            Segmented(
+                options = SpeechEngine.entries,
+                selected = settings.engine,
+                label = { if (it == SpeechEngine.ACCURATE) "✨ Accurate" else "⚡ Fast" },
+                onSelect = vm::setEngine,
+                modifier = Modifier.fillMaxWidth(),
             )
+        }
+        item {
+            Text(
+                if (accurate) {
+                    "Whisper AI: punctuation, capital letters, names and accents. 50+ languages, auto-detect. " +
+                        "Takes longer on long videos."
+                } else {
+                    "Vosk: very fast with exact word timing. No punctuation. Best for quick clips in one language."
+                },
+                style = MaterialTheme.typography.bodySmall,
+                color = AppColors.Soft,
+                modifier = Modifier.padding(horizontal = 4.dp),
+            )
+        }
+
+        if (accurate) {
+            item { SectionLabel("Model", Modifier.padding(top = 8.dp)) }
+            items(WhisperCatalog.models, key = { it.id }) { model ->
+                ModelRow(
+                    title = model.name,
+                    detail = if (ramGb in 1 until model.minRamGb) "${model.detail} · may be slow on this phone" else model.detail,
+                    sizeMb = model.sizeMb,
+                    state = states[model.id] ?: ModelState.NotInstalled,
+                    selected = settings.whisperModelId == model.id,
+                    onSelect = { vm.selectWhisperModel(model.id) },
+                    onDownload = { vm.download(model.id) },
+                    onDelete = { vm.delete(model.id) },
+                )
+            }
+            item { SectionLabel("Spoken language", Modifier.padding(top = 8.dp)) }
+            items(WhisperCatalog.languages, key = { "w-" + it.code }) { language ->
+                LanguageRow(
+                    language = language,
+                    selected = settings.whisperLanguage == language.code,
+                    onSelect = { vm.selectWhisperLanguage(language.code) },
+                )
+            }
+        } else {
+            item { SectionLabel("Spoken language", Modifier.padding(top = 8.dp)) }
+            items(ModelCatalog.models, key = { it.id }) { model ->
+                ModelRow(
+                    title = model.language,
+                    detail = model.detail,
+                    sizeMb = model.sizeMb,
+                    state = states[model.id] ?: ModelState.NotInstalled,
+                    selected = settings.languageId == model.id,
+                    onSelect = { vm.select(model.id) },
+                    onDownload = { vm.download(model.id) },
+                    onDelete = { vm.delete(model.id) },
+                )
+            }
         }
     }
 }
 
 @Composable
+private fun LanguageRow(language: SpokenLanguage, selected: Boolean, onSelect: () -> Unit) {
+    val border by animateColorAsState(if (selected) AppColors.Lime else AppColors.Line, label = "border")
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(AppColors.Surface)
+            .border(1.5.dp, border, RoundedCornerShape(16.dp))
+            .pressable(onClick = onSelect, role = Role.RadioButton, pressedScale = 0.97f)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(18.dp).clip(CircleShape).background(if (selected) AppColors.Lime else AppColors.SurfaceHigh))
+        Spacer(Modifier.width(14.dp))
+        Text(language.name, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+        Text(language.english, style = MaterialTheme.typography.bodySmall, color = AppColors.Muted)
+    }
+}
+
+@Composable
 private fun ModelRow(
-    model: SpeechModel,
+    title: String,
+    detail: String,
+    sizeMb: Int,
     state: ModelState,
     selected: Boolean,
     onSelect: () -> Unit,
@@ -136,15 +235,15 @@ private fun ModelRow(
         )
         Spacer(Modifier.width(14.dp))
         Column(Modifier.weight(1f)) {
-            Text(model.language, style = MaterialTheme.typography.titleMedium)
+            Text(title, style = MaterialTheme.typography.titleMedium)
             val status = when (state) {
                 ModelState.Installed -> "Ready offline"
                 is ModelState.Downloading -> "Downloading ${(state.progress * 100).toInt()}%"
                 ModelState.Unpacking -> "Preparing…"
                 is ModelState.Failed -> "Failed: ${state.message}"
-                ModelState.NotInstalled -> "${model.sizeMb} MB download"
+                ModelState.NotInstalled -> "$sizeMb MB download"
             }
-            SectionLabel("${model.detail} · $status")
+            SectionLabel("$detail · $status")
             if (state is ModelState.Downloading) {
                 val progress by animateFloatAsState(state.progress, label = "dl")
                 Spacer(Modifier.height(6.dp))
@@ -158,7 +257,7 @@ private fun ModelRow(
             ModelState.Installed -> Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Rounded.CheckCircle, contentDescription = "Installed", tint = AppColors.Lime)
                 Box(Modifier.size(44.dp).pressable(onClick = onDelete), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Rounded.DeleteOutline, contentDescription = "Delete ${model.language} model", tint = AppColors.Muted)
+                    Icon(Icons.Rounded.DeleteOutline, contentDescription = "Delete $title model", tint = AppColors.Muted)
                 }
             }
             is ModelState.Downloading, ModelState.Unpacking ->
@@ -167,7 +266,7 @@ private fun ModelRow(
                 Icon(Icons.Rounded.Refresh, contentDescription = "Retry download", tint = AppColors.Coral)
             }
             ModelState.NotInstalled -> Box(Modifier.size(44.dp).pressable(onClick = onDownload), contentAlignment = Alignment.Center) {
-                Icon(Icons.Rounded.Download, contentDescription = "Download ${model.language}", tint = AppColors.Text)
+                Icon(Icons.Rounded.Download, contentDescription = "Download $title", tint = AppColors.Text)
             }
         }
     }

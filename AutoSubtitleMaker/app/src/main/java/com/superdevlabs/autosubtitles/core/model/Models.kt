@@ -17,6 +17,8 @@ data class Caption(
     val startMs: Long,
     val endMs: Long,
     val words: List<Word>,
+    /** Optional second line (translation) shown under the caption. */
+    val translation: String? = null,
 ) {
     val text: String get() = words.joinToString(" ") { it.text }
 }
@@ -61,4 +63,9 @@ data class CaptionStyle(
     /** Vertical centre of the caption block: 0 = top of the frame, 1 = bottom. */
     val positionY: Float = 0.78f,
     val wordsPerCaption: Int = 3,
+    /** Pops a matching emoji above captions with words like "money", "love", "fire". */
+    val autoEmoji: Boolean = false,
+    /** Colours important words (numbers, power words) in [keywordColor] all the time. */
+    val keywordHighlight: Boolean = false,
+    val keywordColor: Int = 0xFF4DFF88.toInt(),
 )

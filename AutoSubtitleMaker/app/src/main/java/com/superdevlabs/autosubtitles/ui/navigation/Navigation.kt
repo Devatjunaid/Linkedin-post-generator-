@@ -36,6 +36,7 @@ import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.VideoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +47,10 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -64,6 +68,7 @@ import com.superdevlabs.autosubtitles.ui.projects.ProjectsScreen
 import com.superdevlabs.autosubtitles.ui.settings.SettingsScreen
 import com.superdevlabs.autosubtitles.ui.splash.SplashScreen
 import com.superdevlabs.autosubtitles.ui.theme.AppColors
+import com.superdevlabs.autosubtitles.work.Notifications
 import kotlinx.serialization.Serializable
 
 @Serializable data object SplashRoute
@@ -104,6 +109,23 @@ private val backExit: AnimatedContentTransitionScope<NavBackStackEntry>.() -> Ex
 fun AppNavHost(container: AppContainer, showSplash: Boolean) {
     val nav = rememberNavController()
     val activity = LocalActivity.current
+
+    // Opening a project from a tapped "ready" notification (after the splash, if any).
+    val pending by container.pendingOpen.collectAsStateWithLifecycle()
+    val entry by nav.currentBackStackEntryAsState()
+    LaunchedEffect(pending, entry?.destination) {
+        val (projectId, target) = pending ?: return@LaunchedEffect
+        val destination = entry?.destination ?: return@LaunchedEffect
+        if (destination.hasRoute<SplashRoute>()) return@LaunchedEffect
+        container.pendingOpen.value = null
+        val project = container.projects.get(projectId) ?: return@LaunchedEffect
+        val route: Any = when {
+            target == Notifications.TARGET_EXPORT && project.isReady -> ExportRoute(projectId)
+            project.isReady -> EditorRoute(projectId)
+            else -> ProcessingRoute(projectId)
+        }
+        nav.navigate(route) { launchSingleTop = true }
+    }
 
     NavHost(
         navController = nav,

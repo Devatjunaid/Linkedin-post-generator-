@@ -54,9 +54,9 @@ import com.superdevlabs.autosubtitles.R
 import com.superdevlabs.autosubtitles.core.captions.CaptionSegmenter
 import com.superdevlabs.autosubtitles.core.captions.StylePresets
 import com.superdevlabs.autosubtitles.data.AppSettings
-import com.superdevlabs.autosubtitles.speech.ModelCatalog
 import com.superdevlabs.autosubtitles.ui.components.Segmented
 import com.superdevlabs.autosubtitles.ui.components.SectionLabel
+import com.superdevlabs.autosubtitles.ui.components.ToggleRow
 import com.superdevlabs.autosubtitles.ui.components.pressable
 import com.superdevlabs.autosubtitles.ui.theme.AppColors
 import kotlinx.coroutines.launch
@@ -88,7 +88,12 @@ fun SettingsScreen(container: AppContainer, contentPadding: PaddingValues, onOpe
 
         item { SectionLabel("Defaults for new projects") }
         item {
-            SettingRow(Icons.Rounded.Translate, "Spoken language", ModelCatalog.byId(settings.languageId).language, onOpenLanguages)
+            SettingRow(
+                Icons.Rounded.Translate,
+                "Speech engine & language",
+                "${settings.engine.label} · ${settings.languageLabel}",
+                onOpenLanguages,
+            )
         }
         item {
             Column(Modifier.fillMaxWidth().tile().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -135,11 +140,21 @@ fun SettingsScreen(container: AppContainer, contentPadding: PaddingValues, onOpe
                 }
             }
         }
+        item {
+            ToggleRow(
+                title = "Share usage & crash reports",
+                checked = settings.shareDiagnostics,
+                onChange = { allowed -> scope.launch { container.settings.setShareDiagnostics(allowed) } },
+                hint = "Anonymous. Helps fix crashes. Never includes your videos or captions.",
+                modifier = Modifier.border(1.dp, AppColors.Line, RoundedCornerShape(16.dp)),
+            )
+        }
         item { SettingRow(Icons.Rounded.Description, "Privacy policy", "How the app handles data") { open(privacyUrl) } }
         item {
             InfoTile(
-                "Your videos never leave your phone. Speech recognition, styling and export all run on-device. " +
-                    "The internet is only used to download language models and to show ads.",
+                "Your videos never leave your phone. Speech recognition, translation, styling and export all run " +
+                    "on-device. The internet is only used to download speech and translation models, to show ads " +
+                    "and (if allowed above) to send anonymous crash reports.",
             )
         }
 
@@ -205,6 +220,9 @@ private fun Modifier.tile(): Modifier = this
 
 private const val LICENSES = """
 Speech recognition — Vosk (alphacephei.com/vosk), Apache License 2.0. Language models: Apache License 2.0.
+Accurate engine — sherpa-onnx (k2-fsa), Apache License 2.0; ONNX Runtime, MIT License; OpenAI Whisper models, MIT License; Silero VAD, MIT License.
+Translation — Google ML Kit on-device translation, Google terms of service.
+Firebase Crashlytics & Analytics — Google terms of service.
 JNA — Apache License 2.0 / LGPL 2.1.
 AndroidX, Jetpack Compose, Media3 — Apache License 2.0.
 Kotlin, kotlinx.coroutines, kotlinx.serialization — Apache License 2.0.

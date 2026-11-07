@@ -1,6 +1,7 @@
 package com.superdevlabs.autosubtitles.data
 
 import android.content.Context
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
@@ -10,6 +11,9 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import kotlinx.coroutines.flow.Flow
 
 object ProjectStatus {
@@ -31,12 +35,20 @@ data class ProjectEntity(
     /** Display size (rotation already applied). */
     val width: Int,
     val height: Int,
+    /**
+     * Fast engine: Vosk model id (e.g. "en-us").
+     * Accurate engine: Whisper language code, or "auto".
+     */
     val languageId: String,
     val status: String,
     val captionsJson: String,
     val styleJson: String,
     val createdAt: Long,
     val updatedAt: Long,
+    /** "vosk" or a Whisper model id such as "whisper-base". */
+    @ColumnInfo(defaultValue = "vosk") val engine: String = "vosk",
+    /** Language actually spoken (ISO 639-1), filled in after transcription. Used for translation. */
+    @ColumnInfo(defaultValue = "") val sourceLanguage: String = "",
 )
 
 @Dao
@@ -57,14 +69,24 @@ interface ProjectDao {
     suspend fun delete(id: String)
 }
 
-@Database(entities = [ProjectEntity::class], version = 1, exportSchema = false)
+@Database(entities = [ProjectEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun projects(): ProjectDao
 
     companion object {
         fun create(context: Context): AppDatabase =
             Room.databaseBuilder(context, AppDatabase::class.java, "subtitles.db")
-                .fallbackToDestructiveMigration(dropAllTables = true)
+                .addMigrations(MIGRATION_1_2)
+                // Only a downgrade (installing an older build over a newer one) may wipe data.
+                .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
                 .build()
+
+        /** v1.1: Whisper engine + detected language. Keeps every existing project. */
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL("ALTER TABLE projects ADD COLUMN engine TEXT NOT NULL DEFAULT 'vosk'")
+                connection.execSQL("ALTER TABLE projects ADD COLUMN sourceLanguage TEXT NOT NULL DEFAULT ''")
+            }
+        }
     }
 }

@@ -73,6 +73,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -100,7 +104,9 @@ import com.superdevlabs.autosubtitles.ui.theme.AppColors
 import java.util.Locale
 import kotlin.math.roundToInt
 
-enum class EditorTab(val label: String) { CAPTIONS("Captions"), STYLE("Style"), FONT("Font"), COLOR("Color"), MOTION("Motion"), LAYOUT("Layout") }
+enum class EditorTab(val label: String) {
+    CAPTIONS("Captions"), STYLE("Style"), TRANSLATE("Translate"), FONT("Font"), COLOR("Color"), MOTION("Motion"), LAYOUT("Layout"),
+}
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -178,6 +184,7 @@ fun EditorScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
     var tab by remember { mutableStateOf(EditorTab.CAPTIONS) }
     var editing by remember { mutableStateOf<Caption?>(null) }
     var renaming by remember { mutableStateOf(false) }
+    var showSafeZone by remember { mutableStateOf(false) }
     val renderer = remember { CaptionRenderer(container.fonts) }
 
     Box(Modifier.fillMaxSize().background(AppColors.Ink)) {
@@ -259,6 +266,7 @@ fun EditorScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
                                 }
                             },
                     )
+                    if (showSafeZone) SafeZoneOverlay(Modifier.fillMaxSize())
                     if (!isPlaying) {
                         Box(
                             Modifier.align(Alignment.Center).size(54.dp).clip(CircleShape).background(AppColors.Ink.copy(alpha = 0.55f)),
@@ -338,11 +346,26 @@ fun EditorScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
                             },
                             onEdit = { editing = it },
                         )
-                        EditorTab.STYLE -> StylePanel(container.fonts, ui.style, vm::applyPreset)
+                        EditorTab.STYLE -> StylePanel(container.fonts, ui.style, vm::applyPreset, vm::updateStyle)
+                        EditorTab.TRANSLATE -> TranslatePanel(
+                            translator = container.translator,
+                            sourceCode = project.spokenLanguageCode,
+                            hasTranslation = ui.captions.any { !it.translation.isNullOrBlank() },
+                            state = ui.translation,
+                            onTranslate = { code, mode ->
+                                player.pause()
+                                vm.translate(code, mode)
+                            },
+                            onRemove = vm::removeTranslation,
+                        )
                         EditorTab.FONT -> FontPanel(container.fonts, ui.style, vm::updateStyle, vm::importFont)
                         EditorTab.COLOR -> ColorPanel(ui.style, vm::updateStyle)
                         EditorTab.MOTION -> MotionPanel(container.fonts, ui.style, vm::updateStyle)
-                        EditorTab.LAYOUT -> LayoutPanel(ui.style, vm::updateStyle, vm::setWordsPerCaption)
+                        EditorTab.LAYOUT -> LayoutPanel(
+                            ui.style, vm::updateStyle, vm::setWordsPerCaption,
+                            showSafeZone = showSafeZone,
+                            onSafeZone = { showSafeZone = it },
+                        )
                     }
                 }
             }
@@ -390,6 +413,30 @@ fun EditorScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
 }
 
 private val Color0 = androidx.compose.ui.graphics.Color.Black
+
+/**
+ * Areas that TikTok, Reels and Shorts cover with their own buttons and text (union of the
+ * three apps, 9:16). Captions placed in the clear middle stay readable everywhere.
+ */
+@Composable
+private fun SafeZoneOverlay(modifier: Modifier = Modifier) {
+    Canvas(modifier) {
+        val zone = AppColors.Coral.copy(alpha = 0.28f)
+        val w = size.width
+        val h = size.height
+        // Top bar (tabs, search, Live), right-hand action column, bottom caption/music block.
+        drawRect(zone, topLeft = Offset(0f, 0f), size = Size(w, h * 0.09f))
+        drawRect(zone, topLeft = Offset(w * 0.84f, h * 0.38f), size = Size(w * 0.16f, h * 0.44f))
+        drawRect(zone, topLeft = Offset(0f, h * 0.82f), size = Size(w, h * 0.18f))
+        val dash = PathEffect.dashPathEffect(floatArrayOf(14f, 10f))
+        drawRect(
+            color = AppColors.Lime,
+            topLeft = Offset(w * 0.04f, h * 0.11f),
+            size = Size(w * 0.78f, h * 0.69f),
+            style = Stroke(width = 2.dp.toPx(), pathEffect = dash),
+        )
+    }
+}
 
 @Composable
 private fun TimeLabel(positionMs: () -> Long, durationMs: Long, modifier: Modifier = Modifier) {

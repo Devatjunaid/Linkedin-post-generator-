@@ -60,6 +60,8 @@ import com.superdevlabs.autosubtitles.core.model.ShadowMode
 import com.superdevlabs.autosubtitles.core.model.TextCase
 import com.superdevlabs.autosubtitles.core.render.FontRegistry
 import com.superdevlabs.autosubtitles.ui.components.ChoiceCard
+import com.superdevlabs.autosubtitles.ui.components.NewBadge
+import com.superdevlabs.autosubtitles.ui.components.ToggleRow
 import com.superdevlabs.autosubtitles.ui.components.ColorSwatch
 import com.superdevlabs.autosubtitles.ui.components.SectionLabel
 import com.superdevlabs.autosubtitles.ui.components.Segmented
@@ -167,8 +169,25 @@ fun CaptionsPanel(
 // ---- Style presets --------------------------------------------------------------------------
 
 @Composable
-fun StylePanel(fonts: FontRegistry, style: CaptionStyle, onPreset: (String) -> Unit) {
+fun StylePanel(fonts: FontRegistry, style: CaptionStyle, onPreset: (String) -> Unit, onStyle: StyleEdit) {
     PanelColumn {
+        SectionLabel("Viral boosters")
+        ToggleRow(
+            title = "Auto emoji 🔥",
+            checked = style.autoEmoji,
+            onChange = { on -> onStyle { it.copy(autoEmoji = on) } },
+            hint = "Pops a matching emoji on words like money, love, fire",
+        )
+        ToggleRow(
+            title = "Highlight keywords",
+            checked = style.keywordHighlight,
+            onChange = { on -> onStyle { it.copy(keywordHighlight = on) } },
+            hint = "Numbers and power words stay coloured",
+        )
+        if (style.keywordHighlight) {
+            SwatchRow(StylePresets.keywordColors, style.keywordColor, "Keyword") { c -> onStyle { it.copy(keywordColor = c) } }
+        }
+
         SectionLabel("Presets")
         FlowRow(
             Modifier.fillMaxWidth(),
@@ -182,9 +201,12 @@ fun StylePanel(fonts: FontRegistry, style: CaptionStyle, onPreset: (String) -> U
                     onClick = { onPreset(preset.id) },
                     modifier = Modifier.weight(1f).height(96.dp),
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        MiniCaptionPreview(fonts, preset.style, Modifier.fillMaxWidth().height(64.dp))
-                        Text(preset.name, style = MaterialTheme.typography.labelMedium, color = AppColors.Soft)
+                    Box {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            MiniCaptionPreview(fonts, preset.style, Modifier.fillMaxWidth().height(64.dp))
+                            Text(preset.name, style = MaterialTheme.typography.labelMedium, color = AppColors.Soft)
+                        }
+                        if (preset.isNew) NewBadge(Modifier.align(Alignment.TopEnd).padding(4.dp))
                     }
                 }
             }
@@ -401,8 +423,20 @@ fun MotionPanel(fonts: FontRegistry, style: CaptionStyle, onStyle: StyleEdit) {
 private enum class Placement(val label: String, val y: Float) { TOP("Top", 0.16f), MIDDLE("Middle", 0.5f), BOTTOM("Bottom", 0.78f) }
 
 @Composable
-fun LayoutPanel(style: CaptionStyle, onStyle: StyleEdit, onWordsPerCaption: (Int) -> Unit) {
+fun LayoutPanel(
+    style: CaptionStyle,
+    onStyle: StyleEdit,
+    onWordsPerCaption: (Int) -> Unit,
+    showSafeZone: Boolean,
+    onSafeZone: (Boolean) -> Unit,
+) {
     PanelColumn {
+        ToggleRow(
+            title = "TikTok / Reels / Shorts safe zone",
+            checked = showSafeZone,
+            onChange = onSafeZone,
+            hint = "Shows where the app buttons cover your video (preview only)",
+        )
         SectionLabel("Position")
         val nearest = Placement.entries.minBy { kotlin.math.abs(it.y - style.positionY) }
         Segmented(
@@ -428,7 +462,7 @@ fun LayoutPanel(style: CaptionStyle, onStyle: StyleEdit, onWordsPerCaption: (Int
             Box(Modifier.size(8.dp).clip(RoundedCornerShape(4.dp)).background(AppColors.Coral))
             Spacer(Modifier.width(8.dp))
             Text(
-                "Changing this re-groups all captions (your text edits are kept).",
+                "Changing this re-groups all captions (your text edits are kept, 2nd-line translations are removed).",
                 style = MaterialTheme.typography.bodySmall,
                 color = AppColors.Muted,
             )

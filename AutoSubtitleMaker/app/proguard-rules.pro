@@ -18,3 +18,8 @@
 -keepclasseswithmembers class com.superdevlabs.autosubtitles.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
+
+# --- sherpa-onnx (offline Whisper) ---
+# The native library reads and creates these Kotlin classes by name (fields, constructors),
+# so they must keep their exact names and members.
+-keep class com.k2fsa.sherpa.onnx.** { *; }

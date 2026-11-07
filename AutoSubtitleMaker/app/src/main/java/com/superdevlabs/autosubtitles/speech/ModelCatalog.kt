@@ -45,4 +45,7 @@ object ModelCatalog {
     const val DEFAULT_ID = "en-us"
 
     fun byId(id: String): SpeechModel = models.firstOrNull { it.id == id } ?: models.first()
+
+    /** ISO 639-1 code of a Vosk model's language ("en-us" → "en", "zh" → "zh"). */
+    fun languageCode(id: String): String = byId(id).id.substringBefore('-')
 }

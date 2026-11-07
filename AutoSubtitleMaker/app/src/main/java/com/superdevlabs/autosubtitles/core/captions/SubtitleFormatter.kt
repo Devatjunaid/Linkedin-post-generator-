@@ -30,14 +30,14 @@ object SubtitleFormatter {
         SubtitleFormat.SRT -> srt(captions, style)
         SubtitleFormat.VTT -> vtt(captions, style)
         SubtitleFormat.ASS -> ass(captions, style, fontName, videoWidth, videoHeight)
-        SubtitleFormat.TXT -> captions.joinToString("\n") { applyCase(it.text, style.textCase) } + "\n"
+        SubtitleFormat.TXT -> captions.joinToString("\n") { cueText(it, style) } + "\n"
     }
 
     fun srt(captions: List<Caption>, style: CaptionStyle): String = buildString {
         captions.forEachIndexed { index, caption ->
             append(index + 1).append('\n')
             append(srtTime(caption.startMs)).append(" --> ").append(srtTime(caption.endMs)).append('\n')
-            append(applyCase(caption.text, style.textCase)).append("\n\n")
+            append(cueText(caption, style)).append("\n\n")
         }
     }
 
@@ -45,7 +45,7 @@ object SubtitleFormatter {
         append("WEBVTT\n\n")
         captions.forEach { caption ->
             append(vttTime(caption.startMs)).append(" --> ").append(vttTime(caption.endMs)).append('\n')
-            append(applyCase(caption.text, style.textCase)).append("\n\n")
+            append(cueText(caption, style)).append("\n\n")
         }
     }
 
@@ -107,9 +107,17 @@ object SubtitleFormatter {
                 } else {
                     append(escapeAss(applyCase(caption.text, style.textCase)))
                 }
+                caption.translation?.takeIf { it.isNotBlank() }?.let { append("\\N").append(escapeAss(applyCase(it.trim(), style.textCase))) }
                 append('\n')
             }
         }
+    }
+
+    /** Caption text plus its translation on a second line, when there is one. */
+    private fun cueText(caption: Caption, style: CaptionStyle): String {
+        val main = applyCase(caption.text, style.textCase)
+        val second = caption.translation?.trim()?.takeIf { it.isNotEmpty() } ?: return main
+        return main + "\n" + applyCase(second, style.textCase)
     }
 
     fun applyCase(text: String, case: TextCase): String = when (case) {

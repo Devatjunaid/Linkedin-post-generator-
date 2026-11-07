@@ -1,6 +1,8 @@
 package com.superdevlabs.autosubtitles.ui.home
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -25,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -67,6 +70,8 @@ import com.superdevlabs.autosubtitles.data.AppSettings
 import com.superdevlabs.autosubtitles.data.Project
 import com.superdevlabs.autosubtitles.speech.ModelCatalog
 import com.superdevlabs.autosubtitles.speech.ModelState
+import com.superdevlabs.autosubtitles.speech.SpeechEngine
+import com.superdevlabs.autosubtitles.speech.WhisperCatalog
 import com.superdevlabs.autosubtitles.ui.components.ExitDialog
 import com.superdevlabs.autosubtitles.ui.components.SectionLabel
 import com.superdevlabs.autosubtitles.ui.components.Thumbnail
@@ -90,7 +95,14 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
     suspend fun createProject(uri: Uri): String {
         val current = container.settings.current()
         val style = StylePresets.byId(current.presetId).style.copy(wordsPerCaption = current.wordsPerCaption)
-        return container.projects.create(uri, current.languageId, style)
+        container.telemetry.event("video_picked", "engine" to current.engineId, "preset" to current.presetId)
+        return container.projects.create(uri, current.engineId, current.projectLanguageId, style)
+    }
+
+    suspend fun shouldAskNotifications(): Boolean = !container.settings.current().askedNotifications
+
+    fun markAskedNotifications() {
+        viewModelScope.launch { container.settings.markAskedNotifications() }
     }
 }
 
@@ -110,8 +122,25 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     var showExit by rememberSaveable { mutableStateOf(false) }
 
+    var pendingUri by remember { mutableStateOf<Uri?>(null) }
+    val start: (Uri) -> Unit = { uri -> scope.launch { onStartProject(vm.createProject(uri)) } }
+    // Asked once, right before the first job, so the "subtitles ready" notification can show.
+    val notificationPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        vm.markAskedNotifications()
+        pendingUri?.let(start)
+        pendingUri = null
+    }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) scope.launch { onStartProject(vm.createProject(uri)) }
+        if (uri != null) {
+            scope.launch {
+                if (Build.VERSION.SDK_INT >= 33 && vm.shouldAskNotifications()) {
+                    pendingUri = uri
+                    notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    start(uri)
+                }
+            }
+        }
     }
     val pickVideo = {
         picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
@@ -122,8 +151,10 @@ fun HomeScreen(
         ExitDialog(onStay = { showExit = false }, onExit = onExit)
     }
 
-    val model = ModelCatalog.byId(settings.languageId)
-    val modelState = modelStates[model.id] ?: ModelState.NotInstalled
+    val accurate = settings.engine == SpeechEngine.ACCURATE
+    val modelId = if (accurate) settings.whisperModelId else ModelCatalog.byId(settings.languageId).id
+    val modelSizeMb = if (accurate) WhisperCatalog.byId(modelId).sizeMb else ModelCatalog.byId(modelId).sizeMb
+    val modelState = modelStates[modelId] ?: ModelState.NotInstalled
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().statusBarsPadding(),
@@ -138,12 +169,12 @@ fun HomeScreen(
                 BrandMark(34.dp)
                 Spacer(Modifier.width(8.dp))
                 Text("Auto Subtitles", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
-                LanguageChip(model.language, onOpenLanguages)
+                LanguageChip("${settings.languageLabel} · ${settings.engine.label}", onOpenLanguages)
             }
         }
         item {
             Column(Modifier.padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                EngineStatus(modelState, model.sizeMb)
+                EngineStatus(modelState, modelSizeMb)
                 Text(
                     buildAnnotatedString {
                         append("Pick a video.\n")
@@ -203,7 +234,13 @@ private fun LanguageChip(language: String, onClick: () -> Unit) {
             .padding(start = 14.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(language, style = MaterialTheme.typography.titleSmall)
+        Text(
+            language,
+            style = MaterialTheme.typography.titleSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.widthIn(max = 150.dp),
+        )
         Icon(Icons.Rounded.KeyboardArrowDown, contentDescription = "Change language", tint = AppColors.Muted)
     }
 }
@@ -318,7 +355,7 @@ fun FilmCard(project: Project, tilt: Float, onClick: () -> Unit) {
         Column(Modifier.padding(horizontal = 2.dp)) {
             Text(project.name, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
-                "${formatDuration(project.durationMs)} · ${ModelCatalog.byId(project.languageId).id.uppercase()} · " +
+                "${formatDuration(project.durationMs)} · ${project.languageTag} · " +
                     if (project.isReady) "done" else "draft",
                 style = MaterialTheme.typography.labelSmall,
                 color = AppColors.Muted,

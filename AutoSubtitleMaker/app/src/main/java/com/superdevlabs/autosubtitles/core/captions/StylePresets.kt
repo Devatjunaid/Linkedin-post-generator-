@@ -7,7 +7,7 @@ import com.superdevlabs.autosubtitles.core.model.HighlightMode
 import com.superdevlabs.autosubtitles.core.model.ShadowMode
 import com.superdevlabs.autosubtitles.core.model.TextCase
 
-data class StylePreset(val id: String, val name: String, val style: CaptionStyle)
+data class StylePreset(val id: String, val name: String, val style: CaptionStyle, val isNew: Boolean = false)
 
 object StylePresets {
 
@@ -20,11 +20,70 @@ object StylePresets {
     const val CREAM = 0xFFFFF4D6.toInt()
     const val INK = 0xFF0E0E12.toInt()
     const val BLACK = 0xFF000000.toInt()
+    const val GREEN = 0xFF4DFF88.toInt()
+    const val YELLOW = 0xFFFFD60A.toInt()
+    const val RED = 0xFFFF3B3B.toInt()
 
     val textColors = listOf(WHITE, CREAM, SUN, ICE, LILAC, CORAL, LIME, INK)
-    val accentColors = listOf(LIME, CORAL, ICE, SUN, LILAC, WHITE, INK)
+    val accentColors = listOf(LIME, CORAL, ICE, SUN, YELLOW, GREEN, RED, LILAC, WHITE, INK)
+    val keywordColors = listOf(GREEN, YELLOW, RED, LIME, CORAL, ICE, LILAC)
 
     val all: List<StylePreset> = listOf(
+        // ---- Trending short-video looks (v1.1) ----
+        StylePreset(
+            "viral", "Viral",
+            CaptionStyle(
+                presetId = "viral", fontId = "anton", textSize = 0.095f, letterSpacing = 0.01f,
+                textCase = TextCase.UPPER, highlightMode = HighlightMode.COLOR, highlightColor = YELLOW,
+                outlineWidth = 0.16f, outlineColor = BLACK, shadowMode = ShadowMode.DROP,
+                animation = CaptionAnimation.POP, autoEmoji = true, keywordHighlight = true, keywordColor = GREEN,
+                positionY = 0.7f, wordsPerCaption = 2,
+            ),
+            isNew = true,
+        ),
+        StylePreset(
+            "spotlight", "Spotlight",
+            CaptionStyle(
+                presetId = "spotlight", fontId = "poppins_black", textSize = 0.075f, letterSpacing = 0f,
+                textCase = TextCase.UPPER, highlightMode = HighlightMode.BOX, highlightColor = RED,
+                outlineWidth = 0.12f, outlineColor = BLACK, shadowMode = ShadowMode.DROP,
+                animation = CaptionAnimation.POP, keywordHighlight = false,
+            ),
+            isNew = true,
+        ),
+        StylePreset(
+            "hype", "Hype",
+            CaptionStyle(
+                presetId = "hype", fontId = "archivo_black", textSize = 0.088f, letterSpacing = 0f,
+                textCase = TextCase.UPPER, textColor = WHITE, highlightMode = HighlightMode.COLOR,
+                highlightColor = GREEN, outlineWidth = 0.18f, outlineColor = BLACK, shadowMode = ShadowMode.GLOW,
+                animation = CaptionAnimation.BOUNCE, autoEmoji = true, keywordHighlight = true, keywordColor = YELLOW,
+            ),
+            isNew = true,
+        ),
+        StylePreset(
+            "story", "Story",
+            CaptionStyle(
+                presetId = "story", fontId = "poppins_bold", textSize = 0.058f, letterSpacing = 0f,
+                textCase = TextCase.ORIGINAL, textColor = INK, highlightMode = HighlightMode.COLOR,
+                highlightColor = CORAL, outlineWidth = 0f, backgroundMode = BackgroundMode.LINE_BOX,
+                backgroundColor = WHITE, backgroundOpacity = 1f, shadowMode = ShadowMode.NONE,
+                animation = CaptionAnimation.SLIDE_UP, autoEmoji = true,
+            ),
+            isNew = true,
+        ),
+        StylePreset(
+            "podcast", "Podcast",
+            CaptionStyle(
+                presetId = "podcast", fontId = "bricolage", textSize = 0.06f, letterSpacing = 0f,
+                textCase = TextCase.ORIGINAL, highlightMode = HighlightMode.COLOR, highlightColor = ICE,
+                outlineWidth = 0f, backgroundMode = BackgroundMode.BLOCK, backgroundColor = INK,
+                backgroundOpacity = 0.7f, shadowMode = ShadowMode.NONE, animation = CaptionAnimation.KARAOKE,
+                keywordHighlight = true, keywordColor = YELLOW, wordsPerCaption = 5,
+            ),
+            isNew = true,
+        ),
+        // ---- Classics ----
         StylePreset("pop", "Pop", CaptionStyle()),
         StylePreset(
             "karaoke", "Karaoke",

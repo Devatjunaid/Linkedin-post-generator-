@@ -10,6 +10,8 @@ import com.superdevlabs.autosubtitles.core.captions.StylePresets
 import com.superdevlabs.autosubtitles.core.model.Caption
 import com.superdevlabs.autosubtitles.core.model.CaptionStyle
 import com.superdevlabs.autosubtitles.data.Project
+import com.superdevlabs.autosubtitles.translate.TranslateMode
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
@@ -28,6 +30,14 @@ data class EditorUi(
     val selectedId: Long? = null,
     val canUndo: Boolean = false,
     val message: String? = null,
+    val translation: TranslationUi = TranslationUi(),
+)
+
+data class TranslationUi(
+    val running: Boolean = false,
+    val progress: Float = 0f,
+    val status: String = "",
+    val error: String? = null,
 )
 
 class EditorViewModel(private val container: AppContainer, private val projectId: String) : ViewModel() {
@@ -73,6 +83,7 @@ class EditorViewModel(private val container: AppContainer, private val projectId
         val preset = StylePresets.byId(id)
         commit(style = StylePresets.apply(preset, _ui.value.style))
         viewModelScope.launch { container.settings.setPreset(id) }
+        container.telemetry.event("preset_applied", "preset" to id)
     }
 
     /** Re-groups every word into captions of [count] words. */
@@ -121,6 +132,42 @@ class EditorViewModel(private val container: AppContainer, private val projectId
     }
 
     fun consumeMessage() = _ui.update { it.copy(message = null) }
+
+    /** Offline translation of every caption (undoable like any other edit). */
+    fun translate(targetCode: String, mode: TranslateMode) {
+        val start = _ui.value
+        val project = start.project ?: return
+        if (start.translation.running || start.captions.isEmpty()) return
+        val source = project.spokenLanguageCode
+        if (source.isBlank()) {
+            _ui.update { it.copy(translation = TranslationUi(error = "Unknown spoken language. Re-create the subtitles first.")) }
+            return
+        }
+        viewModelScope.launch {
+            _ui.update { it.copy(translation = TranslationUi(running = true, status = "Starting…")) }
+            try {
+                val result = container.translator.translate(
+                    captions = start.captions,
+                    sourceCode = source,
+                    targetCode = targetCode,
+                    mode = mode,
+                    wordsPerCaption = start.style.wordsPerCaption,
+                ) { progress, status ->
+                    _ui.update { it.copy(translation = it.translation.copy(progress = progress, status = status)) }
+                }
+                commit(captions = result, clearSelection = true)
+                _ui.update { it.copy(translation = TranslationUi(), message = "Translated. Tap undo to go back.") }
+                container.telemetry.event("captions_translated", "from" to source, "to" to targetCode, "mode" to mode.name)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _ui.update { it.copy(translation = TranslationUi(error = e.message ?: "Translation failed")) }
+                container.telemetry.recordError(e, "translate")
+            }
+        }
+    }
+
+    fun removeTranslation() = commit(captions = _ui.value.captions.map { it.copy(translation = null) })
 
     /** Writes any pending edit immediately (called when leaving the editor). */
     fun flush() {

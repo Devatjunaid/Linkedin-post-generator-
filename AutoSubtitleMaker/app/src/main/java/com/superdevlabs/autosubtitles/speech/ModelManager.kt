@@ -27,12 +27,17 @@ sealed interface ModelState {
     data class Failed(val message: String) : ModelState
 }
 
-/** Downloads, unpacks and deletes offline speech models under files/models/<id>. */
+/**
+ * Downloads, unpacks and deletes offline speech models under files/models/<id>.
+ * Handles both Vosk models (one zip) and Whisper models (several files).
+ */
 class ModelManager(private val context: Context, private val appScope: CoroutineScope) {
 
     private val root = File(context.filesDir, "models").apply { mkdirs() }
     private val locks = ConcurrentHashMap<String, Mutex>()
-    private val _states = MutableStateFlow(ModelCatalog.models.associate { it.id to initialState(it.id) })
+    private val _states = MutableStateFlow(
+        (ModelCatalog.models.map { it.id } + WhisperCatalog.models.map { it.id }).associateWith { initialState(it) },
+    )
     val states: StateFlow<Map<String, ModelState>> = _states.asStateFlow()
 
     fun modelDir(id: String): File = File(root, id)
@@ -54,6 +59,10 @@ class ModelManager(private val context: Context, private val appScope: Coroutine
                 setState(id, ModelState.Installed)
                 return
             }
+            if (WhisperCatalog.isWhisper(id)) {
+                installWhisper(WhisperCatalog.byId(id))
+                return
+            }
             val model = ModelCatalog.byId(id)
             val zip = File(context.cacheDir, "${model.id}.zip.part")
             try {
@@ -69,6 +78,37 @@ class ModelManager(private val context: Context, private val appScope: Coroutine
             } finally {
                 zip.delete()
             }
+        }
+    }
+
+    private suspend fun installWhisper(model: WhisperModel) {
+        val dir = modelDir(model.id)
+        val staging = File(root, "${model.id}.staging").apply { deleteRecursively(); mkdirs() }
+        try {
+            setState(model.id, ModelState.Downloading(0f))
+            // Rough byte weights so the progress bar moves smoothly across the three files.
+            val weights = mapOf(model.encoder to 0.2f, model.decoder to 0.78f, model.tokens to 0.02f)
+            var done = 0f
+            for (file in model.files) {
+                val weight = weights.getValue(file)
+                download(model.url(file), File(staging, file)) { p ->
+                    setState(model.id, ModelState.Downloading((done + weight * p).coerceIn(0f, 0.99f)))
+                }
+                done += weight
+            }
+            setState(model.id, ModelState.Unpacking)
+            withContext(Dispatchers.IO) {
+                dir.deleteRecursively()
+                if (!staging.renameTo(dir)) staging.copyRecursively(dir, overwrite = true)
+                File(dir, MARKER).writeText("ok")
+            }
+            setState(model.id, ModelState.Installed)
+        } catch (t: Throwable) {
+            dir.deleteRecursively()
+            setState(model.id, ModelState.Failed(t.message ?: "Download failed"))
+            throw t
+        } finally {
+            staging.deleteRecursively()
         }
     }
 
@@ -116,6 +156,7 @@ class ModelManager(private val context: Context, private val appScope: Coroutine
                     }
                 }
             }
+            if (total > 0 && read != total) throw IOException("Download was interrupted. Please retry.")
         } finally {
             connection?.disconnect()
         }

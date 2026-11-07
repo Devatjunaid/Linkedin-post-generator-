@@ -56,7 +56,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,7 +68,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -92,7 +90,9 @@ import com.superdevlabs.autosubtitles.ui.components.Thumbnail
 import com.superdevlabs.autosubtitles.ui.components.TopBar
 import com.superdevlabs.autosubtitles.ui.editor.CaptionLayer
 import com.superdevlabs.autosubtitles.ui.home.formatDuration
+import com.superdevlabs.autosubtitles.review.ReviewPrompter
 import com.superdevlabs.autosubtitles.ui.theme.AppColors
+import com.superdevlabs.autosubtitles.work.ExportPhase
 import kotlin.math.sin
 
 @Composable
@@ -106,10 +106,17 @@ fun ExportScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
     val activity = LocalActivity.current
     var confirmCancel by remember { mutableStateOf(false) }
 
-    val view = LocalView.current
-    DisposableEffect(ui.phase) {
-        view.keepScreenOn = ui.phase == ExportPhase.RUNNING
-        onDispose { view.keepScreenOn = false }
+    var confirmLeave by remember { mutableStateOf(false) }
+
+    // A happy moment: maybe show the Google Play review sheet (rate-limited, see ReviewPrompter).
+    LaunchedEffect(ui.phase) {
+        if (ui.phase == ExportPhase.DONE && ui.savedVideo) {
+            val total = vm.countFinishedExport() ?: return@LaunchedEffect
+            if (activity != null) {
+                kotlinx.coroutines.delay(1_200)
+                ReviewPrompter.onExportFinished(activity, container, total)
+            }
+        }
     }
 
     // Subtitle files are saved with the system "Save as" picker: no storage permission needed.
@@ -119,7 +126,7 @@ fun ExportScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
     val createTxt = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(SubtitleFormat.TXT.mimeType)) { uri -> if (uri != null) vm.writeSubtitle(context, uri) }
 
     val storagePermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) vm.startVideoExport(context)
+        if (granted) vm.startVideoExport()
     }
 
     fun startVideo() {
@@ -128,7 +135,7 @@ fun ExportScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
         if (legacyNeedsPermission) {
             storagePermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         } else {
-            vm.startVideoExport(context)
+            vm.startVideoExport()
         }
     }
 
@@ -153,13 +160,13 @@ fun ExportScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
         LaunchedEffect(Unit) { startVideo() }
     }
 
-    BackHandler(enabled = ui.phase == ExportPhase.RUNNING) { confirmCancel = true }
+    BackHandler(enabled = ui.phase == ExportPhase.RUNNING) { confirmLeave = true }
 
     Column(Modifier.fillMaxSize().background(AppColors.Ink).statusBarsPadding().navigationBarsPadding()) {
         TopBar(
             title = "Export",
             subtitle = ui.project?.name,
-            onBack = { if (ui.phase == ExportPhase.RUNNING) confirmCancel = true else onBack() },
+            onBack = { if (ui.phase == ExportPhase.RUNNING) confirmLeave = true else onBack() },
         )
         Column(
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp),
@@ -271,6 +278,27 @@ fun ExportScreen(container: AppContainer, projectId: String, onBack: () -> Unit,
             }
         }
         BannerAd(container.ads)
+    }
+
+    if (confirmLeave) {
+        AlertDialog(
+            onDismissRequest = { confirmLeave = false },
+            title = { Text("Keep exporting in the background?") },
+            text = { Text("The video keeps rendering even if you leave or lock your phone. It'll be saved to your gallery.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmLeave = false
+                    onBack()
+                }) { Text("Run in background") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    confirmLeave = false
+                    vm.cancel()
+                }) { Text("Cancel export", color = AppColors.Coral) }
+            },
+            containerColor = AppColors.Surface,
+        )
     }
 
     if (confirmCancel) {

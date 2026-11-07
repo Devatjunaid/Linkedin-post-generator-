@@ -7,6 +7,13 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+// Crash reports + analytics need your Firebase project's google-services.json in app/.
+// Without it the app still builds and runs; Firebase simply stays off.
+if (file("google-services.json").exists()) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
+    apply(plugin = libs.plugins.firebase.crashlytics.get().pluginId)
+}
+
 // AdMob ids. Debug builds always use Google's public test units so you never click your
 // own live ads (that gets AdMob accounts suspended). Release builds use the real units.
 val admobAppId = "ca-app-pub-1948347222012540~6939661409"
@@ -27,8 +34,8 @@ android {
         applicationId = "com.superdevlabs.autosubtitles"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 3
+        versionName = "1.1.0"
 
         manifestPlaceholders["admobAppId"] = admobAppId
 
@@ -142,6 +149,17 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
 
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.lifecycle.process)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+
+    implementation(libs.play.review)
+    // On-device translation (models download per language, free, no API key).
+    implementation(libs.mlkit.translate)
+
     implementation(libs.play.services.ads)
     implementation(libs.user.messaging.platform)
 
@@ -150,4 +168,6 @@ dependencies {
     implementation("net.java.dev.jna:jna:${libs.versions.jna.get()}@aar")
 
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 }

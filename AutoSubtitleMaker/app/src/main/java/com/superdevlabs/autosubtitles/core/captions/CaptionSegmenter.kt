@@ -7,8 +7,9 @@ import com.superdevlabs.autosubtitles.core.model.Word
  * Groups timed words into readable captions.
  *
  * A new caption starts when the current one reaches [maxWords] words or [maxChars]
- * characters, when the speaker pauses for longer than [maxGapMs], or when the caption
- * would stay on screen longer than [maxDurationMs].
+ * characters, when the speaker pauses for longer than [maxGapMs], when the caption
+ * would stay on screen longer than [maxDurationMs], or after a sentence ends (Whisper
+ * output has punctuation; Vosk output has none, so this never triggers there).
  */
 object CaptionSegmenter {
 
@@ -37,7 +38,8 @@ object CaptionSegmenter {
                 current.size >= limit ||
                     chars + 1 + word.text.length > maxChars ||
                     word.startMs - last.endMs > maxGapMs ||
-                    word.endMs - first.startMs > maxDurationMs
+                    word.endMs - first.startMs > maxDurationMs ||
+                    endsSentence(last.text)
                 )
             if (breakHere) {
                 groups += current
@@ -61,6 +63,10 @@ object CaptionSegmenter {
             )
         }
     }
+
+    private fun endsSentence(text: String): Boolean = text.lastOrNull()?.let { it in SENTENCE_END } == true
+
+    private const val SENTENCE_END = ".!?。！？؟"
 
     /** All words of the given captions in time order (used when re-grouping). */
     fun flatten(captions: List<Caption>): List<Word> = captions.flatMap { it.words }.sortedBy { it.startMs }

@@ -32,6 +32,8 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -270,4 +272,48 @@ fun Card(modifier: Modifier = Modifier, padding: Dp = 16.dp, content: @Composabl
             .border(1.dp, AppColors.Line, RoundedCornerShape(24.dp))
             .padding(padding),
     ) { content() }
+}
+
+/** Title + optional hint with a switch on the right; the whole row is tappable. */
+@Composable
+fun ToggleRow(title: String, checked: Boolean, onChange: (Boolean) -> Unit, modifier: Modifier = Modifier, hint: String? = null) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(AppColors.SurfaceHigh)
+            .pressable(onClick = { onChange(!checked) }, role = Role.Switch, pressedScale = 0.98f)
+            .padding(start = 14.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.titleSmall)
+            if (hint != null) Text(hint, style = MaterialTheme.typography.bodySmall, color = AppColors.Muted)
+        }
+        Switch(
+            checked = checked,
+            onCheckedChange = null,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = AppColors.Ink,
+                checkedTrackColor = AppColors.Lime,
+                uncheckedThumbColor = AppColors.Muted,
+                uncheckedTrackColor = AppColors.SurfaceTop,
+                uncheckedBorderColor = AppColors.Line,
+            ),
+        )
+    }
+}
+
+/** Small "NEW" badge for fresh presets and features. */
+@Composable
+fun NewBadge(modifier: Modifier = Modifier) {
+    Text(
+        "NEW",
+        style = MaterialTheme.typography.labelSmall,
+        color = AppColors.Ink,
+        modifier = modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(AppColors.Coral)
+            .padding(horizontal = 5.dp, vertical = 1.dp),
+    )
 }

@@ -11,8 +11,8 @@ import com.superdevlabs.autosubtitles.data.Project
 import com.superdevlabs.autosubtitles.export.ExportQuality
 import com.superdevlabs.autosubtitles.export.MediaSaver
 import com.superdevlabs.autosubtitles.export.VideoExporter
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Job
+import com.superdevlabs.autosubtitles.work.ExportJob
+import com.superdevlabs.autosubtitles.work.ExportPhase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,8 +25,6 @@ enum class OutputKind(val label: String, val wantsVideo: Boolean, val wantsSubti
     SUBTITLES("Subtitle file", false, true),
     BOTH("Both", true, true),
 }
-
-enum class ExportPhase { IDLE, RUNNING, DONE, ERROR }
 
 data class ExportUi(
     val project: Project? = null,
@@ -61,10 +59,25 @@ class ExportViewModel(private val container: AppContainer, private val projectId
 
     private val _ui = MutableStateFlow(ExportUi())
     val ui: StateFlow<ExportUi> = _ui.asStateFlow()
-    private var job: Job? = null
+    private var countedFinish = false
 
     init {
         viewModelScope.launch { _ui.update { it.copy(project = container.projects.get(projectId)) } }
+        // The video itself renders in ExportWorker (keeps going in the background); mirror its state.
+        viewModelScope.launch {
+            container.jobs.export(projectId).collect { job ->
+                if (job == null) return@collect
+                _ui.update { ui ->
+                    ui.copy(
+                        phase = job.phase,
+                        progress = job.progress,
+                        videoFile = job.videoFile ?: ui.videoFile,
+                        savedVideo = job.phase == ExportPhase.DONE,
+                        error = job.error,
+                    )
+                }
+            }
+        }
     }
 
     fun setOutput(kind: OutputKind) = _ui.update { it.copy(output = kind) }
@@ -83,13 +96,16 @@ class ExportViewModel(private val container: AppContainer, private val projectId
         val project = ui.project ?: return
         viewModelScope.launch {
             runCatching {
+                // Use the latest saved edits from the editor.
+                val latest = container.projects.get(projectId) ?: project
                 val text = SubtitleFormatter.format(
-                    ui.format, project.captions, project.style,
-                    fontName = container.fonts.option(project.style.fontId).name,
-                    videoWidth = project.width, videoHeight = project.height,
+                    ui.format, latest.captions, latest.style,
+                    fontName = container.fonts.option(latest.style.fontId).name,
+                    videoWidth = latest.width, videoHeight = latest.height,
                 )
                 MediaSaver.writeText(context, uri, text)
             }.onSuccess {
+                container.telemetry.event("subtitle_file_saved", "format" to ui.format.name)
                 _ui.update { s ->
                     s.copy(savedSubtitle = true, phase = if (s.output.wantsVideo) s.phase else ExportPhase.DONE)
                 }
@@ -97,37 +113,29 @@ class ExportViewModel(private val container: AppContainer, private val projectId
         }
     }
 
-    fun startVideoExport(context: Context) {
+    fun startVideoExport() {
         val start = _ui.value
-        val initial = start.project ?: return
-        job?.cancel()
-        _ui.update { it.copy(phase = ExportPhase.RUNNING, progress = 0f, error = null, savedVideo = false) }
-        job = viewModelScope.launch {
-            try {
-                // Use the latest saved edits from the editor.
-                val project = container.projects.get(projectId) ?: initial
-                val file = container.exporter.export(
-                    project = project,
-                    captions = project.captions,
-                    style = project.style,
-                    quality = start.quality,
-                    keepAudio = start.keepAudio,
-                ) { p -> _ui.update { it.copy(progress = p) } }
-                MediaSaver.saveVideoToGallery(context.applicationContext, file)
-                _ui.update { it.copy(phase = ExportPhase.DONE, progress = 1f, videoFile = file, savedVideo = true) }
-            } catch (e: CancellationException) {
-                _ui.update { it.copy(phase = ExportPhase.IDLE, progress = 0f) }
-                throw e
-            } catch (e: Throwable) {
-                _ui.update { it.copy(phase = ExportPhase.ERROR, error = e.message ?: "Export failed") }
-            }
-        }
+        countedFinish = false
+        container.jobs.updateExport(projectId) { ExportJob(phase = ExportPhase.RUNNING) }
+        container.work.startExport(projectId, start.quality, start.keepAudio)
+    }
+
+    /** Called once per finished export; returns the total number of successful exports. */
+    suspend fun countFinishedExport(): Int? {
+        if (countedFinish) return null
+        countedFinish = true
+        return container.settings.incrementExports()
     }
 
     fun cancel() {
-        job?.cancel()
+        container.work.cancelExport(projectId)
+        container.jobs.clearExport(projectId)
         _ui.update { it.copy(phase = ExportPhase.IDLE, progress = 0f, savedSubtitle = false) }
     }
 
-    fun reset() = _ui.update { it.copy(phase = ExportPhase.IDLE, progress = 0f, error = null, savedSubtitle = false, savedVideo = false) }
+    fun reset() {
+        container.jobs.clearExport(projectId)
+        countedFinish = false
+        _ui.update { it.copy(phase = ExportPhase.IDLE, progress = 0f, error = null, savedSubtitle = false, savedVideo = false) }
+    }
 }

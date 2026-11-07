@@ -53,6 +53,7 @@ import com.superdevlabs.autosubtitles.ui.components.Thumbnail
 import com.superdevlabs.autosubtitles.ui.components.pressable
 import com.superdevlabs.autosubtitles.ui.home.formatDuration
 import com.superdevlabs.autosubtitles.ui.theme.AppColors
+import com.superdevlabs.autosubtitles.work.ProcessingUi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -62,7 +63,12 @@ class ProjectsViewModel(private val container: AppContainer) : ViewModel() {
     val projects: StateFlow<List<Project>> = container.projects.observeProjects()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    val jobs: StateFlow<Map<String, ProcessingUi>> = container.jobs.processingAll
+
     fun delete(id: String) {
+        container.work.cancelProcessing(id)
+        container.work.cancelExport(id)
+        container.jobs.clearProcessing(id)
         viewModelScope.launch { container.projects.delete(id) }
     }
 }
@@ -80,6 +86,7 @@ fun ProjectsScreen(
 ) {
     val vm: ProjectsViewModel = viewModel(factory = viewModelFactory { initializer { ProjectsViewModel(container) } })
     val projects by vm.projects.collectAsStateWithLifecycle()
+    val jobs by vm.jobs.collectAsStateWithLifecycle()
     var pendingDelete by remember { mutableStateOf<Project?>(null) }
 
     // A native ad sits in the free space after every 6th project.
@@ -111,6 +118,7 @@ fun ProjectsScreen(
                         is GridEntry.Item -> item(key = entry.project.id) {
                             ProjectTile(
                                 project = entry.project,
+                                job = jobs[entry.project.id],
                                 index = entry.index,
                                 onOpen = { onOpenProject(entry.project.id, entry.project.isReady) },
                                 onDelete = { pendingDelete = entry.project },
@@ -143,7 +151,7 @@ fun ProjectsScreen(
 }
 
 @Composable
-private fun ProjectTile(project: Project, index: Int, onOpen: () -> Unit, onDelete: () -> Unit) {
+private fun ProjectTile(project: Project, job: ProcessingUi?, index: Int, onOpen: () -> Unit, onDelete: () -> Unit) {
     // Staggered entrance: tiles drop in one after another.
     val appear = remember(project.id) { Animatable(0f) }
     LaunchedEffect(project.id) {
@@ -164,10 +172,10 @@ private fun ProjectTile(project: Project, index: Int, onOpen: () -> Unit, onDele
     ) {
         Box(Modifier.fillMaxWidth().aspectRatio(0.8f).clip(RoundedCornerShape(14.dp))) {
             Thumbnail(project.thumbnail, Modifier.fillMaxSize(), contentDescription = project.name)
-            val (label, color) = when (project.status) {
-                ProjectStatus.READY -> "READY" to AppColors.Lime
-                ProjectStatus.FAILED -> "FAILED" to AppColors.Coral
-                else -> "DRAFT" to AppColors.Ice
+            val (label, color) = when {
+                job?.running == true && project.status != ProjectStatus.READY ->
+                    "WORKING ${(job.overall * 100).toInt()}%" to AppColors.Ice
+                else -> statusLabel(project.status)
             }
             Text(
                 label,
@@ -197,4 +205,10 @@ private fun ProjectTile(project: Project, index: Int, onOpen: () -> Unit, onDele
             }
         }
     }
+}
+
+private fun statusLabel(status: String) = when (status) {
+    ProjectStatus.READY -> "READY" to AppColors.Lime
+    ProjectStatus.FAILED -> "FAILED" to AppColors.Coral
+    else -> "DRAFT" to AppColors.Ice
 }

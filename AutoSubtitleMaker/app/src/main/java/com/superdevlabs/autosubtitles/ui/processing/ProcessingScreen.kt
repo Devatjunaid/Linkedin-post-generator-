@@ -46,7 +46,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,7 +58,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -73,6 +71,9 @@ import com.superdevlabs.autosubtitles.ui.components.SectionLabel
 import com.superdevlabs.autosubtitles.ui.components.Thumbnail
 import com.superdevlabs.autosubtitles.ui.components.TopBar
 import com.superdevlabs.autosubtitles.ui.theme.AppColors
+import com.superdevlabs.autosubtitles.work.ProcessingUi
+import com.superdevlabs.autosubtitles.work.StepStatus
+import com.superdevlabs.autosubtitles.work.StepUi
 
 @Composable
 fun ProcessingScreen(container: AppContainer, projectId: String, onBack: () -> Unit, onDone: () -> Unit) {
@@ -88,13 +89,6 @@ fun ProcessingScreen(container: AppContainer, projectId: String, onBack: () -> U
             continued = true
             onDone()
         }
-    }
-
-    // Keep the screen awake while the phone is working.
-    val view = LocalView.current
-    DisposableEffect(ui.done, ui.error) {
-        view.keepScreenOn = !ui.done && ui.error == null
-        onDispose { view.keepScreenOn = false }
     }
 
     BackHandler(enabled = !ui.done && ui.error == null) { confirmLeave = true }
@@ -149,7 +143,7 @@ fun ProcessingScreen(container: AppContainer, projectId: String, onBack: () -> U
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Rounded.Lock, contentDescription = null, tint = AppColors.Muted, modifier = Modifier.size(14.dp))
                 Spacer(Modifier.width(6.dp))
-                SectionLabel("On-device · no uploads · no credits")
+                SectionLabel(if (ui.running) "Keeps running if you leave · on-device" else "On-device · no uploads · no credits")
             }
             AnimatedVisibility(
                 visible = ui.done,
@@ -177,15 +171,26 @@ fun ProcessingScreen(container: AppContainer, projectId: String, onBack: () -> U
     if (confirmLeave) {
         AlertDialog(
             onDismissRequest = { confirmLeave = false },
-            title = { Text("Stop creating subtitles?") },
-            text = { Text("The project stays in your list as a draft. You can run it again later.") },
+            title = { Text("Keep working in the background?") },
+            text = {
+                Text(
+                    "Subtitles keep being created even if you leave or lock your phone. " +
+                        "We'll send a notification when they're ready.",
+                )
+            },
             confirmButton = {
                 TextButton(onClick = {
                     confirmLeave = false
                     onBack()
+                }) { Text("Run in background") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    confirmLeave = false
+                    vm.cancel()
+                    onBack()
                 }) { Text("Stop", color = AppColors.Coral) }
             },
-            dismissButton = { TextButton(onClick = { confirmLeave = false }) { Text("Keep going") } },
             containerColor = AppColors.Surface,
         )
     }

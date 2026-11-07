@@ -8,6 +8,8 @@ import android.provider.OpenableColumns
 import androidx.core.graphics.scale
 import com.superdevlabs.autosubtitles.core.model.Caption
 import com.superdevlabs.autosubtitles.core.model.CaptionStyle
+import com.superdevlabs.autosubtitles.speech.ModelCatalog
+import com.superdevlabs.autosubtitles.speech.WhisperCatalog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -34,8 +36,29 @@ data class Project(
     val captions: List<Caption>,
     val style: CaptionStyle,
     val updatedAt: Long,
+    /** "vosk" or a Whisper model id. */
+    val engine: String = "vosk",
+    /** Language actually spoken (ISO 639-1), known after transcription. */
+    val sourceLanguage: String = "",
 ) {
     val isReady: Boolean get() = status == ProjectStatus.READY
+    val isWhisper: Boolean get() = WhisperCatalog.isWhisper(engine)
+
+    /** Short code for cards, e.g. "EN". */
+    val languageTag: String
+        get() = when {
+            sourceLanguage.isNotBlank() -> sourceLanguage.uppercase()
+            isWhisper -> if (languageId == WhisperCatalog.AUTO) "AUTO" else languageId.uppercase()
+            else -> ModelCatalog.byId(languageId).id.substringBefore('-').uppercase()
+        }
+
+    /** The spoken language as an ISO 639-1 code, best guess before transcription. */
+    val spokenLanguageCode: String
+        get() = when {
+            sourceLanguage.isNotBlank() -> sourceLanguage
+            isWhisper -> languageId.takeIf { it != WhisperCatalog.AUTO }.orEmpty()
+            else -> ModelCatalog.languageCode(languageId)
+        }
 }
 
 class ProjectRepository(private val context: Context, private val dao: ProjectDao) {
@@ -54,7 +77,7 @@ class ProjectRepository(private val context: Context, private val dao: ProjectDa
     suspend fun get(id: String): Project? = dao.get(id)?.toProject()
 
     /** Creates the project row right after the user picks a video. Import happens later. */
-    suspend fun create(uri: Uri, languageId: String, style: CaptionStyle): String {
+    suspend fun create(uri: Uri, engine: String, languageId: String, style: CaptionStyle): String {
         val now = System.currentTimeMillis()
         val id = UUID.randomUUID().toString()
         val name = withContext(Dispatchers.IO) { displayName(uri) }
@@ -66,6 +89,7 @@ class ProjectRepository(private val context: Context, private val dao: ProjectDa
                 id = id, name = name.take(60), sourceUri = uri.toString(), videoPath = null, thumbnailPath = null,
                 durationMs = 0, width = 0, height = 0, languageId = languageId, status = ProjectStatus.NEW,
                 captionsJson = "[]", styleJson = json.encodeToString(CaptionStyle.serializer(), style), createdAt = now, updatedAt = now,
+                engine = engine,
             ),
         )
         return id
@@ -175,6 +199,11 @@ class ProjectRepository(private val context: Context, private val dao: ProjectDa
         dao.upsert(entity.copy(languageId = languageId))
     }
 
+    suspend fun setSourceLanguage(id: String, language: String) {
+        val entity = dao.get(id) ?: return
+        dao.upsert(entity.copy(sourceLanguage = language))
+    }
+
     suspend fun markFailed(id: String) {
         val entity = dao.get(id) ?: return
         dao.upsert(entity.copy(status = ProjectStatus.FAILED, updatedAt = System.currentTimeMillis()))
@@ -204,5 +233,7 @@ class ProjectRepository(private val context: Context, private val dao: ProjectDa
         captions = runCatching { json.decodeFromString(captionListSerializer, captionsJson) }.getOrDefault(emptyList()),
         style = runCatching { json.decodeFromString(CaptionStyle.serializer(), styleJson) }.getOrDefault(CaptionStyle()),
         updatedAt = updatedAt,
+        engine = engine,
+        sourceLanguage = sourceLanguage,
     )
 }
