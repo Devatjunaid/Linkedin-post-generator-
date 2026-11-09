@@ -1,0 +1,375 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: Fredoka; font-weight: 600; src: url(/fonts/fredoka-600.woff2); }
+@font-face { font-family: Fredoka; font-weight: 700; src: url(/fonts/fredoka-700.woff2); }
+@font-face { font-family: Nunito; font-weight: 800; src: url(/fonts/nunito-800.woff2); }
+@font-face { font-family: Nunito; font-weight: 900; src: url(/fonts/nunito-900.woff2); }
+body { margin: 0; background: #888; }
+.asset { position: relative; overflow: hidden; margin: 0 0 40px; }
+.icon { width: 512px; height: 512px; }
+.shot { width: 1080px; height: 1920px; font-family: Fredoka; }
+.abs { position: absolute; }
+.cap { position: absolute; left: 0; right: 0; top: 70px; text-align: center; z-index: 5; }
+.cap h1 { margin: 0; font: 700 128px/1 Fredoka; color: #fff; letter-spacing: 1px;
+  -webkit-text-stroke: 22px #241C5C; paint-order: stroke fill; text-shadow: 0 14px 0 #241C5C; }
+.cap p { display: inline-block; margin: 34px 0 0; padding: 14px 40px; border-radius: 60px;
+  font: 900 50px/1.1 Nunito; color: #241C5C; background: #fff; box-shadow: 0 8px 0 rgba(36,28,92,.35); }
+.card { position: absolute; left: 70px; top: 470px; width: 940px; height: 1330px; border-radius: 70px;
+  background: #1E1A4D; border: 16px solid #fff; box-sizing: border-box; box-shadow: 0 40px 0 rgba(36,28,92,.35), 0 30px 80px rgba(0,0,0,.35); overflow: hidden; }
+.bar { position: absolute; left: 36px; right: 36px; top: 34px; height: 96px; display: flex; align-items: center; gap: 20px; }
+.rb { width: 92px; height: 92px; border-radius: 50%; background: #4A43A0; display: grid; place-items: center; box-shadow: 0 7px 0 #17143D; }
+.ttl { flex: 1; text-align: center; color: #FFF8E7; font: 700 46px/1 Fredoka; }
+.ttl small { display: block; font: 800 26px/1.4 Nunito; color: #B9B3F0; }
+.prog { position: absolute; left: 44px; right: 44px; top: 150px; height: 26px; border-radius: 13px; background: #17143D; }
+.prog i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 13px; background: linear-gradient(90deg,#FFC93C,#FFE58A); }
+.prog b { position: absolute; right: 0; top: 34px; font: 800 28px Nunito; color: #FFF8E7; }
+.board { position: absolute; left: 30px; right: 30px; top: 210px; bottom: 190px; border-radius: 50px; }
+.tools { position: absolute; left: 36px; right: 36px; bottom: 40px; display: flex; gap: 24px; }
+.tool { flex: 1; height: 110px; border-radius: 34px; display: flex; align-items: center; justify-content: center; gap: 16px;
+  font: 900 44px Nunito; color: #241C5C; }
+.burst { position: absolute; display: grid; place-items: center; z-index: 6; }
+.burst span { position: absolute; font: 700 var(--fs) Fredoka; color: #fff; -webkit-text-stroke: 14px #241C5C; paint-order: stroke fill; transform: rotate(var(--r)); }
+.bubble { position: absolute; z-index: 6; background: #fff; border-radius: 40px; padding: 22px 36px; font: 900 54px Nunito; color: #241C5C;
+  border: 8px solid #241C5C; box-shadow: 0 10px 0 rgba(36,28,92,.35); }
+.bubble::after { content: ''; position: absolute; width: 40px; height: 40px; background: #fff; border-right: 8px solid #241C5C; border-bottom: 8px solid #241C5C; transform: rotate(var(--tr, 45deg)); left: var(--tx, 60px); bottom: -27px; }
+.big { position: absolute; z-index: 4; filter: drop-shadow(0 22px 0 rgba(36,28,92,.35)); }
+</style></head>
+<body>
+<div id="root"></div>
+<script type="module">
+import { WORLDS, INK } from '/src/pictures.js';
+import { LEVELS } from '/src/levels.js';
+import { artSVG, polyPoints } from '/src/render.js';
+import { zipSVG, starSVG, icons } from '/src/art.js';
+
+const root = document.getElementById('root');
+const pic = (id) => WORLDS.flatMap((w) => w.pictures).find((p) => p.id === id);
+const level = (id) => LEVELS.find((l) => l.pic.id === id);
+const hsv = (h, s, v) => { const f = (n) => { const k = (n + h / 60) % 6; return v - v * s * Math.max(0, Math.min(k, 4 - k, 1)); }; return `rgb(${f(5) * 255 | 0},${f(3) * 255 | 0},${f(1) * 255 | 0})`; };
+
+function dotRadius(dots) {
+  let m = 1e9;
+  for (let i = 0; i < dots.length; i++) for (let j = i + 1; j < dots.length; j++) m = Math.min(m, Math.hypot(dots[i][0] - dots[j][0], dots[i][1] - dots[j][1]));
+  return Math.max(3, Math.min(5.2, m * 0.48));
+}
+
+// The real play board: lit dots gold, next dot mint with its ring, line in the
+// streak rainbow (or sunlight), Zip at the end of the line.
+function boardSVG(lv, { lit = 0, rainbow = true, zip = true, ghost = false, closed = false, w = 880, h = 930 } = {}) {
+  const d = lv.dots, r = dotRadius(d);
+  const xs = d.map((p) => p[0]), ys = d.map((p) => p[1]);
+  const pad = r * 2.4;
+  let x0 = Math.min(...xs) - pad, x1 = Math.max(...xs) + pad, y0 = Math.min(...ys) - pad, y1 = Math.max(...ys) + pad;
+  // keep the board's aspect
+  const want = w / h, cw = x1 - x0, ch = y1 - y0;
+  if (cw / ch < want) { const nw = ch * want; x0 -= (nw - cw) / 2; x1 += (nw - cw) / 2; } else { const nh = cw / want; y0 -= (nh - ch) / 2; y1 += (nh - ch) / 2; }
+  let s = '';
+  if (ghost) s += `<polygon points="${polyPoints(lv.pic.pts)}" fill="#FFFFFF" opacity=".06"/>`;
+  const segs = [];
+  for (let i = 1; i < lit; i++) segs.push([d[i - 1], d[i], i]);
+  if (closed) segs.push([d[d.length - 1], d[0], d.length]);
+  for (const [a, b, i] of segs) {
+    const col = rainbow ? hsv((i * 37) % 360, 0.62, 1) : '#FFE58A';
+    s += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-opacity=".45" stroke-width="4.6" stroke-linecap="round"/>`;
+  }
+  for (const [a, b] of segs) s += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#FFE58A" stroke-width="1.5" stroke-linecap="round"/>`;
+  d.forEach((p, i) => {
+    const isLit = i < lit, isNext = i === lit;
+    const fill = isLit ? '#FFC93C' : isNext ? '#3EE0B0' : '#FFFFFF';
+    if (isNext) {
+      s += `<circle cx="${p[0]}" cy="${p[1]}" r="${r * 1.55}" fill="none" stroke="#3EE0B0" stroke-opacity=".7" stroke-width="1.1"/>`;
+      s += `<circle cx="${p[0]}" cy="${p[1]}" r="${r * 2.1}" fill="none" stroke="#3EE0B0" stroke-opacity=".3" stroke-width=".8"/>`;
+    }
+    const sc = isNext ? 1.15 : 1;
+    s += `<circle cx="${p[0]}" cy="${p[1]}" r="${r * sc}" fill="${fill}"/>`;
+    const fs = (i + 1 >= 10 ? 0.92 : 1.08) * r * sc;
+    s += `<text x="${p[0]}" y="${p[1] + fs * 0.36}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="${fs}" fill="${INK}">${i + 1}</text>`;
+  });
+  // sparkles around the newest dot
+  if (lit > 0 && lit < d.length) {
+    const p = d[lit - 1];
+    [[-1, -1.2, '#FFE58A'], [1.3, -0.6, '#FF9AA2'], [0.6, 1.3, '#5CC8FF'], [-1.4, 0.5, '#3EE0B0'], [0, -1.8, '#C3A6FF']].forEach(([dx, dy, c]) =>
+      s += `<circle cx="${p[0] + dx * r * 1.9}" cy="${p[1] + dy * r * 1.9}" r="${r * 0.22}" fill="${c}"/>`);
+  }
+  if (zip && lit > 0 && lit < d.length) {
+    const p = d[lit - 1], zs = 14;
+    s += `<g transform="translate(${p[0] - 0.5 * zs} ${p[1] - 1.07 * zs}) scale(${zs / 120})">${zipInner()}</g>`;
+  }
+  return `<svg viewBox="${x0} ${y0} ${x1 - x0} ${y1 - y0}" width="${w}" height="${h}">${s}</svg>`;
+}
+
+const zipInner = (o) => zipSVG({ size: 120, ...o }).replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+
+// A finished picture as a fat sticker (white outline) for pop-out moments.
+function stickerSVG(id, size, { outline = 7, fill } = {}) {
+  const p = pic(id);
+  return `<svg viewBox="-12 -12 124 124" width="${size}" height="${size}">
+    <polygon points="${polyPoints(p.pts)}" fill="#fff" stroke="#fff" stroke-width="${outline * 2}" stroke-linejoin="round"/>
+    <polygon points="${polyPoints(p.pts)}" fill="${fill || p.fill}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+    ${artSVG(p.art)}</svg>`;
+}
+
+// Pointing hand that taps the next dot (tip of the finger at its top-left).
+function handSVG(size) {
+  return `<svg viewBox="0 0 120 150" width="${size}" height="${size * 1.25}">
+    <g stroke="${INK}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="22" y="128" width="64" height="22" rx="8" fill="#FF5D73"/>
+      <path d="M30 6 c0 -8 18 -8 18 0 v58 c2 -8 18 -8 18 2 c2 -8 18 -7 18 3 c3 -7 18 -5 18 5 v30 c0 18 -12 30 -30 30 h-14 c-14 0 -22 -6 -30 -18 l-20 -28 c-5 -8 5 -16 12 -9 l10 10 z" fill="#FFE0C2"/>
+      <path d="M66 66 v14 M84 70 v12" fill="none"/>
+    </g>
+    <ellipse cx="36" cy="14" rx="4" ry="6" fill="#fff" opacity=".7"/>
+  </svg>`;
+}
+
+function rays(color, op = 0.16, n = 18) {
+  return `background: repeating-conic-gradient(from 0deg, rgba(255,255,255,${op}) 0deg ${180 / n}deg, transparent ${180 / n}deg ${360 / n}deg);`;
+}
+function confetti(seed, n, area = [1080, 1920]) {
+  let x = seed * 9301 + 49297, rnd = () => ((x = (x * 9301 + 49297) % 233280) / 233280);
+  const cols = ['#FFE14D', '#FF5D73', '#3EE0B0', '#5CC8FF', '#C3A6FF', '#FFFFFF', '#FF9F1C'];
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const c = cols[i % cols.length], X = rnd() * area[0], Y = rnd() * area[1], k = rnd();
+    if (k < 0.4) s += `<circle cx="${X}" cy="${Y}" r="${6 + rnd() * 10}" fill="${c}" opacity=".9"/>`;
+    else if (k < 0.75) s += `<rect x="${X}" y="${Y}" width="${14 + rnd() * 12}" height="${30 + rnd() * 16}" rx="6" fill="${c}" transform="rotate(${rnd() * 360} ${X} ${Y})"/>`;
+    else s += `<g transform="translate(${X} ${Y}) rotate(${rnd() * 60}) scale(${1.4 + rnd() * 1.4})">${starPath(c)}</g>`;
+  }
+  return `<svg class="abs" style="left:0;top:0" width="${area[0]}" height="${area[1]}">${s}</svg>`;
+}
+const starPath = (c) => `<polygon points="0,-12 3.5,-3.8 12,-3.7 5.6,2 7.4,10.6 0,6 -7.4,10.6 -5.6,2 -12,-3.7 -3.5,-3.8" fill="${c}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>`;
+const sparkle = (x, y, s, c = '#fff') => `<svg class="abs" style="left:${x - s / 2}px;top:${y - s / 2}px;z-index:7" width="${s}" height="${s}" viewBox="-10 -10 20 20"><path d="M0 -10 Q1 -1 10 0 Q1 1 0 10 Q-1 1 -10 0 Q-1 -1 0 -10Z" fill="${c}"/></svg>`;
+
+function burst(x, y, size, text, { color = '#FFE14D', fs = 120, r = -8, spikes = 14 } = {}) {
+  const pts = [];
+  for (let i = 0; i < spikes * 2; i++) { const a = Math.PI * i / spikes; const rr = i % 2 ? 0.74 : 1; pts.push(`${50 + 48 * rr * Math.cos(a)},${50 + 48 * rr * Math.sin(a)}`); }
+  return `<div class="burst" style="left:${x}px;top:${y}px;width:${size}px;height:${size}px;transform:rotate(${r}deg)">
+    <svg viewBox="0 0 100 100" width="${size}" height="${size}" style="filter:drop-shadow(0 12px 0 rgba(36,28,92,.35))"><polygon points="${pts.join(' ')}" fill="${color}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/></svg>
+    <span style="--fs:${fs}px;--r:0deg">${text}</span></div>`;
+}
+
+function card({ title, sub, stars = 3, progress, total, board, boardBg, tools = true, rot = 0, extra = '' }) {
+  return `<div class="card" style="transform:rotate(${rot}deg)">
+    <div class="bar"><div class="rb">${icons.map({ size: 50, stroke: '#fff' })}</div>
+      <div class="ttl">${title}<small>${sub}</small></div>
+      <div class="rb" style="width:auto;padding:0 22px;border-radius:46px;gap:4px;display:flex">${[0, 1, 2].map((i) => starSVG(40, i < stars)).join('')}</div></div>
+    <div class="prog"><i style="width:${(progress / total) * 100}%"></i><b>${progress}/${total}</b></div>
+    <div class="board" style="background:${boardBg}">${board}</div>
+    ${tools ? `<div class="tools"><div class="tool" style="background:#3EE0B0;box-shadow:0 9px 0 #1E9E78">${icons.hint({ size: 50, stroke: INK })}Hint</div>
+      <div class="tool" style="background:#5CC8FF;box-shadow:0 9px 0 #2B8FC7">${icons.speak({ size: 50, stroke: INK })}Say it</div></div>` : ''}
+    ${extra}</div>`;
+}
+
+function boardFrame(svg) { return `<div style="position:absolute;inset:0;display:grid;place-items:center">${svg}</div>`; }
+
+function shot(id, { bg, cap, sub, body, seed = 1 }) {
+  return `<div class="asset shot" id="${id}" style="background:${bg}">
+    <div class="abs" style="inset:-600px;${rays()}"></div>
+    ${confetti(seed, 26)}
+    <div class="cap"><h1>${cap}</h1><p>${sub}</p></div>
+    ${body}</div>`;
+}
+
+const BOARD_BG = { dinos: 'radial-gradient(circle at 50% 40%,#17736B,#0F4C47 70%)', animals: 'radial-gradient(circle at 50% 40%,#2E7D52,#1C4A33 70%)', vehicles: 'radial-gradient(circle at 50% 40%,#2453B0,#0F2A66 70%)' };
+
+// ---------------------------------------------------------------- screenshots
+const trex = level('trex');
+const rocket = level('rocket');
+const lion = level('lion');
+const brachio = level('iguano');
+const stego = level('stego');
+
+const shots = [];
+
+// 1. Tap the dots
+{
+  const lit = Math.round(trex.dots.length * 0.6);
+  const b = boardSVG(trex, { lit, ghost: false });
+  // where is the next dot on screen? compute to place the hand
+  shots.push(shot('shot-1', {
+    bg: 'linear-gradient(170deg,#FFD23F 0%,#FF9F1C 55%,#FF6B35 100%)', seed: 3,
+    cap: 'Tap the dots!', sub: '1, 2, 3… who is hiding?',
+    body: card({ title: 'Level 7', sub: 'Dino Valley', progress: lit, total: trex.dots.length, board: boardFrame(b), boardBg: BOARD_BG.dinos, rot: -2 })
+      + `<div class="abs hand" data-level="trex" data-lit="${lit}" style="z-index:8"></div>`
+      + `<div class="bubble" style="left:150px;top:770px;--tx:250px;transform:rotate(-5deg)">Who is it?</div>`
+,
+  }));
+}
+
+function silhouette(id, size) {
+  const p = pic(id);
+  return `<svg viewBox="-12 -12 124 124" width="${size}" height="${size}"><polygon points="${polyPoints(p.pts)}" fill="#fff" stroke="#fff" stroke-width="14" stroke-linejoin="round"/>
+  <polygon points="${polyPoints(p.pts)}" fill="#241C5C" stroke="#241C5C" stroke-width="2" stroke-linejoin="round"/>
+  <text x="${p.pts.reduce((a, q) => a + q[0], 0) / p.pts.length}" y="${p.pts.reduce((a, q) => a + q[1], 0) / p.pts.length + 12}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="36" fill="#FFE14D">?</text></svg>`;
+}
+
+// 2. It comes alive
+{
+  shots.push(shot('shot-2', {
+    bg: 'linear-gradient(170deg,#FF8FB1 0%,#FF5D73 50%,#E63972 100%)', seed: 5,
+    cap: 'ROAR!', sub: 'Every picture comes alive!',
+    body: card({ title: 'Level 7', sub: 'Dino Valley', progress: trex.dots.length, total: trex.dots.length, board: boardFrame(boardSVG(trex, { lit: trex.dots.length, closed: true, zip: false })), boardBg: BOARD_BG.dinos, rot: 2, tools: false })
+      + `<div class="big" style="left:90px;top:640px;width:900px;transform:rotate(-4deg)">${stickerSVG('trex', 900, { outline: 5 })}</div>`
+      + burst(640, 470, 400, 'WOW!', { fs: 110, r: 10 })
+      + `<div class="abs" style="left:260px;top:1590px;display:flex;align-items:flex-end;gap:10px;z-index:7;filter:drop-shadow(0 10px 0 rgba(36,28,92,.35))">${starSVG(170)}<span style="margin-bottom:40px">${starSVG(210)}</span>${starSVG(170)}</div>`
+      + sparkle(170, 700, 90) + sparkle(960, 1250, 70) + sparkle(120, 1350, 60, '#FFE14D') + sparkle(900, 1500, 100, '#FFE14D'),
+  }));
+}
+
+// 3. Vehicles
+{
+  const lit = Math.round(rocket.dots.length * 0.7);
+  shots.push(shot('shot-3', {
+    bg: 'linear-gradient(170deg,#5CC8FF 0%,#2F7BFF 55%,#3D2DB5 100%)', seed: 8,
+    cap: 'Vroom! Zoom!', sub: 'Rockets, race cars & trains',
+    body: card({ title: 'Level 18', sub: 'Turbo Town', progress: lit, total: rocket.dots.length, board: boardFrame(boardSVG(rocket, { lit })), boardBg: BOARD_BG.vehicles, rot: -2 })
+      + `<div class="abs hand" data-level="rocket" data-lit="${lit}" style="z-index:8"></div>`
+      + `<div class="big" style="left:690px;top:1440px;transform:rotate(-10deg)">${stickerSVG('racecar', 420)}</div>`
+      + `<div class="big" style="left:-50px;top:1530px;transform:rotate(8deg)">${stickerSVG('firetruck', 360)}</div>`
+      + `<div class="big" style="left:-30px;top:330px;transform:rotate(-14deg)">${stickerSVG('airplane', 250)}</div>`,
+  }));
+}
+
+// 4. Animals
+{
+  shots.push(shot('shot-4', {
+    bg: 'linear-gradient(170deg,#9BE564 0%,#3FAE4A 55%,#1E7F4F 100%)', seed: 11,
+    cap: 'Animal pals!', sub: 'Lions, puppies, owls & more',
+    body: card({ title: 'Level 18', sub: 'Animal Park', progress: lion.dots.length, total: lion.dots.length, board: '', boardBg: BOARD_BG.animals, rot: 2, tools: false })
+      + `<div class="big" style="left:130px;top:640px;transform:rotate(-3deg)">${stickerSVG('lion', 820, { outline: 5 })}</div>`
+      + burst(30, 520, 330, 'ROAR!', { fs: 82, r: -12, color: '#FF9F1C' })
+      + `<div class="big" style="left:-40px;top:1500px;transform:rotate(-10deg)">${stickerSVG('elephant', 340)}</div>`
+      + `<div class="big" style="left:360px;top:1580px;transform:rotate(4deg)">${stickerSVG('dog', 330)}</div>`
+      + `<div class="big" style="left:760px;top:1480px;transform:rotate(12deg)">${stickerSVG('owl', 320)}</div>`
+      + sparkle(880, 760, 90, '#FFE14D') + sparkle(160, 1300, 70),
+  }));
+}
+
+// 5. Counting
+{
+  const lit = 14;
+  shots.push(shot('shot-5', {
+    bg: 'linear-gradient(170deg,#C3A6FF 0%,#9B6BFF 50%,#5B3FD8 100%)', seed: 14,
+    cap: 'Count to 25!', sub: 'Learn numbers while you play',
+    body: card({ title: 'Level 20', sub: 'Dino Valley', progress: lit, total: brachio.dots.length, board: boardFrame(boardSVG(brachio, { lit })), boardBg: BOARD_BG.dinos, rot: -2 })
+      + `<div class="abs hand" data-level="iguano" data-lit="${lit}" style="z-index:8"></div>`
+      + `<div class="bubble zipsay" style="left:250px;top:1500px;--tx:40px;transform:rotate(-4deg);font-size:64px">Fifteen!</div>`
+      + `<div class="big" style="left:40px;top:1560px;z-index:7">${zipSVG({ size: 230 })}</div>`
+,
+  }));
+}
+function numBall(n, color, size) {
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}"><circle cx="50" cy="50" r="44" fill="${color}" stroke="${INK}" stroke-width="6"/><ellipse cx="34" cy="30" rx="12" ry="7" fill="#fff" opacity=".6" transform="rotate(-35 34 30)"/>
+  <text x="50" y="66" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="46" fill="${INK}">${n}</text></svg>`;
+}
+
+// 6. Stars & stickers
+{
+  shots.push(shot('shot-6', {
+    bg: 'linear-gradient(170deg,#7CF2D0 0%,#1FC8A0 50%,#119E8A 100%)', seed: 17,
+    cap: 'Win 3 stars!', sub: 'Collect 60 picture stickers',
+    body: card({ title: 'Level 19', sub: 'Dino Valley', progress: stego.dots.length, total: stego.dots.length, board: '', boardBg: BOARD_BG.dinos, rot: -2, tools: false })
+      + `<div class="big" style="left:160px;top:830px;transform:rotate(-2deg)">${stickerSVG('stego', 760, { outline: 5 })}</div>`
+      + `<div class="abs" style="left:130px;top:690px;display:flex;align-items:flex-end;gap:14px;z-index:7;filter:drop-shadow(0 12px 0 rgba(36,28,92,.35))">${starSVG(230)}<span style="margin-bottom:60px">${starSVG(300)}</span>${starSVG(230)}</div>`
+      + `<div class="big" style="left:-30px;top:1470px;transform:rotate(-14deg)">${stickerSVG('trex', 300)}</div>`
+      + `<div class="big" style="left:250px;top:1590px;transform:rotate(6deg)">${stickerSVG('cat', 270)}</div>`
+      + `<div class="big" style="left:500px;top:1540px;transform:rotate(-6deg)">${stickerSVG('bus', 290)}</div>`
+      + `<div class="big" style="left:790px;top:1470px;transform:rotate(12deg)">${stickerSVG('butterfly', 290)}</div>`
+      + sparkle(130, 900, 80) + sparkle(960, 840, 100, '#FFE14D'),
+  }));
+}
+
+// -------------------------------------------------------------------- icons
+function iconA() {
+  // Big, friendly T-Rex face bursting from a sunny burst, with numbered dots and Zip.
+  return `<div class="asset icon" id="icon-a"><svg viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="sun" cx="50%" cy="58%" r="70%"><stop offset="0" stop-color="#FFF27A"/><stop offset=".45" stop-color="#FFC93C"/><stop offset="1" stop-color="#FF7A2F"/></radialGradient>
+    <radialGradient id="head" cx="45%" cy="35%" r="75%"><stop offset="0" stop-color="#A6F07A"/><stop offset=".6" stop-color="#6FD14A"/><stop offset="1" stop-color="#3FA83A"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <rect width="512" height="512" fill="url(#sun)"/>
+  <g transform="translate(256 300)" opacity=".22">${Array.from({ length: 16 }, (_, i) => `<path d="M0 0 L${Math.cos(i * Math.PI / 8) * 520} ${Math.sin(i * Math.PI / 8) * 520} L${Math.cos((i + 0.5) * Math.PI / 8) * 520} ${Math.sin((i + 0.5) * Math.PI / 8) * 520}Z" fill="#fff"/>`).join('')}</g>
+  <!-- spikes -->
+  <g stroke="${INK}" stroke-width="10" stroke-linejoin="round" fill="#FF8A3D">
+    <path d="M176 214 Q186 140 214 128 Q236 160 238 200 Z"/>
+    <path d="M226 196 Q238 104 268 92 Q292 132 288 196 Z"/>
+    <path d="M280 200 Q296 128 326 124 Q342 160 334 218 Z"/>
+  </g>
+  <!-- head -->
+  <path d="M70 540 C 52 400, 90 196, 256 186 C 422 196, 460 400, 442 540 Z" fill="url(#head)" stroke="${INK}" stroke-width="12"/>
+  <ellipse cx="256" cy="520" rx="150" ry="90" fill="#C8F59E" opacity=".7"/>
+  <!-- eyes -->
+  <g stroke="${INK}" stroke-width="10">
+    <circle cx="186" cy="292" r="58" fill="#fff"/><circle cx="326" cy="292" r="58" fill="#fff"/>
+  </g>
+  <circle cx="198" cy="302" r="34" fill="${INK}"/><circle cx="338" cy="302" r="34" fill="${INK}"/>
+  <circle cx="184" cy="286" r="13" fill="#fff"/><circle cx="324" cy="286" r="13" fill="#fff"/>
+  <circle cx="210" cy="318" r="6" fill="#fff"/><circle cx="350" cy="318" r="6" fill="#fff"/>
+  <!-- cheeks, nostrils -->
+  <ellipse cx="128" cy="386" rx="30" ry="18" fill="#FF8FA3"/><ellipse cx="384" cy="386" rx="30" ry="18" fill="#FF8FA3"/>
+  <circle cx="236" cy="362" r="7" fill="${INK}"/><circle cx="276" cy="362" r="7" fill="${INK}"/>
+  <!-- mouth -->
+  <path d="M170 392 Q256 404 342 392 Q332 490 256 494 Q180 490 170 392 Z" fill="#7A1F3D" stroke="${INK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M206 462 Q256 430 306 462 Q290 490 256 492 Q222 490 206 462Z" fill="#FF6F91"/>
+  <g fill="#fff" stroke="${INK}" stroke-width="5" stroke-linejoin="round">
+    <path d="M188 396 L200 424 L212 398 Z"/><path d="M300 398 L312 424 L324 396 Z"/>
+  </g>
+  <!-- dot trail -->
+  <path d="M74 262 Q 70 162 140 106 Q 210 58 300 58" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round" opacity=".55" filter="url(#glow)"/>
+  <path d="M74 262 Q 70 162 140 106" fill="none" stroke="#FF5D73" stroke-width="14" stroke-linecap="round"/>
+  <path d="M140 106 Q 210 58 300 58" fill="none" stroke="#5CC8FF" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 24"/>
+  ${[[74, 262, 1, '#FFC93C'], [140, 106, 2, '#FFC93C'], [300, 58, 3, '#3EE0B0']].map(([x, y, n, c]) => `<circle cx="${x}" cy="${y}" r="38" fill="${c}" stroke="${INK}" stroke-width="9"/><text x="${x}" y="${y + 17}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="50" fill="${INK}">${n}</text>`).join('')}
+  <!-- Zip -->
+  <g transform="translate(332 44) scale(1.2)">${zipInner()}</g>
+  </svg></div>`;
+}
+
+function iconB() {
+  // Zip draws a rainbow star from big numbered dots on a deep purple night.
+  const P = [];
+  for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; P.push([256 + 168 * Math.cos(a), 282 + 168 * Math.sin(a)]); }
+  const order = [0, 2, 4, 1, 3]; // star path
+  const pts = order.map((k) => P[k]);
+  const segs = [];
+  const cols = ['#FF5D73', '#FFC93C', '#3EE0B0', '#5CC8FF'];
+  for (let i = 1; i < 5; i++) segs.push(`<line x1="${pts[i - 1][0]}" y1="${pts[i - 1][1]}" x2="${pts[i][0]}" y2="${pts[i][1]}" stroke="${cols[i - 1]}" stroke-width="26" stroke-linecap="round"/>`);
+  return `<div class="asset icon" id="icon-b"><svg viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="nb" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#8F6BFF"/><stop offset=".6" stop-color="#5B3FD8"/><stop offset="1" stop-color="#2B1F7A"/></radialGradient>
+    <filter id="g2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+  </defs>
+  <rect width="512" height="512" fill="url(#nb)"/>
+  ${[[60, 70, 5], [450, 90, 4], [90, 440, 4], [470, 400, 6], [40, 250, 3], [400, 470, 3]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".8"/>`).join('')}
+  <polygon points="${pts.map((p) => p.join(',')).join(' ')}" fill="#FFE14D" opacity=".18"/>
+  <g filter="url(#g2)" opacity=".8">${segs.join('')}</g>
+  ${segs.join('')}
+  <line x1="${pts[4][0]}" y1="${pts[4][1]}" x2="${pts[0][0]}" y2="${pts[0][1]}" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 26" opacity=".9"/>
+  ${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="46" fill="${i < 4 ? '#FFC93C' : '#3EE0B0'}" stroke="${INK}" stroke-width="10"/><text x="${x}" y="${y + 21}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="62" fill="${INK}">${i + 1}</text>`).join('')}
+  <g transform="translate(330 40) scale(1.25)">${zipInner()}</g>
+  </svg></div>`;
+}
+
+root.innerHTML = iconA() + iconB() + shots.join('');
+
+// Place each pointing hand so the fingertip sits on the board's next dot.
+await document.fonts.ready;
+for (const h of document.querySelectorAll('.hand')) {
+  const shotEl = h.closest('.shot');
+  const svg = shotEl.querySelector('.board svg');
+  const lv = level(h.dataset.level);
+  const p = lv.dots[+h.dataset.lit];
+  const pt = svg.createSVGPoint(); pt.x = p[0]; pt.y = p[1];
+  const scr = pt.matrixTransform(svg.getScreenCTM());
+  const base = shotEl.getBoundingClientRect();
+  const size = 185;
+  h.innerHTML = handSVG(size);
+  // fingertip is at (39,2) of 120x150 viewBox
+  h.style.left = `${scr.x - base.left - (39 / 120) * size}px`;
+  h.style.top = `${scr.y - base.top - (2 / 150) * size * 1.25 + 12}px`;
+  h.style.filter = 'drop-shadow(0 14px 0 rgba(36,28,92,.35))';
+  h.insertAdjacentHTML('beforebegin', `<div class="abs" style="z-index:7;left:${scr.x - base.left - 70}px;top:${scr.y - base.top - 70}px;width:140px;height:140px;border-radius:50%;border:10px solid #fff;opacity:.85;box-sizing:border-box"></div>`);
+}
+window.ready = true;
+</script>
+</body></html>
