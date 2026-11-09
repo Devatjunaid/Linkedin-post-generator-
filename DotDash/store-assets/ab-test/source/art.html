@@ -290,31 +290,7 @@ function iconA() {
   </defs>
   <rect width="512" height="512" fill="url(#sun)"/>
   <g transform="translate(256 300)" opacity=".22">${Array.from({ length: 16 }, (_, i) => `<path d="M0 0 L${Math.cos(i * Math.PI / 8) * 520} ${Math.sin(i * Math.PI / 8) * 520} L${Math.cos((i + 0.5) * Math.PI / 8) * 520} ${Math.sin((i + 0.5) * Math.PI / 8) * 520}Z" fill="#fff"/>`).join('')}</g>
-  <!-- spikes -->
-  <g stroke="${INK}" stroke-width="10" stroke-linejoin="round" fill="#FF8A3D">
-    <path d="M176 214 Q186 140 214 128 Q236 160 238 200 Z"/>
-    <path d="M226 196 Q238 104 268 92 Q292 132 288 196 Z"/>
-    <path d="M280 200 Q296 128 326 124 Q342 160 334 218 Z"/>
-  </g>
-  <!-- head -->
-  <path d="M70 540 C 52 400, 90 196, 256 186 C 422 196, 460 400, 442 540 Z" fill="url(#head)" stroke="${INK}" stroke-width="12"/>
-  <ellipse cx="256" cy="520" rx="150" ry="90" fill="#C8F59E" opacity=".7"/>
-  <!-- eyes -->
-  <g stroke="${INK}" stroke-width="10">
-    <circle cx="186" cy="292" r="58" fill="#fff"/><circle cx="326" cy="292" r="58" fill="#fff"/>
-  </g>
-  <circle cx="198" cy="302" r="34" fill="${INK}"/><circle cx="338" cy="302" r="34" fill="${INK}"/>
-  <circle cx="184" cy="286" r="13" fill="#fff"/><circle cx="324" cy="286" r="13" fill="#fff"/>
-  <circle cx="210" cy="318" r="6" fill="#fff"/><circle cx="350" cy="318" r="6" fill="#fff"/>
-  <!-- cheeks, nostrils -->
-  <ellipse cx="128" cy="386" rx="30" ry="18" fill="#FF8FA3"/><ellipse cx="384" cy="386" rx="30" ry="18" fill="#FF8FA3"/>
-  <circle cx="236" cy="362" r="7" fill="${INK}"/><circle cx="276" cy="362" r="7" fill="${INK}"/>
-  <!-- mouth -->
-  <path d="M170 392 Q256 404 342 392 Q332 490 256 494 Q180 490 170 392 Z" fill="#7A1F3D" stroke="${INK}" stroke-width="10" stroke-linejoin="round"/>
-  <path d="M206 462 Q256 430 306 462 Q290 490 256 492 Q222 490 206 462Z" fill="#FF6F91"/>
-  <g fill="#fff" stroke="${INK}" stroke-width="5" stroke-linejoin="round">
-    <path d="M188 396 L200 424 L212 398 Z"/><path d="M300 398 L312 424 L324 396 Z"/>
-  </g>
+  ${dinoFace()}
   <!-- dot trail -->
   <path d="M74 262 Q 70 162 140 106 Q 210 58 300 58" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round" opacity=".55" filter="url(#glow)"/>
   <path d="M74 262 Q 70 162 140 106" fill="none" stroke="#FF5D73" stroke-width="14" stroke-linecap="round"/>
@@ -350,7 +326,72 @@ function iconB() {
   </svg></div>`;
 }
 
-root.innerHTML = iconA() + iconB() + shots.join('');
+function dinoFace() {
+  return `  <!-- spikes -->
+  <g stroke="${INK}" stroke-width="10" stroke-linejoin="round" fill="#FF8A3D">
+    <path d="M176 214 Q186 140 214 128 Q236 160 238 200 Z"/>
+    <path d="M226 196 Q238 104 268 92 Q292 132 288 196 Z"/>
+    <path d="M280 200 Q296 128 326 124 Q342 160 334 218 Z"/>
+  </g>
+  <!-- head -->
+  <path d="M70 540 C 52 400, 90 196, 256 186 C 422 196, 460 400, 442 540 Z" fill="url(#head)" stroke="${INK}" stroke-width="12"/>
+  <ellipse cx="256" cy="520" rx="150" ry="90" fill="#C8F59E" opacity=".7"/>
+  <!-- eyes -->
+  <g stroke="${INK}" stroke-width="10">
+    <circle cx="186" cy="292" r="58" fill="#fff"/><circle cx="326" cy="292" r="58" fill="#fff"/>
+  </g>
+  <circle cx="198" cy="302" r="34" fill="${INK}"/><circle cx="338" cy="302" r="34" fill="${INK}"/>
+  <circle cx="184" cy="286" r="13" fill="#fff"/><circle cx="324" cy="286" r="13" fill="#fff"/>
+  <circle cx="210" cy="318" r="6" fill="#fff"/><circle cx="350" cy="318" r="6" fill="#fff"/>
+  <!-- cheeks, nostrils -->
+  <ellipse cx="128" cy="386" rx="30" ry="18" fill="#FF8FA3"/><ellipse cx="384" cy="386" rx="30" ry="18" fill="#FF8FA3"/>
+  <circle cx="236" cy="362" r="7" fill="${INK}"/><circle cx="276" cy="362" r="7" fill="${INK}"/>
+  <!-- mouth -->
+  <path d="M170 392 Q256 404 342 392 Q332 490 256 494 Q180 490 170 392 Z" fill="#7A1F3D" stroke="${INK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M206 462 Q256 430 306 462 Q290 490 256 492 Q222 490 206 462Z" fill="#FF6F91"/>
+  <g fill="#fff" stroke="${INK}" stroke-width="5" stroke-linejoin="round">
+    <path d="M188 396 L200 424 L212 398 Z"/><path d="M300 398 L312 424 L324 396 Z"/>
+  </g>
+`;
+}
+
+function featureGraphic() {
+  const L = (ch, color, r) => `<span style="display:inline-block;color:${color};transform:rotate(${r}deg)">${ch}</span>`;
+  const trail = [[372, 232, 1, '#FFC93C'], [430, 128, 2, '#FFC93C'], [528, 92, 3, '#3EE0B0']];
+  return `<div class="asset" id="feature" style="width:1024px;height:500px">
+  <svg class="abs" style="left:0;top:0" width="1024" height="500" viewBox="0 0 1024 500">
+    <defs>
+      <radialGradient id="fsun" cx="30%" cy="60%" r="90%"><stop offset="0" stop-color="#FFF27A"/><stop offset=".4" stop-color="#FFC93C"/><stop offset="1" stop-color="#FF7A2F"/></radialGradient>
+      <radialGradient id="head" cx="45%" cy="35%" r="75%"><stop offset="0" stop-color="#A6F07A"/><stop offset=".6" stop-color="#6FD14A"/><stop offset="1" stop-color="#3FA83A"/></radialGradient>
+      <filter id="fglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+    </defs>
+    <rect width="1024" height="500" fill="url(#fsun)"/>
+    <g transform="translate(250 330)" opacity=".2">${Array.from({ length: 20 }, (_, i) => `<path d="M0 0 L${Math.cos(i * Math.PI / 10) * 1100} ${Math.sin(i * Math.PI / 10) * 1100} L${Math.cos((i + 0.5) * Math.PI / 10) * 1100} ${Math.sin((i + 0.5) * Math.PI / 10) * 1100}Z" fill="#fff"/>`).join('')}</g>
+  </svg>
+  ${confetti(21, 18, [1024, 500])}
+  <svg class="abs" style="left:-40px;top:-14px" width="512" height="512" viewBox="0 0 512 512">${dinoFace()}</svg>
+  <svg class="abs" style="left:0;top:0;z-index:3" width="1024" height="500" viewBox="0 0 1024 500">
+    <path d="M372 232 Q 380 150 430 128 Q 480 100 528 92" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round" opacity=".55" filter="url(#fglow)"/>
+    <path d="M372 232 Q 380 150 430 128" fill="none" stroke="#FF5D73" stroke-width="13" stroke-linecap="round"/>
+    <path d="M430 128 Q 480 100 528 92" fill="none" stroke="#5CC8FF" stroke-width="13" stroke-linecap="round" stroke-dasharray="1 22"/>
+    ${trail.map(([x, y, n, c]) => `<circle cx="${x}" cy="${y}" r="32" fill="${c}" stroke="${INK}" stroke-width="8"/><text x="${x}" y="${y + 15}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="42" fill="${INK}">${n}</text>`).join('')}
+  </svg>
+  <div class="abs" style="left:480px;top:44px;width:540px;text-align:center;z-index:4;font:700 140px/0.97 Fredoka;-webkit-text-stroke:20px ${INK};paint-order:stroke fill;text-shadow:0 12px 0 ${INK};letter-spacing:2px">
+    <div>${L('D', '#FFC93C', -6)}${L('O', '#3EE0B0', 4)}${L('T', '#FF5D73', -3)}</div>
+    <div>${L('D', '#5CC8FF', -4)}${L('A', '#FFE14D', 4)}${L('S', '#FF5D73', -5)}${L('H', '#3EE0B0', 3)}${L('!', '#C3A6FF', 8)}</div>
+  </div>
+  <div class="abs" style="left:530px;top:380px;width:400px;text-align:center;z-index:4">
+    <span style="display:inline-block;padding:12px 30px;border-radius:50px;background:#fff;font:900 34px/1.1 Nunito;color:${INK};box-shadow:0 7px 0 rgba(36,28,92,.35);transform:rotate(-2deg)">Connect the dots!</span>
+  </div>
+  <div class="big" style="left:890px;top:300px;transform:rotate(12deg);z-index:5">${stickerSVG('racecar', 170)}</div>
+  <div class="big" style="left:900px;top:-6px;transform:rotate(-10deg);z-index:5">${stickerSVG('lion', 140)}</div>
+  <div class="big" style="left:400px;top:340px;transform:rotate(-12deg);z-index:5">${stickerSVG('elephant', 130)}</div>
+  <div class="big" style="left:450px;top:150px;z-index:5;transform:rotate(-8deg)">${zipSVG({ size: 105 })}</div>
+  ${sparkle(380, 470, 50)}${sparkle(990, 250, 46)}${sparkle(840, 40, 40, '#fff')}
+  </div>`;
+}
+
+root.innerHTML = featureGraphic() + iconA() + iconB() + shots.join('');
 
 // Place each pointing hand so the fingertip sits on the board's next dot.
 await document.fonts.ready;
